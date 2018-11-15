@@ -28,7 +28,7 @@ public class DatabaseManagerTest {
     @Test
     public void testSchema() {
     	try {
-    		DatabaseManager dbm = new DatabaseManager("jdbc:h2:./test", "sa", "");
+    		DatabaseManager dbm = new DatabaseManager("jdbc:h2:./build/test", "sa", "");
     		Connection conn = dbm.connect();
     		DatabaseMetaData md = conn.getMetaData();
     		ResultSet rs = md.getTables(null, null, "%", null);
