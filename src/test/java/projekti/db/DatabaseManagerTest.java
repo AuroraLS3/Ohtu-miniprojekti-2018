@@ -16,9 +16,9 @@ public class DatabaseManagerTest {
         try {
             DatabaseManager dbm = new DatabaseManager("jdbc:h2:./build/test", "sa", "");
             Connection conn = dbm.connect();
-            assertFalse(conn.isClosed());
+            assertFalse("Connection should open", conn.isClosed());
             dbm.disconnect();
-            assertTrue(conn.isClosed());
+            assertTrue("Connection should close", conn.isClosed());
         } catch (SQLException e) {
             e.printStackTrace();
             fail("Connect caused an exception");
@@ -36,7 +36,7 @@ public class DatabaseManagerTest {
     		while(rs.next()) {
     			hs.add(rs.getString(3));
     		}
-    		assertTrue(hs.contains("Recommendation"));
+    		assertTrue("There should be the recommendation table", hs.contains("Recommendation"));
     	}	catch (SQLException e) {
     		e.printStackTrace();
     		fail("Checking schema caused an exception");

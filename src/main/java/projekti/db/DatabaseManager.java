@@ -31,7 +31,7 @@ class DatabaseManager {
 		try {
 			Class.forName("org.h2.Driver");
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			System.out.println("Can't find H2 driver");
 		}
 		this.url = url;
 		this.username = username;
