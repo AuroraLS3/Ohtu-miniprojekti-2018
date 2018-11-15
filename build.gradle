@@ -4,3 +4,32 @@
  * This is a general purpose Gradle build.
  * Learn how to create Gradle builds at https://guides.gradle.org/creating-new-gradle-builds/
  */
+
+// Apply the java plugin to add support for Java
+apply plugin: 'java'
+
+// Apply the application plugin to add support for building an application
+apply plugin: 'application'
+
+// In this section you declare where to find the dependencies of your project
+repositories {
+    // Use jcenter for resolving your dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    jcenter()
+}
+
+
+ 
+ dependencies {
+    compile 'com.google.guava:guava:20.0'
+    testCompile 'junit:junit:4.12'
+    compile 'com.h2database:h2:1.4.195'
+ }
+ 
+ mainClassName = 'projekti.main.Main'
+ 
+ jar {
+    manifest {
+        attributes 'Main-Class': 'projekti.main.Main'
+    }
+}
