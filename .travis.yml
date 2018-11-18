@@ -1,9 +1,8 @@
 language: java
-sudo: disabled
 install: false
 
 jdk:
-- oraclejdk8
+    - oraclejdk8
 
 jobs:
     include:
@@ -16,4 +15,4 @@ jobs:
         
 cache:
   directories:
-- '$HOME/.m2/repository'
+    - '$HOME/.m2/repository'
