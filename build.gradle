@@ -4,26 +4,18 @@ apply plugin: 'application'
 apply plugin: 'checkstyle'
 
 repositories {
-    // Use jcenter for resolving your dependencies.
-    // You can declare any Maven/Ivy/file repository here.
     jcenter()
 }
 
-
-
- dependencies {
+dependencies {
     compile 'com.h2database:h2:1.4.195'
     compile 'com.google.guava:guava:20.0'
-<<<<<<< HEAD
-    compile 'com.h2database:h2:1.4.195'
-=======
->>>>>>> requested fixes
     testCompile 'junit:junit:4.12'
  }
 
- mainClassName = 'projekti.main.Main'
+mainClassName = 'projekti.main.Main'
 
- jar {
+jar {
     manifest {
         attributes 'Main-Class': 'projekti.main.Main'
     }
