@@ -19,15 +19,15 @@ repositories {
 }
 
 
- 
+
  dependencies {
+    compile 'com.h2database:h2:1.4.195'
     compile 'com.google.guava:guava:20.0'
     testCompile 'junit:junit:4.12'
-    compile 'com.h2database:h2:1.4.195'
  }
- 
+
  mainClassName = 'projekti.main.Main'
- 
+
  jar {
     manifest {
         attributes 'Main-Class': 'projekti.main.Main'
