@@ -67,7 +67,7 @@ class DatabaseManager {
 	 */
 	public void setupSchema() throws SQLException {
 		try (Connection c = this.connect();
-				Statement stmnt = c.createStatement()){
+				Statement stmnt = c.createStatement()) {
 			this.connect();
 			String schema = readResourceFile(this.schemaPath);
 			stmnt.executeUpdate(schema);
