@@ -1,7 +1,22 @@
+
 apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'checkstyle'
 
 repositories {
     jcenter()
+}
+
+dependencies {
+    compile 'com.h2database:h2:1.4.195'
+    compile 'com.google.guava:guava:20.0'
+    testCompile 'junit:junit:4.12'
+ }
+
+mainClassName = 'projekti.main.Main'
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'projekti.main.Main'
+    }
 }
