@@ -33,7 +33,7 @@ public class DatabaseManagerTest {
     		DatabaseMetaData md = conn.getMetaData();
     		ResultSet rs = md.getTables(null, null, "%", null);
     		HashSet<String> hs = new HashSet<>();
-    		while(rs.next()) {
+    		while (rs.next()) {
     			hs.add(rs.getString(3));
     		}
     		assertTrue("There should be the recommendation table", hs.contains("Recommendation"));
