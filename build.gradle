@@ -12,8 +12,12 @@ repositories {
 
 
  dependencies {
-    compile 'com.google.guava:guava:20.0'
     compile 'com.h2database:h2:1.4.195'
+    compile 'com.google.guava:guava:20.0'
+<<<<<<< HEAD
+    compile 'com.h2database:h2:1.4.195'
+=======
+>>>>>>> requested fixes
     testCompile 'junit:junit:4.12'
  }
 
