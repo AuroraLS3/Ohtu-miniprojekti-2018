@@ -9,6 +9,9 @@ repositories {
 
 dependencies {
     compile 'com.h2database:h2:1.4.195'
+    run {
+      standardInput = System.in
+    }
     compile 'com.google.guava:guava:20.0'
     testCompile 'junit:junit:4.12'
  }

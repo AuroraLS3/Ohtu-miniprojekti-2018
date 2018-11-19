@@ -1,5 +1,9 @@
 package projekti.main;
 
+
+import projekti.UI.TUI;
+
+
 public class Main {
 
 	/**
@@ -7,7 +11,9 @@ public class Main {
 	 * @param args these are the CLI args...
 	 */
     public static void main(String[] args) {
-        System.out.println("Hello world");
+     
+        TUI app = new TUI();
+        app.run();
     }
 
 }
