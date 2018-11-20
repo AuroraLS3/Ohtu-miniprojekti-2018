@@ -13,6 +13,7 @@ public class TUI {
     public TUI(BookDAO bd) { 
         scanner = new Scanner(System.in);
         bookDao = bd;
+       
     }
 
     public void run() throws SQLException {
@@ -33,7 +34,7 @@ public class TUI {
                     continue;
 
                 case "all": //listataan kaikki vinkit tietokannasta;
-                    
+                    System.out.println("Kirja\t \tkirjailija");
                     List<Book> books = bookDao.findAll();
                     // tulostusasun voisi määrittää kirjan toStringnä
                     books.forEach(s -> System.out.println(s.getAuthor() + ": " + s.getTitle() + ", ISBN: " + s.getISBN()));
@@ -58,11 +59,10 @@ public class TUI {
         String ISBN = scanner.nextLine();
 
         Book book = new Book(author, title, ISBN);
-        if (bookDao.create(book).equals(book)) {
-            System.out.println("\nuusi vinkki lisätty");
-        } else {
-            System.out.println("\nuutta vinkkiä ei lisätty");
-        }
+        
+        bookDao.create(book);
+        System.out.println("\nuusi vinkki lisätty");
+        // oletetaan toistaiseksi, että onnistuu. Daon kanssa ongelmia. System.out.println("\nuutta vinkkiä ei lisätty");
         
     }
 }
