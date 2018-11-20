@@ -4,6 +4,7 @@ package projekti.main;
 import java.sql.SQLException;
 
 import projekti.UI.TUI;
+import projekti.UI.TextIO;
 import projekti.db.*;
 
 
@@ -26,7 +27,7 @@ public class Main {
 
         // bDao.create(new Book("matti", "minä", "1234"));
         
-        TUI app = new TUI(bDao);
+        TUI app = new TUI(bDao, new TextIO());
         app.run();
     }
 
