@@ -20,6 +20,11 @@ public class BookDAO {
 
     private final DatabaseManager databaseManager;
 
+    /**
+     * Constructor.
+     *
+     * @param databaseManager Required DatabaseManager for getting Connections.
+     */
     public BookDAO(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
     }
