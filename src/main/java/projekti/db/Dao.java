@@ -18,6 +18,8 @@ public interface Dao<T, K> {
     
     /**
      * Fetch one object from the database based on a certain key.
+     * 
+     * @param key the given key
      *
      * @return object.
      */
@@ -27,7 +29,6 @@ public interface Dao<T, K> {
     /**
      * Fetch all objects of a certain type from the database.
      * 
-     * @param key the given key
      *
      * @return list of objects.
      */
