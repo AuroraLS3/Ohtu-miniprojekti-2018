@@ -8,25 +8,24 @@ import projekti.db.BookDAO;
 import projekti.domain.Book;
 
 public class TUI {
-    private Scanner scanner;
     private BookDAO bookDao; // voidaan antaa konstruktorin parametrina
-    public TUI(BookDAO bd) { 
-        scanner = new Scanner(System.in);
+    private IO io;
+    public TUI(BookDAO bd, IO io) { 
         bookDao = bd;
-       
+        this.io = io;
     }
 
     public void run() throws SQLException {
-        System.out.println("Tervetuloa lukuvinkkiapplikaatioon!\n");
-        System.out.println("Tuetut toiminnot:\n ");
-        System.out.println("\tnew \tlisää uusi lukuvinkki");
-        System.out.println("\tall \tlistaa kaikki lukuvinkit");
+        io.print("Tervetuloa lukuvinkkiapplikaatioon!\n \n");
+        io.print("Tuetut toiminnot:\n ");
+        io.print("\tnew \tlisää uusi lukuvinkki \n");
+        io.print("\tall \tlistaa kaikki lukuvinkit \n");
         
-        System.out.println("\tend \tsulkee ohjelman");
+        io.print("\tend \tsulkee ohjelman \n");
         String input = "";
         while (!input.equals("end")) {
-            System.out.println("\ntoiminto: ");
-            input = scanner.nextLine();
+            io.print("\ntoiminto: \n");
+            input = io.GetInput();
             switch (input) { // kaikki toiminnot voidaan refaktoroida omaksi metodikseen myöhemmin
                 case "new": //luodaan uusi vinkki tietokantaan
                     //Käyttäjä valitsee vinkin tyyypin, nyt vain kirjat tuettu
@@ -36,35 +35,35 @@ public class TUI {
                 case "all": //listataan kaikki vinkit tietokannasta;
                     List<Book> books = bookDao.findAll();
                     // tulostusasun voisi määrittää kirjan toStringnä
-                    books.forEach(s -> System.out.println(s.getAuthor() + ": " + s.getTitle() + ", ISBN: " + s.getISBN()));
+                    books.forEach(s -> io.print(s.getAuthor() + ": " + s.getTitle() + ", ISBN: " + s.getISBN() + "\n"));
                     continue;
 
                 case "end": 
-                    System.out.println("\nlopetetaan ohjelman suoritus");
+                    io.print("\nlopetetaan ohjelman suoritus");
                     continue;
             }
 
-            System.out.println("\nei tuettu toiminto");
+            io.print("\nei tuettu toiminto \n");
         }   
     }
     private void createBook() throws SQLException {
         System.out.print("kirjailija: ");
-        String author = scanner.nextLine();
+        String author = io.GetInput();
 
         System.out.print("nimi: ");
-        String title = scanner.nextLine();
+        String title = io.GetInput();
 
         System.out.print("ISBN: ");
-        String ISBN = scanner.nextLine();
+        String ISBN = io.GetInput();
 
         Book book = new Book(author, title, ISBN);
 
         if (!bookDao.create(book).equals(null)) {
-            System.out.println("\nuusi vinkki lisätty");
+            io.print("\nuusi vinkki lisätty \n");
         } else {
-            System.out.println("\nvinkkiä ei lisätty");
+            io.print("\nvinkkiä ei lisätty \n");
         }
-        // oletetaan toistaiseksi, että onnistuu. Daon kanssa ongelmia. System.out.println("\nuutta vinkkiä ei lisätty");
+        // oletetaan toistaiseksi, että onnistuu. Daon kanssa ongelmia. io.print("\nuutta vinkkiä ei lisätty");
         
     }
 }
