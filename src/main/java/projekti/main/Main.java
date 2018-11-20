@@ -20,13 +20,8 @@ public class Main {
         DatabaseManager dbm = new DatabaseManager("jdbc:h2:./build/vinkit", "sa", "");
         dbm.connect();
         dbm.setupSchema();
-       
         BookDAO bDao = new BookDAO(dbm);
-        
-        bDao.findAll();
-
-        // bDao.create(new Book("matti", "minä", "1234"));
-        
+        bDao.findAll();        
         TUI app = new TUI(bDao, new TextIO());
         app.run();
     }

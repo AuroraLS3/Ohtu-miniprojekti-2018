@@ -7,8 +7,9 @@ import projekti.db.BookDAO;
 import projekti.domain.Book;
 
 public class TUI {
-    private BookDAO bookDao; // voidaan antaa konstruktorin parametrina
+    private BookDAO bookDao;
     private IO io;
+    
     public TUI(BookDAO bd, IO io) { 
         bookDao = bd;
         this.io = io;
@@ -40,9 +41,11 @@ public class TUI {
                 case "end": 
                     io.print("\nlopetetaan ohjelman suoritus");
                     continue;
+                default:
+                    io.print("\nei tuettu toiminto \n");
             }
 
-            io.print("\nei tuettu toiminto \n");
+
         }   
     }
     private void createBook() throws SQLException {
