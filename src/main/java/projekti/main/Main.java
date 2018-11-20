@@ -1,18 +1,24 @@
 package projekti.main;
 
 
-import projekti.UI.TUI;
+import java.sql.SQLException;
 
+import projekti.UI.TUI;
+import projekti.db.*;
 
 public class Main {
 
 	/**
-	 * This is the main method.
-	 * @param args these are the CLI args...
-	 */
-    public static void main(String[] args) {
-     
-        TUI app = new TUI();
+     * This is the main method.
+     * 
+     * @param args these are the CLI args...
+     * @throws SQLException
+     */
+    public static void main(String[] args) throws SQLException {
+        DatabaseManager dbm = new DatabaseManager("jdbc:h2:./build/resources/main", "sa", "");
+       
+        BookDAO bDao = new BookDAO(dbm);
+        TUI app = new TUI(bDao);
         app.run();
     }
 
