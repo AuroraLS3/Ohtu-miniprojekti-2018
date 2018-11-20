@@ -34,7 +34,6 @@ public class TUI {
                     continue;
 
                 case "all": //listataan kaikki vinkit tietokannasta;
-                    System.out.println("Kirja\t \tkirjailija");
                     List<Book> books = bookDao.findAll();
                     // tulostusasun voisi määrittää kirjan toStringnä
                     books.forEach(s -> System.out.println(s.getAuthor() + ": " + s.getTitle() + ", ISBN: " + s.getISBN()));
@@ -59,9 +58,12 @@ public class TUI {
         String ISBN = scanner.nextLine();
 
         Book book = new Book(author, title, ISBN);
-        
-        bookDao.create(book);
-        System.out.println("\nuusi vinkki lisätty");
+
+        if (!bookDao.create(book).equals(null)) {
+            System.out.println("\nuusi vinkki lisätty");
+        } else {
+            System.out.println("\nvinkkiä ei lisätty");
+        }
         // oletetaan toistaiseksi, että onnistuu. Daon kanssa ongelmia. System.out.println("\nuutta vinkkiä ei lisätty");
         
     }
