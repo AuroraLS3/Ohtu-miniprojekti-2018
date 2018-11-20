@@ -82,13 +82,9 @@ public class BookDAO implements Dao<Book, Integer> {
             stmt.setString(3, book.getISBN());
             stmt.setString(4, book.getType());
             stmt.executeUpdate();
-            connection.commit();
-            stmt.close();
-
-            stmt = connection.prepareStatement("SELECT MAX(ID) AS MAX_ID FROM " + TABLE_NAME);
-            ResultSet rs = stmt.executeQuery();
+            ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
-                bookId = rs.getInt("MAX_ID");
+                bookId = rs.getInt(1);
             }
             rs.close();
             stmt.close();
