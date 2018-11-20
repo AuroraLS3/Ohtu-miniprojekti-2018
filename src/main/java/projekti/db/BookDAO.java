@@ -70,7 +70,7 @@ public class BookDAO implements Dao<Book, Integer> {
     @Override
     public Book create(Book book) throws SQLException {
 
-        int bookId;
+        int bookId = -1;
 
         String sql = "INSERT INTO " + TABLE_NAME + " (AUTHOR, NAME, ISBN, TYPE) "
                 + "VALUES (?, ?, ?, ?)";
@@ -82,12 +82,16 @@ public class BookDAO implements Dao<Book, Integer> {
             stmt.setString(3, book.getISBN());
             stmt.setString(4, book.getType());
             stmt.executeUpdate();
+            connection.commit();
+            stmt.close();
 
-            stmt = connection.prepareStatement("SELECT MAX(ID) AS ID FROM " + TABLE_NAME);
+            stmt = connection.prepareStatement("SELECT MAX(ID) AS MAX_ID FROM " + TABLE_NAME);
             ResultSet rs = stmt.executeQuery();
-            bookId = rs.getInt("ID");
+            if (rs.next()) {
+                bookId = rs.getInt("MAX_ID");
+            }
             rs.close();
-
+            stmt.close();
         } catch (SQLException e) {
             // Unchecked exception is thrown if SQL error occurs during closing or execution.
             throw new IllegalStateException(e.getMessage(), e);
