@@ -29,6 +29,11 @@ nbdist/
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+.vscode/*
+.classpath
+.project
+.nb-gradle-properties
+
 
 # Generated files
 .idea/**/contentModel.xml
