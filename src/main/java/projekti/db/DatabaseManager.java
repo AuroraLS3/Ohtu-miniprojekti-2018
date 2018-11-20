@@ -28,7 +28,7 @@ public class DatabaseManager {
 	 * @param url      url for driver
 	 * @param username username for db "sa"
 	 * @param password password for db ""
-	 * @throws SQLException
+	 * @throws SQLException if something goes wrong
 	 */
 	public DatabaseManager(String url, String username, String password) throws SQLException {
 		try {
@@ -46,8 +46,8 @@ public class DatabaseManager {
 	/**
 	 * Make a safe connection. Useful if autocommit is of.
 	 * 
-	 * @return Connection.
-	 * @throws SQLException
+	 * @return Connection connection to db.
+	 * @throws SQLException if something goes wrong.
 	 */
 	public Connection connect() throws SQLException {
 		if (this.conn == null || this.conn.isClosed()) {
@@ -55,7 +55,10 @@ public class DatabaseManager {
 		}
 		return this.conn;
 	}
-
+	/**
+	 * Convenience method for closing connection.
+	 * @throws SQLException if something goes wrong.
+	 */
 	public void disconnect() throws SQLException {
 		this.conn.close();
 	}
