@@ -47,6 +47,8 @@ public class BookDAO implements Dao<Book, Integer> {
     /**
      * Read books from database using ResultSet. 
      *
+     * @param results the ResultSet to be used
+     * 
      * @return a list of books defined in the given ResultSet.
      */
 
@@ -65,6 +67,8 @@ public class BookDAO implements Dao<Book, Integer> {
 
     /**
      * Add a new book to the database.
+     * 
+     * @param book the given book
      *
      * @return a new Book fetched from the database
      */
