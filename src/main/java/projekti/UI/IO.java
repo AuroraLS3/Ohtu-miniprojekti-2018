@@ -12,6 +12,6 @@ public interface IO {
 	 * Get input.
 	 * @return String input.
 	 */
-	public String GetInput();
+	public String getInput();
 
 }

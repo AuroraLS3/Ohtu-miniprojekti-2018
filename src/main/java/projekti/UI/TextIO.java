@@ -5,7 +5,7 @@ import java.util.Scanner;
 /*
  * Handle input and output to Sys.in.
  */
-public class TextIO implements IO{
+public class TextIO implements IO {
 	private Scanner scanner;
 	/**
 	 * Create TextIO object.
@@ -28,7 +28,7 @@ public class TextIO implements IO{
 	 * @return String representing input.
 	 */
 	@Override
-	public String GetInput() {
+	public String getInput() {
 		String value = "";
 		value = scanner.nextLine();
 		return value;
