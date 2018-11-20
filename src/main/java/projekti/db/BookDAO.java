@@ -43,6 +43,12 @@ public class BookDAO implements Dao<Book, Integer> {
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
+    
+    /**
+     * Read books from database using ResultSet. 
+     *
+     * @return a list of books defined in the given ResultSet.
+     */
 
     private List<Book> readBooksFrom(ResultSet results) throws SQLException {
         List<Book> books = new ArrayList<>();
