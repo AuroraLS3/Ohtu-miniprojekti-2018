@@ -30,17 +30,16 @@ public class TUI {
                 case "new": //luodaan uusi vinkki tietokantaan
                     //Käyttäjä valitsee vinkin tyyypin, nyt vain kirjat tuettu
                     createBook();
-                    continue;
-
+                    break;
                 case "all": //listataan kaikki vinkit tietokannasta;
                     List<Book> books = bookDao.findAll();
                     // tulostusasun voisi määrittää kirjan toStringnä
                     books.forEach(s -> io.print(s.getAuthor() + ": " + s.getTitle() + ", ISBN: " + s.getISBN() + "\n"));
-                    continue;
+                    break;
 
                 case "end": 
                     io.print("\nlopetetaan ohjelman suoritus");
-                    continue;
+                    break;
                 default:
                     io.print("\nei tuettu toiminto \n");
             }
