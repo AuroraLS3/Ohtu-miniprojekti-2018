@@ -14,7 +14,7 @@ public class DatabaseManagerTest {
 	public void testConnection() {
 		try {
 			DatabaseManager dbm = new DatabaseManager("jdbc:h2:./build/test", "sa", "");
-			try (Connection conn = dbm.connect()){
+			try (Connection conn = dbm.connect()) {
 				assertFalse("Connection should open", conn.isClosed());
 				dbm.disconnect();
 				assertTrue("Connection should close", conn.isClosed());

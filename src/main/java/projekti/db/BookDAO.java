@@ -80,23 +80,24 @@ public class BookDAO implements Dao<Book, Integer> {
     @Override
     public Book create(Book book) throws SQLException {
 
-        int bookId;
+        int bookId = -1;
 
-        String sql = "INSERT INTO " + TABLE_NAME + " (ID, AUTHOR, NAME, ISBN, TYPE) "
-                + "VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO " + TABLE_NAME + " (AUTHOR, NAME, ISBN, TYPE) "
+                + "VALUES (?, ?, ?, ?)";
         try (Connection connection = databaseManager.connect()) {
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setString(2, book.getAuthor());
-            stmt.setString(3, book.getTitle());
-            stmt.setString(4, book.getISBN());
-            stmt.setString(5, book.getType());
+      
+            stmt.setString(1, book.getAuthor());
+            stmt.setString(2, book.getTitle());
+            stmt.setString(3, book.getISBN());
+            stmt.setString(4, book.getType());
             stmt.executeUpdate();
-
-            stmt = connection.prepareStatement("SELECT MAX(ID) AS ID FROM " + TABLE_NAME);
-            ResultSet rs = stmt.executeQuery();
-            bookId = rs.getInt("ID");
+            ResultSet rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                bookId = rs.getInt(1);
+            }
             rs.close();
-
+            stmt.close();
         } catch (SQLException e) {
             // Unchecked exception is thrown if SQL error occurs during closing or execution.
             throw new IllegalStateException(e.getMessage(), e);
@@ -117,7 +118,7 @@ public class BookDAO implements Dao<Book, Integer> {
     @Override
     public Book findOne(Integer key) throws SQLException {
         try (Connection conn = databaseManager.connect()) {
-            PreparedStatement stmt = conn.prepareStatement("SELECT AUTHOR, TITLE, ISBN FROM " + TABLE_NAME + " WHERE ID = ?");
+            PreparedStatement stmt = conn.prepareStatement("SELECT AUTHOR, NAME, ISBN FROM " + TABLE_NAME + " WHERE ID = ?");
             stmt.setInt(1, key);
 
             ResultSet result = stmt.executeQuery();
