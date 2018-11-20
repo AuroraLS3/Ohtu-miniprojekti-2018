@@ -46,13 +46,13 @@ public class TUI {
         }   
     }
     private void createBook() throws SQLException {
-        System.out.print("kirjailija: ");
+        io.print("kirjailija: ");
         String author = io.getInput();
 
-        System.out.print("nimi: ");
+        io.print("nimi: ");
         String title = io.getInput();
 
-        System.out.print("ISBN: ");
+        io.print("ISBN: ");
         String ISBN = io.getInput();
 
         Book book = new Book(author, title, ISBN);
