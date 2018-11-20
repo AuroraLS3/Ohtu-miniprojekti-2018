@@ -24,11 +24,11 @@ public class Book {
     public Book(String author, String title, String isbn) {
         Check.notNull(author, () -> new IllegalArgumentException("Author should not be null"));
         Check.notNull(title, () -> new IllegalArgumentException("Title should not be null"));
-        Check.notNull(isbn, () -> new IllegalArgumentException("isbn should not be null"));
+        Check.notNull(isbn, () -> new IllegalArgumentException("ISBN should not be null"));
 
         Check.isFalse(author.isEmpty(), () -> new IllegalArgumentException("Author should not be empty"));
         Check.isFalse(title.isEmpty(), () -> new IllegalArgumentException("Title should not be empty"));
-        Check.isFalse(isbn.isEmpty(), () -> new IllegalArgumentException("isbn should not be empty"));
+        Check.isFalse(isbn.isEmpty(), () -> new IllegalArgumentException("ISBN should not be empty"));
 
         this.author = author;
         this.title = title;
