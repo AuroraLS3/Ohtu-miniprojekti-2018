@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * @author vili
  *
  */
-class DatabaseManager {
+public class DatabaseManager {
 	private String url;
 	private String username;
 	private String password;

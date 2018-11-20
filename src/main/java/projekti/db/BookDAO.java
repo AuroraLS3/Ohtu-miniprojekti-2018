@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class BookDAO {
 
-    private static final String TABLE_NAME = "Recommendation";
+    private static final String TABLE_NAME = "RECOMMENDATION";
 
     private final DatabaseManager databaseManager;
 
