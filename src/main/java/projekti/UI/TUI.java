@@ -2,7 +2,6 @@ package projekti.UI;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Scanner;
 
 import projekti.db.BookDAO;
 import projekti.domain.Book;
@@ -25,7 +24,7 @@ public class TUI {
         String input = "";
         while (!input.equals("end")) {
             io.print("\ntoiminto: \n");
-            input = io.GetInput();
+            input = io.getInput();
             switch (input) { // kaikki toiminnot voidaan refaktoroida omaksi metodikseen myöhemmin
                 case "new": //luodaan uusi vinkki tietokantaan
                     //Käyttäjä valitsee vinkin tyyypin, nyt vain kirjat tuettu
@@ -48,13 +47,13 @@ public class TUI {
     }
     private void createBook() throws SQLException {
         System.out.print("kirjailija: ");
-        String author = io.GetInput();
+        String author = io.getInput();
 
         System.out.print("nimi: ");
-        String title = io.GetInput();
+        String title = io.getInput();
 
         System.out.print("ISBN: ");
-        String ISBN = io.GetInput();
+        String ISBN = io.getInput();
 
         Book book = new Book(author, title, ISBN);
 
