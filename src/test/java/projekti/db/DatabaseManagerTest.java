@@ -43,6 +43,7 @@ public class DatabaseManagerTest {
 					hs.add(rs.getString(3));
 				}
 				rs.close();
+                                dbm.disconnect();
 				assertTrue("There should be the recommendation table", hs.contains("RECOMMENDATION"));
 			} catch (SQLException e) {
 				e.printStackTrace();

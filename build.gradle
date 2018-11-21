@@ -1,20 +1,32 @@
-
+plugins {
+  id 'com.github.johnrengelman.shadow' version '4.0.2'
+}
 apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'checkstyle'
+apply plugin: 'jacoco'
+
+project.ext {
+    cucumberVersion = '1.2.5'
+    junitVersion = '4.12'
+}
+
 repositories {
     jcenter()
 }
 
 dependencies {
-
     compile 'com.h2database:h2:1.4.195'
     compile 'com.google.guava:guava:20.0'
-    testCompile 'junit:junit:4.12'
-    run {
-      standardInput = System.in
-    }
- }
+    testCompile 'info.cukes:cucumber-java:' + cucumberVersion
+    testCompile 'info.cukes:cucumber-junit:' + cucumberVersion
+    testCompile 'junit:junit:' + junitVersion
+}
+
+test {
+    testLogging.showStandardStreams = true
+    systemProperties System.getProperties()
+}
 
 mainClassName = 'projekti.main.Main'
 
@@ -22,4 +34,8 @@ jar {
     manifest {
         attributes 'Main-Class': 'projekti.main.Main'
     }
+}
+
+run {
+  standardInput = System.in
 }
