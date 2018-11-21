@@ -9,8 +9,8 @@ import projekti.domain.Book;
 public class TUI {
     private BookDAO bookDao;
     private IO io;
-    
-    public TUI(BookDAO bd, IO io) { 
+
+    public TUI(BookDAO bd, IO io) {
         bookDao = bd;
         this.io = io;
     }
@@ -20,7 +20,7 @@ public class TUI {
         io.print("Tuetut toiminnot:\n ");
         io.print("\tnew \tlisää uusi lukuvinkki \n");
         io.print("\tall \tlistaa kaikki lukuvinkit \n");
-        
+
         io.print("\tend \tsulkee ohjelman \n");
         String input = "";
         while (!input.equals("end")) {
@@ -34,10 +34,13 @@ public class TUI {
                 case "all": //listataan kaikki vinkit tietokannasta;
                     List<Book> books = bookDao.findAll();
                     // tulostusasun voisi määrittää kirjan toStringnä
-                    books.forEach(s -> io.print(s.getAuthor() + ": " + s.getTitle() + ", ISBN: " + s.getISBN() + "\n"));
+                    books.forEach(s -> {
+                        io.print(s.getAuthor() + ": " + s.getTitle() + ", ISBN: " + s.getISBN());
+                        io.print("\n");
+                            });
                     break;
 
-                case "end": 
+                case "end":
                     io.print("\nlopetetaan ohjelman suoritus");
                     break;
                 default:
@@ -45,7 +48,7 @@ public class TUI {
             }
 
 
-        }   
+        }
     }
     private void createBook() throws SQLException {
         io.print("kirjailija: ");
@@ -60,11 +63,13 @@ public class TUI {
         Book book = new Book(author, title, ISBN);
 
         if (!bookDao.create(book).equals(null)) {
-            io.print("\nuusi vinkki lisätty \n");
+            io.print("\n");
+            io.print("new book recommendation added");
+            io.print("\n");
         } else {
             io.print("\nvinkkiä ei lisätty \n");
         }
         // oletetaan toistaiseksi, että onnistuu. Daon kanssa ongelmia. io.print("\nuutta vinkkiä ei lisätty");
-        
+
     }
 }
