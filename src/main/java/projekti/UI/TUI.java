@@ -37,7 +37,7 @@ public class TUI {
                     books.forEach(s -> {
                         io.print(s.getAuthor() + ": " + s.getTitle() + ", ISBN: " + s.getISBN());
                         io.print("\n");
-                            });
+                    });
                     break;
 
                 case "end":
