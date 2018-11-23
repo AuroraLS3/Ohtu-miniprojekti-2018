@@ -14,12 +14,14 @@ import static org.junit.Assert.*;
 import projekti.UI.StubIO;
 import projekti.UI.TUI;
 import projekti.db.BookDAO;
+import projekti.db.Dao;
 import projekti.db.DatabaseManager;
+import projekti.domain.Book;
 
 public class Stepdefs {
 
     DatabaseManager dbm;
-    BookDAO bDao;
+    Dao<Book,Integer> bDao;
     TUI app;
     StubIO io;
     List<String> inputLines;
@@ -88,9 +90,9 @@ public class Stepdefs {
 
     @Then("^system will show a list of existing book recommendations$")
     public void system_will_show_a_list_of_existing_book_recommendations() throws Throwable {
-        assertTrue(io.getPrints().contains("Helka: Super Hieno Kirja, ISBN: 987654321"));
-        assertTrue(io.getPrints().contains("Reetta: Great Book, ISBN: 111122222"));
-        assertTrue(io.getPrints().contains("Heli: Kirjojen Kirja, ISBN: 777777333"));
+        assertTrue(io.getPrints().contains("1. Helka: Super Hieno Kirja, ISBN: 987654321"));
+        assertTrue(io.getPrints().contains("2. Reetta: Great Book, ISBN: 111122222"));
+        assertTrue(io.getPrints().contains("3. Heli: Kirjojen Kirja, ISBN: 777777333"));
     }
 //    @Given("^command login is selected$")
 //    public void command_login_selected() throws Throwable {
@@ -118,7 +120,6 @@ public class Stepdefs {
 //       app = new App(io, auth);
 //       app.run();
 //    }
-
 //    @Then("^system will respond with \"([^\"]*)\"$")
 //    public void system_will_respond_with(String expectedOutput) throws Throwable {
 //        assertTrue(io.getPrints().contains(expectedOutput));

@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.stream.Collectors;
+import projekti.main.Main;
 
 /**
  * Is used to manage database configuration.
@@ -82,7 +83,7 @@ public class DatabaseManager {
 
 	private String readResourceFile(String filename) {
 		try (InputStreamReader isr = new InputStreamReader(
-				ClassLoader.getSystemClassLoader().getResourceAsStream(filename));
+				Main.class.getClassLoader().getResourceAsStream(filename));
 				BufferedReader br = new BufferedReader(isr)) {
 			String value = br.lines().collect(Collectors.joining("\n"));
 			return value;
