@@ -8,7 +8,7 @@ jobs:
     include:
       - stage: "Tests"
         name: "Checkstyle"
-        script: gradle checkstyleMain checkstyleTest
+        script: gradle checkstyleMain
       - stage: "Tests"
         name: "Unit tests"
         script: gradle test
