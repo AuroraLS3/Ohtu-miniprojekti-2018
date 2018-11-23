@@ -45,18 +45,7 @@ public class TUI {
                     break;
 
                 case "select":
-                    io.print("syötä olion id tai palaa jättämällä tyhjäksi\n");
-                    io.print("ID: ");
-                    String id_String = io.getInput();
-                   try {
-                       Integer ID = Integer.parseInt(id_String);
-                       Book book = bookDao.findOne(ID);
-                       io.print(book.getAuthor() + ": " + book.getTitle() + ", ISBN: " + book.getISBN()+"\n"); //myöhemmin myös kuvaus
-                    } catch (IllegalArgumentException ex){
-                        if (!id_String.equals("")){
-                        io.print("\n Not a valid ID. Has to be a number.");
-                        }
-                    }
+                    selectBook();
                     break;
                 default:
                     io.print("\nei tuettu toiminto \n");
@@ -64,7 +53,20 @@ public class TUI {
 
         }
     }
-
+    private void selectBook() throws SQLException {
+        io.print("syötä olion id tai palaa jättämällä tyhjäksi\n");
+        io.print("ID: ");
+        String id_String = io.getInput();
+        try {
+            Integer ID = Integer.parseInt(id_String);
+            Book book = bookDao.findOne(ID);
+            io.print(book.getAuthor() + ": " + book.getTitle() + ", ISBN: " + book.getISBN() + "\n"); //myöhemmin myös kuvaus
+        } catch (IllegalArgumentException ex) {
+            if (!id_String.equals("")) {
+                io.print("\n Not a valid ID. Has to be a number.");
+            }
+        }
+    }
     private void createBook() throws SQLException {
         io.print("kirjailija: ");
         String author = io.getInput();
