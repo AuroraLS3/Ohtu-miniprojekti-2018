@@ -112,7 +112,7 @@ public class BookDAO implements Dao<Book, Integer> {
     @Override
     public Book findOne(Integer key) throws SQLException {
         try (Connection conn = databaseManager.connect()) {
-            PreparedStatement stmt = conn.prepareStatement("SELECT AUTHOR, NAME, ISBN FROM " + TABLE_NAME + " WHERE ID = ?");
+            PreparedStatement stmt = conn.prepareStatement("SELECT ID, AUTHOR, NAME, ISBN FROM " + TABLE_NAME + " WHERE ID = ?");
             stmt.setInt(1, key);
 
             ResultSet result = stmt.executeQuery();
@@ -120,8 +120,10 @@ public class BookDAO implements Dao<Book, Integer> {
             if (!result.next()) {
                 return null;
             }
-
-            return new Book(result.getString("AUTHOR"), result.getString("NAME"), result.getString("ISBN"));
+            Integer id = result.getInt("ID");
+            Book book = new Book(result.getString("AUTHOR"), result.getString("NAME"), result.getString("ISBN"));
+            book.setID(id);
+            return book;
         }
     }
 
@@ -154,6 +156,11 @@ public class BookDAO implements Dao<Book, Integer> {
         }
     }
 
+    /*
+     * Deletes a specific book from the database by the given key/id.
+     *
+     * @param key the book's primary key
+     */
     @Override
     public void delete(Integer key) throws SQLException {
         try (Connection conn = databaseManager.connect()) {

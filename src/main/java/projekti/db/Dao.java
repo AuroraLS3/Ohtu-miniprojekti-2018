@@ -52,11 +52,6 @@ public interface Dao<T, K> {
      */
     T update(T object) throws SQLException;
 
-    /**
-     * Deletes a specific book from the database by the given key/id.
-     *
-     * @param key the book's primary key
-     */
     void delete(K key) throws SQLException;
 
 }
