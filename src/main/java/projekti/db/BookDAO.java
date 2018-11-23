@@ -39,10 +39,9 @@ public class BookDAO implements Dao<Book, Integer> {
     @Override
     public List<Book> findAll() {
         String sql = "SELECT * FROM " + TABLE_NAME + " WHERE TYPE='BOOK'";
-        try (
-                Connection connection = databaseManager.connect();
-                PreparedStatement statement = connection.prepareStatement(sql);
-                ResultSet results = statement.executeQuery();) {
+        try (Connection connection = databaseManager.connect();
+             PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet results = statement.executeQuery()) {
             return readBooksFrom(results);
         } catch (SQLException e) {
             // Unchecked exception is thrown if SQL error occurs during closing or execution.
@@ -54,7 +53,6 @@ public class BookDAO implements Dao<Book, Integer> {
      * Read books from database using ResultSet.
      *
      * @param results the ResultSet to be used
-     *
      * @return a list of books defined in the given ResultSet.
      */
     private List<Book> readBooksFrom(ResultSet results) throws SQLException {
@@ -76,12 +74,10 @@ public class BookDAO implements Dao<Book, Integer> {
      * Add a new book to the database.
      *
      * @param book the given book
-     *
      * @return a new Book fetched from the database
      */
     @Override
     public Book create(Book book) throws SQLException {
-
         int bookId = -1;
 
         String sql = "INSERT INTO " + TABLE_NAME + " (AUTHOR, NAME, ISBN, TYPE) "
@@ -108,13 +104,10 @@ public class BookDAO implements Dao<Book, Integer> {
     }
 
     /**
-     *
      * Searches for a specific book from the database by the given key/id.
      *
      * @param key the book's primary key
-     *
      * @return a new Book object fetched from the database based on the key
-     *
      */
     @Override
     public Book findOne(Integer key) throws SQLException {
@@ -161,12 +154,7 @@ public class BookDAO implements Dao<Book, Integer> {
         }
     }
 
-    /*
-     * Deletes a specific book from the database by the given key/id.
-     *
-     * @param key the book's primary key
-     *
-     */
+    @Override
     public void delete(Integer key) throws SQLException {
         try (Connection conn = databaseManager.connect()) {
             PreparedStatement stmt = conn.prepareStatement("DELETE FROM " + TABLE_NAME + " WHERE ID = ?");

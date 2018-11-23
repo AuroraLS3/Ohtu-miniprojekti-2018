@@ -48,8 +48,6 @@ public class Book extends AbstractPropertyStore {
 
     private final String type;
 
-    private Integer id;
-
     /**
      * Create a new book.
      *
