@@ -14,7 +14,9 @@ jobs:
         script: gradle test
       - stage: "Success"
         name: "Codecov upload"
-        script: bash <(curl -s https://codecov.io/bash)
+        script: 
+            - gradle jacocoTestReport
+            - bash <(curl -s https://codecov.io/bash)
         
 cache:
   directories:
