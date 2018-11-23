@@ -46,7 +46,22 @@ public class TUI {
                     break;
 
                 case "select":
-                    selectBook();
+                    Book book = selectBook();
+                    String s_input ="";
+                    while(!input.equals("return")){
+                        switch(s_input) {
+                            case "edit":
+                            break;
+
+                            case "delete":
+                            break;
+                        
+                            case "return":
+                            io.print("\n");
+                            break;
+
+                    }
+                }
                     break;
                 default:
                     io.print("\nei tuettu toiminto \n");
@@ -54,7 +69,7 @@ public class TUI {
 
         }
     }
-    private void selectBook() throws SQLException {
+    private Book selectBook() throws SQLException {
         io.print("syötä olion id tai palaa jättämällä tyhjäksi\n");
         io.print("ID: ");
         String id_String = io.getInput();
@@ -64,7 +79,7 @@ public class TUI {
             Book book = bookDao.findOne(ID);
             Check.notNull(book, () -> new NullPointerException("No book found"));
             io.print(book.getAuthor() + ": " + book.getTitle() + ", ISBN: " + book.getISBN() + "\n"); //myöhemmin myös kuvaus
-            
+            return book;
 
         } catch (IllegalArgumentException ex) {
             if (!id_String.equals("")) {
@@ -73,6 +88,7 @@ public class TUI {
         } catch (NullPointerException ex) {
             io.print(ex.getMessage());
         }
+        return null;
     }
     private void createBook() throws SQLException {
         io.print("kirjailija: ");
