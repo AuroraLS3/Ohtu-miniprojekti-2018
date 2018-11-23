@@ -6,6 +6,7 @@ import projekti.db.Dao;
 import projekti.domain.Book;
 
 public class TUI {
+
     private Dao<Book, Integer> bookDao;
     private IO io;
 
@@ -46,9 +47,9 @@ public class TUI {
                     io.print("\nei tuettu toiminto \n");
             }
 
-
         }
     }
+
     private void createBook() throws SQLException {
         io.print("kirjailija: ");
         String author = io.getInput();
@@ -58,10 +59,16 @@ public class TUI {
 
         io.print("ISBN: ");
         String ISBN = io.getInput();
+        Book book = null;
+        try {
+            book = new Book(author, title, ISBN);
+        } catch (IllegalArgumentException ex) {
+            io.print("\n Do not leave empty fields please. \n");
+            io.print("\n Book recommendation was not added. \n");
+            return;
+        }
 
-        Book book = new Book(author, title, ISBN);
-
-        if (!bookDao.create(book).equals(null)) {
+        if (bookDao.create(book) != null) {
             io.print("\n");
             io.print("new book recommendation added");
             io.print("\n");
