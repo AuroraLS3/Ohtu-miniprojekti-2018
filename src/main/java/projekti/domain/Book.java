@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Object that represents a book.
@@ -121,5 +122,19 @@ public class Book extends AbstractPropertyStore {
 
     public String getType() {
         return type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return Objects.equals(type, book.type);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(type);
     }
 }
