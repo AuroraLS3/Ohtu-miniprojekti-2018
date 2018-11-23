@@ -4,7 +4,7 @@ Codecov: [![codecov](https://codecov.io/gh/Rsl1122/Ohtu-miniprojekti-2018/branch
 
 [Latest release](https://github.com/Rsl1122/Ohtu-miniprojekti-2018/releases/latest)
 
-[Product Backlog](https://docs.google.com/spreadsheets/d/1Hh63WBl7Jm-nLXs4tSZQd8toW1HmXVGl8d5n0MAYEQU/edit?usp=sharing)
+[Product Backlog and Sprint Backlogs](https://docs.google.com/spreadsheets/d/1Hh63WBl7Jm-nLXs4tSZQd8toW1HmXVGl8d5n0MAYEQU/edit?usp=sharing)
 
 [User Guide](https://github.com/Rsl1122/Ohtu-miniprojekti-2018/tree/master/documentation/user_guide.md)
 
