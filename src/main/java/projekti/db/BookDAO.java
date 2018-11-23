@@ -169,6 +169,7 @@ public class BookDAO implements Dao<Book, Integer> {
      * @param key the book's primary key
      *
      */
+    @Override
     public void delete(Integer key) throws SQLException {
         try (Connection conn = databaseManager.connect()) {
             PreparedStatement stmt = conn.prepareStatement("DELETE FROM " + TABLE_NAME + " WHERE ID = ?");
