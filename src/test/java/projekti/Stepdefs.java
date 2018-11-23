@@ -90,9 +90,9 @@ public class Stepdefs {
 
     @Then("^system will show a list of existing book recommendations$")
     public void system_will_show_a_list_of_existing_book_recommendations() throws Throwable {
-        assertTrue(io.getPrints().contains("Helka: Super Hieno Kirja, ISBN: 987654321"));
-        assertTrue(io.getPrints().contains("Reetta: Great Book, ISBN: 111122222"));
-        assertTrue(io.getPrints().contains("Heli: Kirjojen Kirja, ISBN: 777777333"));
+        assertTrue(io.getPrints().contains("1. Helka: Super Hieno Kirja, ISBN: 987654321"));
+        assertTrue(io.getPrints().contains("2. Reetta: Great Book, ISBN: 111122222"));
+        assertTrue(io.getPrints().contains("3. Heli: Kirjojen Kirja, ISBN: 777777333"));
     }
 //    @Given("^command login is selected$")
 //    public void command_login_selected() throws Throwable {
