@@ -24,7 +24,7 @@ public class BookDAOTest {
 
     @Before
     public void setUp() throws SQLException, IOException {
-        testBook = new Book("Matti Meikäläinen", "Esimerkki-ihmisen arkipäivä", "4332652435");
+        testBook = new Book("Matti Meikäläinen", "Esimerkki-ihmisen arkipäivä", "4332652435", "");
 
         File dbFile = temporaryFolder.newFile();
         DatabaseManager databaseManager = new DatabaseManager("jdbc:h2:" + dbFile.getAbsolutePath(), "sa", "");

@@ -18,9 +18,9 @@ import projekti.domain.Book.Properties;
  * @author Rsl1122
  */
 public class BookDAO implements Dao<Book, Integer> {
-
+    
     private static final String TABLE_NAME = "RECOMMENDATION";
-
+    
     private final DatabaseManager databaseManager;
 
     /**
@@ -41,8 +41,8 @@ public class BookDAO implements Dao<Book, Integer> {
     public List<Book> findAll() {
         String sql = "SELECT * FROM " + TABLE_NAME + " WHERE TYPE='BOOK'";
         try (Connection connection = databaseManager.connect();
-             PreparedStatement statement = connection.prepareStatement(sql);
-             ResultSet results = statement.executeQuery()) {
+                PreparedStatement statement = connection.prepareStatement(sql);
+                ResultSet results = statement.executeQuery()) {
             return readBooksFrom(results);
         } catch (SQLException e) {
             // Unchecked exception is thrown if SQL error occurs during closing or execution.
@@ -63,7 +63,8 @@ public class BookDAO implements Dao<Book, Integer> {
             Book book = new Book(
                     results.getString("AUTHOR"),
                     results.getString("NAME"),
-                    results.getString("ISBN")
+                    results.getString("ISBN"),
+                    results.getString("DESCRIPTION")
             );
             book.setID(id);
             books.add(book);
@@ -80,12 +81,12 @@ public class BookDAO implements Dao<Book, Integer> {
     @Override
     public Book create(Book book) throws SQLException {
         int bookId = -1;
-
+        
         String sql = "INSERT INTO " + TABLE_NAME + " (AUTHOR, NAME, ISBN, TYPE) "
                 + "VALUES (?, ?, ?, ?)";
         try (Connection connection = databaseManager.connect()) {
             PreparedStatement stmt = connection.prepareStatement(sql);
-
+            
             stmt.setString(1, book.getProperty(Properties.AUTHOR).orElse(null));
             stmt.setString(2, book.getProperty(Properties.TITLE).orElse(null));
             stmt.setString(3, book.getProperty(Properties.ISBN).orElse(null));
@@ -115,14 +116,16 @@ public class BookDAO implements Dao<Book, Integer> {
         try (Connection conn = databaseManager.connect()) {
             PreparedStatement stmt = conn.prepareStatement("SELECT ID, AUTHOR, NAME, ISBN FROM " + TABLE_NAME + " WHERE ID = ?");
             stmt.setInt(1, key);
-
+            
             ResultSet result = stmt.executeQuery();
-
+            
             if (!result.next()) {
                 return null;
             }
             Integer id = result.getInt("ID");
-            Book book = new Book(result.getString("AUTHOR"), result.getString("NAME"), result.getString("ISBN"));
+            Book book = new Book(result.getString("AUTHOR"), result.getString("NAME"),
+                    result.getString("ISBN"),
+                    result.getString("DESCRIPTION"));
             book.setID(id);
             return book;
         }
@@ -172,5 +175,5 @@ public class BookDAO implements Dao<Book, Integer> {
             stmt.close();
         }
     }
-
+    
 }

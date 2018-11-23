@@ -54,6 +54,7 @@ public class TUI {
 
         }
     }
+
     private void selectBook() throws SQLException {
         io.print("syötä olion id tai palaa jättämällä tyhjäksi\n");
         io.print("ID: ");
@@ -65,7 +66,6 @@ public class TUI {
             Check.notNull(book, () -> new NullPointerException("No book found"));
             io.print(book.getAuthor() + ": " + book.getTitle() + ", ISBN: " + book.getISBN() + "\n"); //myöhemmin myös kuvaus
 
-
         } catch (IllegalArgumentException ex) {
             if (!id_String.equals("")) {
                 io.print("\n Not a valid ID. Has to be a number.");
@@ -74,6 +74,7 @@ public class TUI {
             io.print(ex.getMessage());
         }
     }
+
     private void createBook() throws SQLException {
         io.print("kirjailija: ");
         String author = io.getInput();
@@ -89,9 +90,9 @@ public class TUI {
 
         Book book;
         try {
-            book = new Book(author, title, ISBN);
-            if (!description.isEmpty) {
-              book.setDescription(description);
+            book = new Book(author, title, ISBN, "");
+            if (!description.isEmpty()) {
+                book.setDescription(description);
             }
         } catch (IllegalArgumentException ex) {
             io.print("\n Do not leave empty fields please. \n");

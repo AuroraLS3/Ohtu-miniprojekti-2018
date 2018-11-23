@@ -21,6 +21,7 @@ public class Book extends AbstractPropertyStore {
      * Use this to access properties {@code book.getProperty(Properties.NAME)}
      */
     public static class Properties {
+
         public static final Property<String> AUTHOR = new Property<>("AUTHOR", String.class, author -> author != null && !author.isEmpty());
         public static final Property<String> TITLE = new Property<>("NAME", String.class, title -> title != null && !title.isEmpty());
         public static final Property<String> ISBN = new Property<>("ISBN", String.class, isbn -> isbn != null && !isbn.isEmpty());
@@ -54,10 +55,11 @@ public class Book extends AbstractPropertyStore {
      * Create a new book.
      *
      * @param author Author of the book, not null or empty.
-     * @param title  Title of the book, not null or empty.
-     * @param isbn   ISBN of the book, not null or empty.
+     * @param title Title of the book, not null or empty.
+     * @param isbn ISBN of the book, not null or empty.
+     * @param description Description of the book, can be empty
      */
-    public Book(String author, String title, String isbn) {
+    public Book(String author, String title, String isbn, String description) {
         Check.notNull(author, () -> new IllegalArgumentException("Author should not be null"));
         Check.notNull(title, () -> new IllegalArgumentException("Title should not be null"));
         Check.notNull(isbn, () -> new IllegalArgumentException("ISBN should not be null"));
@@ -72,6 +74,10 @@ public class Book extends AbstractPropertyStore {
         addProperty(Properties.DESCRIPTION, description);
 
         this.type = "BOOK";
+    }
+    
+    public Book(String author, String title, String isbn) {
+        this(author, title, isbn, "");
     }
 
     public void setID(Integer id) {
@@ -135,22 +141,22 @@ public class Book extends AbstractPropertyStore {
         return getProperty(Properties.DESCRIPTION).orElse(null);
     }
 
-    public String getType() {
-        return type;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Book book = (Book) o;
+        return Objects.equals(type, book.type);
     }
 
     @Override
-     public boolean equals(Object o) {
-         if (this == o) return true;
-         if (o == null || getClass() != o.getClass()) return false;
-         Book book = (Book) o;
-         return Objects.equals(type, book.type);
-     }
+    public int hashCode() {
 
-     @Override
-     public int hashCode() {
-
-         return Objects.hash(type);
-     }
+        return Objects.hash(type);
+    }
 
 }
