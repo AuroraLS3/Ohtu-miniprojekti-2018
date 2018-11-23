@@ -14,12 +14,14 @@ import static org.junit.Assert.*;
 import projekti.UI.StubIO;
 import projekti.UI.TUI;
 import projekti.db.BookDAO;
+import projekti.db.Dao;
 import projekti.db.DatabaseManager;
+import projekti.domain.Book;
 
 public class Stepdefs {
 
     DatabaseManager dbm;
-    BookDAO bDao;
+    Dao<Book,Integer> bDao;
     TUI app;
     StubIO io;
     List<String> inputLines;
@@ -118,7 +120,6 @@ public class Stepdefs {
 //       app = new App(io, auth);
 //       app.run();
 //    }
-
 //    @Then("^system will respond with \"([^\"]*)\"$")
 //    public void system_will_respond_with(String expectedOutput) throws Throwable {
 //        assertTrue(io.getPrints().contains(expectedOutput));

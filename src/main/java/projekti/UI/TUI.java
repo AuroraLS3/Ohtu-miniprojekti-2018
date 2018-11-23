@@ -4,13 +4,14 @@ import java.sql.SQLException;
 import java.util.List;
 
 import projekti.db.BookDAO;
+import projekti.db.Dao;
 import projekti.domain.Book;
 
 public class TUI {
-    private BookDAO bookDao;
+    private Dao<Book, Integer> bookDao;
     private IO io;
 
-    public TUI(BookDAO bd, IO io) {
+    public TUI(Dao<Book,Integer> bd, IO io) {
         bookDao = bd;
         this.io = io;
     }
