@@ -1,5 +1,6 @@
 # Ohtu-miniprojekti-2018
-[![Build Status](https://travis-ci.org/Rsl1122/Ohtu-miniprojekti-2018.svg?branch=master)](https://travis-ci.org/Rsl1122/Ohtu-miniprojekti-2018)
+Travis: [![Build Status](https://travis-ci.org/Rsl1122/Ohtu-miniprojekti-2018.svg?branch=master)](https://travis-ci.org/Rsl1122/Ohtu-miniprojekti-2018)  
+Codecov: [![codecov](https://codecov.io/gh/Rsl1122/Ohtu-miniprojekti-2018/branch/master/graph/badge.svg)](https://codecov.io/gh/Rsl1122/Ohtu-miniprojekti-2018)
 
 [Latest release](https://github.com/Rsl1122/Ohtu-miniprojekti-2018/releases/latest)
 

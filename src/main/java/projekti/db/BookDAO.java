@@ -160,4 +160,20 @@ public class BookDAO implements Dao<Book, Integer> {
             return object;
         }
     }
+
+    /*
+     * Deletes a specific book from the database by the given key/id.
+     *
+     * @param key the book's primary key
+     *
+     */
+    public void delete(Integer key) throws SQLException {
+        try (Connection conn = databaseManager.connect()) {
+            PreparedStatement stmt = conn.prepareStatement("DELETE FROM " + TABLE_NAME + " WHERE ID = ?");
+            stmt.setInt(1, key);
+            stmt.executeUpdate();
+            stmt.close();
+        }
+    }
+
 }
