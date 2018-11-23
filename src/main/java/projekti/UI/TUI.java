@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 import projekti.db.Dao;
 import projekti.domain.Book;
+import projekti.util.Check;
 
 public class TUI {
 
@@ -59,12 +60,18 @@ public class TUI {
         String id_String = io.getInput();
         try {
             Integer ID = Integer.parseInt(id_String);
+        
             Book book = bookDao.findOne(ID);
+            Check.notNull(book, () ->new NullPointerException("No book found"));
             io.print(book.getAuthor() + ": " + book.getTitle() + ", ISBN: " + book.getISBN() + "\n"); //myöhemmin myös kuvaus
+            
+
         } catch (IllegalArgumentException ex) {
             if (!id_String.equals("")) {
                 io.print("\n Not a valid ID. Has to be a number.");
             }
+        } catch (NullPointerException ex){
+            io.print(ex.getMessage());
         }
     }
     private void createBook() throws SQLException {
