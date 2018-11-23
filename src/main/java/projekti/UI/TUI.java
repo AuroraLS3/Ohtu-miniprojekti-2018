@@ -62,7 +62,7 @@ public class TUI {
             Integer ID = Integer.parseInt(id_String);
         
             Book book = bookDao.findOne(ID);
-            Check.notNull(book, () ->new NullPointerException("No book found"));
+            Check.notNull(book, () -> new NullPointerException("No book found"));
             io.print(book.getAuthor() + ": " + book.getTitle() + ", ISBN: " + book.getISBN() + "\n"); //myöhemmin myös kuvaus
             
 
@@ -70,7 +70,7 @@ public class TUI {
             if (!id_String.equals("")) {
                 io.print("\n Not a valid ID. Has to be a number.");
             }
-        } catch (NullPointerException ex){
+        } catch (NullPointerException ex) {
             io.print(ex.getMessage());
         }
     }
