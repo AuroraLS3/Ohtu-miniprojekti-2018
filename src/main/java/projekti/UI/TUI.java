@@ -20,7 +20,7 @@ public class TUI {
         io.print("Tuetut toiminnot:\n ");
         io.print("\tnew \tlisää uusi lukuvinkki \n");
         io.print("\tall \tlistaa kaikki lukuvinkit \n");
-
+        io.print("\tselect \ttarkastele tiettyä vinkkiä \n");
         io.print("\tend \tsulkee ohjelman \n");
         String input = "";
         while (!input.equals("end")) {
@@ -42,6 +42,21 @@ public class TUI {
 
                 case "end":
                     io.print("\nlopetetaan ohjelman suoritus");
+                    break;
+
+                case "select":
+                    io.print("syötä olion id tai palaa jättämällä tyhjäksi\n");
+                    io.print("ID: ");
+                    String id_String = io.getInput();
+                   try {
+                       Integer ID = Integer.parseInt(id_String);
+                       Book book = bookDao.findOne(ID);
+                       io.print(book.getAuthor() + ": " + book.getTitle() + ", ISBN: " + book.getISBN()+"\n"); //myöhemmin myös kuvaus
+                    } catch (IllegalArgumentException ex){
+                        if (!id_String.equals("")){
+                        io.print("\n Not a valid ID. Has to be a number.");
+                        }
+                    }
                     break;
                 default:
                     io.print("\nei tuettu toiminto \n");
