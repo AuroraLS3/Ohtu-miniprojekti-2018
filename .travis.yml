@@ -12,6 +12,9 @@ jobs:
       - stage: "Tests"
         name: "Unit tests"
         script: gradle test
+      - stage: "Success"
+        name: "Codecov upload"
+        script: bash <(curl -s https://codecov.io/bash)
         
 cache:
   directories:
