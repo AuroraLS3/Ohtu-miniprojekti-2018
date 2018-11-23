@@ -50,16 +50,19 @@ public class Stepdefs {
         inputLines.add("Helka");
         inputLines.add("Super Hieno Kirja");
         inputLines.add("987654321");
+        inputLines.add("hyva kirja");
 
         inputLines.add("new");
         inputLines.add("Reetta");
         inputLines.add("Great Book");
         inputLines.add("111122222");
-
+        inputLines.add("hyva kirja");
+        
         inputLines.add("new");
         inputLines.add("Heli");
         inputLines.add("Kirjojen Kirja");
         inputLines.add("777777333");
+        inputLines.add("hyva kirja");
     }
 
     @When("^author \"([^\"]*)\" title \"([^\"]*)\" and ISBN \"([^\"]*)\" are entered$")
@@ -67,6 +70,7 @@ public class Stepdefs {
         inputLines.add(author);
         inputLines.add(title);
         inputLines.add(ISBN);
+        inputLines.add("");
     }
 
     @When("^command all is selected$")

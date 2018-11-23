@@ -82,8 +82,8 @@ public class BookDAO implements Dao<Book, Integer> {
     public Book create(Book book) throws SQLException {
         int bookId = -1;
         
-        String sql = "INSERT INTO " + TABLE_NAME + " (AUTHOR, NAME, ISBN, TYPE) "
-                + "VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO " + TABLE_NAME + " (AUTHOR, NAME, ISBN, TYPE, DESCRIPTION) "
+                + "VALUES (?, ?, ?, ?,?)";
         try (Connection connection = databaseManager.connect()) {
             PreparedStatement stmt = connection.prepareStatement(sql);
             
@@ -91,6 +91,7 @@ public class BookDAO implements Dao<Book, Integer> {
             stmt.setString(2, book.getProperty(Properties.TITLE).orElse(null));
             stmt.setString(3, book.getProperty(Properties.ISBN).orElse(null));
             stmt.setString(4, book.getType());
+            stmt.setString(5, book.getProperty(Properties.DESCRIPTION).orElse(""));
             stmt.executeUpdate();
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
@@ -114,7 +115,7 @@ public class BookDAO implements Dao<Book, Integer> {
     @Override
     public Book findOne(Integer key) throws SQLException {
         try (Connection conn = databaseManager.connect()) {
-            PreparedStatement stmt = conn.prepareStatement("SELECT ID, AUTHOR, NAME, ISBN FROM " + TABLE_NAME + " WHERE ID = ?");
+            PreparedStatement stmt = conn.prepareStatement("SELECT ID, AUTHOR, NAME, ISBN, DESCRIPTION FROM " + TABLE_NAME + " WHERE ID = ?");
             stmt.setInt(1, key);
             
             ResultSet result = stmt.executeQuery();
@@ -146,13 +147,15 @@ public class BookDAO implements Dao<Book, Integer> {
                     + "SET NAME = ? "
                     + "SET ISBN = ? "
                     + "SET TYPE = ? "
+                    + "SET DESCRPIION = ? "
                     + "WHERE RECOMMENDATION.ID = ? ;";
             PreparedStatement stmnt = conn.prepareStatement(statementString);
             stmnt.setString(1, object.getProperty(Properties.AUTHOR).orElse(null));
             stmnt.setString(2, object.getProperty(Properties.TITLE).orElse(null));
             stmnt.setString(3, object.getProperty(Properties.ISBN).orElse(null));
             stmnt.setString(4, object.getType());
-            stmnt.setInt(5, object.getProperty(Properties.ID).orElse(null));
+            stmnt.setString(5, object.getProperty(Properties.DESCRIPTION).orElse(""));
+            stmnt.setInt(6, object.getProperty(Properties.ID).orElse(null));
             int count = stmnt.executeUpdate();
             if (count == 0) {
                 Logger.getGlobal().log(Level.WARNING, "No matches for update in the db");
