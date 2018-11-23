@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import projekti.domain.Book.Properties;
 
 /**
  * Data Access Object for Books.
@@ -85,9 +86,9 @@ public class BookDAO implements Dao<Book, Integer> {
         try (Connection connection = databaseManager.connect()) {
             PreparedStatement stmt = connection.prepareStatement(sql);
 
-            stmt.setString(1, book.getAuthor());
-            stmt.setString(2, book.getTitle());
-            stmt.setString(3, book.getISBN());
+            stmt.setString(1, book.getProperty(Properties.AUTHOR).orElse(null));
+            stmt.setString(2, book.getProperty(Properties.TITLE).orElse(null));
+            stmt.setString(3, book.getProperty(Properties.ISBN).orElse(null));
             stmt.setString(4, book.getType());
             stmt.executeUpdate();
             ResultSet rs = stmt.getGeneratedKeys();
@@ -144,10 +145,11 @@ public class BookDAO implements Dao<Book, Integer> {
                     + "SET TYPE = ? "
                     + "WHERE RECOMMENDATION.ID = ? ;";
             PreparedStatement stmnt = conn.prepareStatement(statementString);
-            stmnt.setString(1, object.getAuthor());
-            stmnt.setString(2, object.getTitle());
-            stmnt.setString(3, object.getISBN());
+            stmnt.setString(1, object.getProperty(Properties.AUTHOR).orElse(null));
+            stmnt.setString(2, object.getProperty(Properties.TITLE).orElse(null));
+            stmnt.setString(3, object.getProperty(Properties.ISBN).orElse(null));
             stmnt.setString(4, object.getType());
+            stmnt.setInt(5, object.getProperty(Properties.ID).orElse(null));
             int count = stmnt.executeUpdate();
             if (count == 0) {
                 Logger.getGlobal().log(Level.WARNING, "No matches for update in the db");

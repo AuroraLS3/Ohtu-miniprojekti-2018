@@ -42,7 +42,7 @@ public class TUI {
                     break;
 
                 case "end":
-                    io.print("\nlopetetaan ohjelman suoritus");
+                    io.print("\nlopetetaan ohjelman suoritus \n");
                     break;
 
                 case "select":
