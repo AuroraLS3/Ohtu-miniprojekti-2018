@@ -20,26 +20,30 @@ public class Book extends AbstractPropertyStore {
      * Use this to access properties {@code book.getProperty(Properties.NAME)}
      */
     public static class Properties {
-        public static Property<String> AUTHOR = new Property<>("author", String.class, author -> author != null && !author.isEmpty());
-        public static Property<String> TITLE = CommonProperties.TITLE;
-        public static Property<String> ISBN = new Property<>("isbn", String.class, isbn -> isbn != null && !isbn.isEmpty());
-        public static Property<Integer> ID = CommonProperties.ID;
+        public static final Property<String> AUTHOR = new Property<>("AUTHOR", String.class, author -> author != null && !author.isEmpty());
+        static final Property<String> TITLE = new Property<>("NAME", String.class, title -> title != null && !title.isEmpty());
+        public static final Property<String> ISBN = new Property<>("ISBN", String.class, isbn -> isbn != null && !isbn.isEmpty());
+        public static final Property<Integer> ID = CommonProperties.ID;
+
+        public static List<Property> getAll() {
+            List<Property> properties = new ArrayList<>();
+            for (Field field : Properties.class.getDeclaredFields()) {
+                if (!Modifier.isPublic(field.getModifiers())) {
+                    continue;
+                }
+                try {
+                    properties.add((Property) field.get(null));
+                } catch (IllegalAccessException ignored) {
+                    /* Inaccessible field */
+                }
+            }
+            return properties;
+        }
     }
 
     @Override
     public List<Property> getProperties() {
-        List<Property> properties = new ArrayList<>();
-        for (Field field : Properties.class.getDeclaredFields()) {
-            if (!Modifier.isPublic(field.getModifiers())) {
-                continue;
-            }
-            try {
-                properties.add((Property) field.get(null));
-            } catch (IllegalAccessException ignored) {
-                /* Inaccessible field */
-            }
-        }
-        return properties;
+        return Properties.getAll();
     }
 
     private final String type;

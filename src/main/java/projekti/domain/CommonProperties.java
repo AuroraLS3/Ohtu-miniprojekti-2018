@@ -1,13 +1,12 @@
 package projekti.domain;
 
 /**
- * TODO Class Javadoc comment
+ * Contains common properties that might be used in multiple different objects.
  *
  * @author Rsl1122
  */
 public class CommonProperties {
 
-    static Property<Integer> ID = new Property<>("db_id", Integer.class);
-    static Property<String> TITLE = new Property<>("title", String.class, title -> title != null && !title.isEmpty());
+    static final Property<Integer> ID = new Property<>("ID", Integer.class);
 
 }
