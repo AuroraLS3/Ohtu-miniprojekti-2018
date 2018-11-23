@@ -34,7 +34,7 @@ public class TUI {
                     List<Book> books = bookDao.findAll();
                     // tulostusasun voisi määrittää kirjan toStringnä
                     books.forEach(s -> {
-                        io.print(s.getAuthor() + ": " + s.getTitle() + ", ISBN: " + s.getISBN());
+                        io.print(s.getID() + ". " + s.getAuthor() + ": " + s.getTitle() + ", ISBN: " + s.getISBN());
                         io.print("\n");
                     });
                     break;

@@ -60,11 +60,13 @@ public class BookDAO implements Dao<Book, Integer> {
     private List<Book> readBooksFrom(ResultSet results) throws SQLException {
         List<Book> books = new ArrayList<>();
         while (results.next()) {
+            Integer id = results.getInt("ID");
             Book book = new Book(
                     results.getString("AUTHOR"),
                     results.getString("NAME"),
                     results.getString("ISBN")
             );
+            book.setID(id);
             books.add(book);
         }
         return books;
