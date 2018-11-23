@@ -8,11 +8,11 @@ jobs:
     include:
       - stage: "Tests"
         name: "Checkstyle"
-        script: gradle checkstyleMain
+        script: gradle checkstyleMain checkstyleTest
       - stage: "Tests"
         name: "Unit tests"
         script: gradle test
-        
+
 cache:
   directories:
     - '$HOME/.m2/repository'
