@@ -1,9 +1,6 @@
 package projekti.domain;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Object representing something that has properties.
@@ -29,4 +26,20 @@ public abstract class AbstractPropertyStore {
 
     public abstract List<Property> getProperties();
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        AbstractPropertyStore that = (AbstractPropertyStore) o;
+        return Objects.equals(propertyMap, that.propertyMap);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(propertyMap);
+    }
 }
