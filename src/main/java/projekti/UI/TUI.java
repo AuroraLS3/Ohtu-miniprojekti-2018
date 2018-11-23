@@ -134,17 +134,27 @@ public class TUI {
         try {
             Integer ID = Integer.parseInt(id_String);
             Book book = bookDao.findOne(ID);
-            Check.notNull(book, () -> new NullPointerException("\nNo book found with id " + id_String + "\n"));
+            Check.notNull(book, () -> new NullPointerException("No book found with id " + id_String));
             if (confirm("oletko varma, että haluat poistaa lukuvinkin numero " + id_String + "?")) {
                 bookDao.delete(ID);
-                io.print("\nvinkin poistaminen onnistui\n");
+                io.print("\n");
+                io.print("vinkin poistaminen onnistui");
+                io.print("\n");
+            } else {
+                io.print("\n");
+                io.print("recommendation deletion canceled");
+                io.print("\n");
             }
         } catch (IllegalArgumentException ex) {
             if (!id_String.equals("")) {
-                io.print("\n Not a valid ID. Has to be a number.");
+                io.print("\n");
+                io.print("Not a valid ID. Has to be a number.");
+                io.print("\n");
             }
         } catch (NullPointerException ex) {
+            io.print("\n");
             io.print(ex.getMessage());
+            io.print("\n");
         }
     }
 }

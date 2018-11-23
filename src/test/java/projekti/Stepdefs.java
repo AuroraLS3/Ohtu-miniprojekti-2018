@@ -57,12 +57,17 @@ public class Stepdefs {
         inputLines.add("Great Book");
         inputLines.add("111122222");
         inputLines.add("hyva kirja");
-        
+
         inputLines.add("new");
         inputLines.add("Heli");
         inputLines.add("Kirjojen Kirja");
         inputLines.add("777777333");
         inputLines.add("hyva kirja");
+    }
+
+    @Given("^command delete is selected$")
+    public void command_delete_is_selected() throws Throwable {
+        inputLines.add("delete");
     }
 
     @When("^author \"([^\"]*)\" title \"([^\"]*)\" and ISBN \"([^\"]*)\" are entered$")
@@ -85,6 +90,31 @@ public class Stepdefs {
         io = new StubIO(inputLines);
         app = new TUI(bDao, io);
         app.run();
+    }
+
+    @When("^existing recommendation id \"([^\"]*)\" is entered$")
+    public void existing_recommendation_id_is_entered(String id) throws Throwable {
+        inputLines.add(id);
+    }
+
+     @When("^affirmative response is given when asked for confirmation$")
+    public void affirmative_response_is_given_when_asked_for_confirmation() throws Throwable {
+        inputLines.add("y");
+    }
+
+    @When("^negative response is given when asked for confirmation$")
+    public void negative_response_is_given_when_asked_for_confirmation() throws Throwable {
+        inputLines.add("n");
+    }
+
+    @When("^nonexisting recommendation id \"([^\"]*)\" is entered$")
+    public void nonexisting_recommendation_id_is_entered(String id) throws Throwable {
+        inputLines.add(id);
+    }
+
+    @When("^invalid recommendation id \"([^\"]*)\" is entered$")
+    public void invalid_recommendation_id_is_entered(String invalidId) throws Throwable {
+        inputLines.add(invalidId);
     }
 
     @Then("^system will respond with \"([^\"]*)\"$")
