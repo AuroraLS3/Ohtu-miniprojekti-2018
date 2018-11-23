@@ -22,6 +22,7 @@ public class TUI {
         io.print("\tnew \tlisää uusi lukuvinkki \n");
         io.print("\tall \tlistaa kaikki lukuvinkit \n");
         io.print("\tselect \ttarkastele tiettyä vinkkiä \n");
+        io.print("\tdelete \tpoista tietyn vinkin \n");
         io.print("\tend \tsulkee ohjelman \n");
         String input = "";
         while (!input.equals("end")) {
@@ -40,18 +41,18 @@ public class TUI {
                         io.print("\n");
                     });
                     break;
-
                 case "end":
                     io.print("\nlopetetaan ohjelman suoritus \n");
                     break;
-
                 case "select":
                     selectBook();
+                    break;
+                case "delete":
+                    deleteBook();
                     break;
                 default:
                     io.print("\nei tuettu toiminto \n");
             }
-
         }
     }
 
@@ -123,6 +124,24 @@ public class TUI {
             String failMessage = "Valintaa ei tunnistettu. \n";
             io.print(failMessage);
             return confirm(message);
+        }
+    }
+
+    private void deleteBook() throws SQLException {
+        io.print("syötä olion id tai palaa jättämällä tyhjäksi\n");
+        io.print("ID: ");
+        String id_String = io.getInput();
+        if (!confirm("oletko varma, että haluat poistaa lukuvinkin numero " + id_String + "?")) {
+            return;
+        }
+        try {
+            Integer ID = Integer.parseInt(id_String);
+            bookDao.delete(ID);
+            io.print("\nvinkin poistaminen onnistui\n");
+        } catch (IllegalArgumentException ex) {
+            if (!id_String.equals("")) {
+                io.print("\n Not a valid ID. Has to be a number.");
+            }
         }
     }
 }

@@ -31,7 +31,7 @@
         <module name="OneStatementPerLine"/>
         <module name="MethodLength">
             <property name="tokens" value="METHOD_DEF"/>
-            <property name="max" value="35"/>
+            <property name="max" value="45"/>
             <property name="countEmpty" value="false"/>
         </module>
 
@@ -40,7 +40,7 @@
         <module name='ClassTypeParameterName' />
         <module name='ConstantName' />
         <module name='LocalFinalVariableName' />
-        
+
         <!--->
         <module name='LocalVariableName' />
         -->
@@ -53,7 +53,7 @@
             <property name='format' value='^[a-z]+(\.[a-z][a-z0-9]*)*$' />
         </module>
         -->
-        
+
         <module name='StaticVariableName' />
         <module name='TypeName' />
 
@@ -84,7 +84,7 @@
 
         <!-- JavaDoc -->
 
-       
+
 
     </module>
 
