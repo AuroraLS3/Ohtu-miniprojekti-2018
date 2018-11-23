@@ -76,6 +76,21 @@ public class TUI {
             io.print("\nvinkkiä ei lisätty \n");
         }
         // oletetaan toistaiseksi, että onnistuu. Daon kanssa ongelmia. io.print("\nuutta vinkkiä ei lisätty");
+    }
 
+    private boolean confirm(String message) {
+        io.print(message + "\n");
+        String optionString = "y/n";
+        io.print(optionString + "\n");
+        String val = io.getInput();
+        if (val.toLowerCase().contains("y")) {
+            return true;
+        } else if (val.toLowerCase().contains("n")) {
+            return false;
+        } else {
+            String failMessage = "Valintaa ei tunnistettu. \n";
+            io.print(failMessage);
+            return confirm(message);
+        }
     }
 }
