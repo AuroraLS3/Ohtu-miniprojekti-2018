@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Data Access Object for Books.
@@ -34,7 +36,6 @@ public class BookDAO implements Dao<Book, Integer> {
      *
      * @return List of books, empty if none are found.
      */
-    
     @Override
     public List<Book> findAll() {
         String sql = "SELECT * FROM " + TABLE_NAME + " WHERE TYPE='BOOK'";
@@ -48,15 +49,14 @@ public class BookDAO implements Dao<Book, Integer> {
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
-    
+
     /**
-     * Read books from database using ResultSet. 
+     * Read books from database using ResultSet.
      *
      * @param results the ResultSet to be used
-     * 
+     *
      * @return a list of books defined in the given ResultSet.
      */
-
     private List<Book> readBooksFrom(ResultSet results) throws SQLException {
         List<Book> books = new ArrayList<>();
         while (results.next()) {
@@ -74,7 +74,7 @@ public class BookDAO implements Dao<Book, Integer> {
 
     /**
      * Add a new book to the database.
-     * 
+     *
      * @param book the given book
      *
      * @return a new Book fetched from the database
@@ -88,7 +88,7 @@ public class BookDAO implements Dao<Book, Integer> {
                 + "VALUES (?, ?, ?, ?)";
         try (Connection connection = databaseManager.connect()) {
             PreparedStatement stmt = connection.prepareStatement(sql);
-      
+
             stmt.setString(1, book.getAuthor());
             stmt.setString(2, book.getTitle());
             stmt.setString(3, book.getISBN());
@@ -112,11 +112,10 @@ public class BookDAO implements Dao<Book, Integer> {
      * Searches for a specific book from the database by the given key/id.
      *
      * @param key the book's primary key
-     * 
+     *
      * @return a new Book object fetched from the database based on the key
-     * 
+     *
      */
-    
     @Override
     public Book findOne(Integer key) throws SQLException {
         try (Connection conn = databaseManager.connect()) {
@@ -130,6 +129,35 @@ public class BookDAO implements Dao<Book, Integer> {
             }
 
             return new Book(result.getString("AUTHOR"), result.getString("NAME"), result.getString("ISBN"));
+        }
+    }
+
+    /**
+     * Update book information in the database
+     *
+     * @param object the book that is updated
+     * @return the book
+     * @throws SQLException
+     */
+    @Override
+    public Book update(Book object) throws SQLException {
+        try (Connection conn = databaseManager.connect()) {
+            String statementString = "UPDATE RECOMMENDATION "
+                    + "SET AUTHOR = ? "
+                    + "SET NAME = ? "
+                    + "SET ISBN = ? "
+                    + "SET TYPE = ? "
+                    + "WHERE RECOMMENDATION.ID = ? ;";
+            PreparedStatement stmnt = conn.prepareStatement(statementString);
+            stmnt.setString(1, object.getAuthor());
+            stmnt.setString(2, object.getTitle());
+            stmnt.setString(3, object.getISBN());
+            stmnt.setString(4, object.getType());
+            int count = stmnt.executeUpdate();
+            if (count == 0) {
+                Logger.getGlobal().log(Level.WARNING, "No matches for update in the db");
+            }
+            return object;
         }
     }
 }

@@ -44,5 +44,14 @@ public interface Dao<T, K> {
      */
 
     T create(T object) throws SQLException;
+    
+    /**
+     * Update object in the database
+     * 
+     * @param object the object that is updated
+     * @return the updated object
+     * @throws SQLException if problems ensue, object is not in db etc.
+     */
+    T update(T object) throws SQLException;
 
 }
