@@ -8,11 +8,12 @@ import projekti.util.Check;
  * @author Rsl1122
  */
 public class Book {
-
     private final String author;
     private final String title;
     private final String isbn;
     private final String type;
+    
+    private Integer id;
 
     /**
      * Create a new book.
@@ -36,6 +37,12 @@ public class Book {
         this.type = "BOOK";
     }
 
+    public void setID(Integer id) {
+        this.id = id;
+    }
+    public Integer getID() {
+        return id;
+    }
     public String getAuthor() {
         return author;
     }
