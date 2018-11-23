@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Object that represents a book.
@@ -21,8 +22,9 @@ public class Book extends AbstractPropertyStore {
      */
     public static class Properties {
         public static final Property<String> AUTHOR = new Property<>("AUTHOR", String.class, author -> author != null && !author.isEmpty());
-        static final Property<String> TITLE = new Property<>("NAME", String.class, title -> title != null && !title.isEmpty());
+        public static final Property<String> TITLE = new Property<>("NAME", String.class, title -> title != null && !title.isEmpty());
         public static final Property<String> ISBN = new Property<>("ISBN", String.class, isbn -> isbn != null && !isbn.isEmpty());
+        public static final Property<String> DESCRIPTION = new Property<>("DESCRIPTION", String.class);
         public static final Property<Integer> ID = CommonProperties.ID;
 
         public static List<Property> getAll() {
@@ -69,12 +71,17 @@ public class Book extends AbstractPropertyStore {
         addProperty(Properties.AUTHOR, author);
         addProperty(Properties.TITLE, title);
         addProperty(Properties.ISBN, isbn);
+        addProperty(Properties.DESCRIPTION, description);
 
         this.type = "BOOK";
     }
 
     public void setID(Integer id) {
         addProperty(Properties.ID, id);
+    }
+
+    public void setDescription(String description) {
+        addProperty(Properties.DESCRIPTION, description);
     }
 
     /**
@@ -124,4 +131,14 @@ public class Book extends AbstractPropertyStore {
     public String getType() {
         return type;
     }
+
+    @Deprecated
+    public String getDescription() {
+        return getProperty(Properties.DESCRIPTION).orElse(null);
+    }
+
+    public String getType() {
+        return type;
+    }
+
 }
