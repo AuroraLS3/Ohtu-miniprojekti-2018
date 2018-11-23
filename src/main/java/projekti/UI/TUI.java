@@ -59,7 +59,7 @@ public class TUI {
 
         io.print("ISBN: ");
         String ISBN = io.getInput();
-        Book book = null;
+        Book book;
         try {
             book = new Book(author, title, ISBN);
         } catch (IllegalArgumentException ex) {
