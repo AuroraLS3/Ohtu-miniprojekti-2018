@@ -60,11 +60,11 @@ public class TUI {
         String id_String = io.getInput();
         try {
             Integer ID = Integer.parseInt(id_String);
-        
+
             Book book = bookDao.findOne(ID);
             Check.notNull(book, () -> new NullPointerException("No book found"));
             io.print(book.getAuthor() + ": " + book.getTitle() + ", ISBN: " + book.getISBN() + "\n"); //myöhemmin myös kuvaus
-            
+
 
         } catch (IllegalArgumentException ex) {
             if (!id_String.equals("")) {
@@ -83,9 +83,16 @@ public class TUI {
 
         io.print("ISBN: ");
         String ISBN = io.getInput();
+
+        io.print("Kuvaus (valinnainen): ");
+        String description = io.getInput();
+
         Book book;
         try {
             book = new Book(author, title, ISBN);
+            if (!description.isEmpty) {
+              book.setDescription(description);
+            }
         } catch (IllegalArgumentException ex) {
             io.print("\n Do not leave empty fields please. \n");
             io.print("\n Book recommendation was not added. \n");

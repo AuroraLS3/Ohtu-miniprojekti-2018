@@ -24,6 +24,7 @@ public class Book extends AbstractPropertyStore {
         public static final Property<String> AUTHOR = new Property<>("AUTHOR", String.class, author -> author != null && !author.isEmpty());
         public static final Property<String> TITLE = new Property<>("NAME", String.class, title -> title != null && !title.isEmpty());
         public static final Property<String> ISBN = new Property<>("ISBN", String.class, isbn -> isbn != null && !isbn.isEmpty());
+        public static final Property<String> DESCRIPTION = new Property<>("DESCRIPTION", String.class);
         public static final Property<Integer> ID = CommonProperties.ID;
 
         public static List<Property> getAll() {
@@ -68,12 +69,17 @@ public class Book extends AbstractPropertyStore {
         addProperty(Properties.AUTHOR, author);
         addProperty(Properties.TITLE, title);
         addProperty(Properties.ISBN, isbn);
+        addProperty(Properties.DESCRIPTION, description);
 
         this.type = "BOOK";
     }
 
     public void setID(Integer id) {
         addProperty(Properties.ID, id);
+    }
+
+    public void setDescription(String description) {
+        addProperty(Properties.DESCRIPTION, description);
     }
 
     /**
@@ -124,21 +130,27 @@ public class Book extends AbstractPropertyStore {
         return type;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Book book = (Book) o;
-        return Objects.equals(type, book.type);
+    @Deprecated
+    public String getDescription() {
+        return getProperty(Properties.DESCRIPTION).orElse(null);
+    }
+
+    public String getType() {
+        return type;
     }
 
     @Override
-    public int hashCode() {
+     public boolean equals(Object o) {
+         if (this == o) return true;
+         if (o == null || getClass() != o.getClass()) return false;
+         Book book = (Book) o;
+         return Objects.equals(type, book.type);
+     }
 
-        return Objects.hash(type);
-    }
+     @Override
+     public int hashCode() {
+
+         return Objects.hash(type);
+     }
+
 }
