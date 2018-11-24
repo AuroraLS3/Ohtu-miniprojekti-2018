@@ -23,6 +23,7 @@ public class TUI {
         io.print("\tnew \tlisää uusi lukuvinkki \n");
         io.print("\tall \tlistaa kaikki lukuvinkit \n");
         io.print("\tselect \ttarkastele tiettyä vinkkiä \n");
+        io.print("\tupdate \tmuokkaa tiettyä vinkkiä \n");
         io.print("\tdelete \tpoista tietyn vinkin \n");
         io.print("\tend \tsulkee ohjelman \n");
         String input = "";
