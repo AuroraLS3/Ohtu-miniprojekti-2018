@@ -75,9 +75,21 @@ public class Book extends AbstractPropertyStore {
 
         this.type = "BOOK";
     }
-    
+
     public Book(String author, String title, String isbn) {
         this(author, title, isbn, "");
+    }
+
+    public void setAuthor(String author) {
+        addProperty(Properties.AUTHOR, author);
+    }
+
+    public void setTitle(String title) {
+        addProperty(Properties.TITLE, title);
+    }
+
+    public void setISBN(String isbn) {
+        addProperty(Properties.ISBN, isbn);
     }
 
     public void setID(Integer id) {

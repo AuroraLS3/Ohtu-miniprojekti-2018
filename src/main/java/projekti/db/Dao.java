@@ -47,10 +47,10 @@ public interface Dao<T, K> {
      * Update object in the database
      *
      * @param object the object that is updated
-     * @return the updated object
+     * @return a boolean indicating whether the object was updated successfully
      * @throws SQLException if problems ensue, object is not in db etc.
      */
-    T update(T object) throws SQLException;
+    boolean update(T object) throws SQLException;
 
     void delete(K key) throws SQLException;
 
