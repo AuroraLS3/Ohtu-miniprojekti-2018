@@ -70,6 +70,11 @@ public class Stepdefs {
         inputLines.add("delete");
     }
 
+    @Given("^command update is selected$")
+    public void command_update_is_selected() throws Throwable {
+        inputLines.add("update");
+    }
+
     @When("^author \"([^\"]*)\" title \"([^\"]*)\" and ISBN \"([^\"]*)\" are entered$")
     public void author_title_and_ISBN_are_entered(String author, String title, String ISBN) throws Throwable {
         inputLines.add(author);
@@ -117,6 +122,26 @@ public class Stepdefs {
         inputLines.add(invalidId);
     }
 
+    @When("^new author \"([^\"]*)\" is entered$")
+    public void new_author_is_entered(String author) throws Throwable {
+        inputLines.add(author);
+    }
+
+    @When("^new title \"([^\"]*)\" is entered$")
+    public void new_title_is_entered(String title) throws Throwable {
+        inputLines.add(title);
+    }
+
+    @When("^new ISBN \"([^\"]*)\" is entered$")
+    public void new_ISBN_is_entered(String isbn) throws Throwable {
+        inputLines.add(isbn);
+    }
+
+    @When("^new description \"([^\"]*)\" is entered$")
+    public void new_description_is_entered(String description) throws Throwable {
+        inputLines.add(description);
+    }
+
     @Then("^system will respond with \"([^\"]*)\"$")
     public void system_will_respond_with(String expectedOutput) throws Throwable {
         assertTrue(io.getPrints().contains(expectedOutput));
@@ -128,6 +153,17 @@ public class Stepdefs {
         assertTrue(io.getPrints().contains("2. Reetta: Great Book, ISBN: 111122222"));
         assertTrue(io.getPrints().contains("3. Heli: Kirjojen Kirja, ISBN: 777777333"));
     }
+
+    @Then("^the list of recommendations will include \"([^\"]*)\"$")
+    public void the_list_of_recommendations_will_include(String expectedOutput) throws Throwable {
+        assertTrue(io.getPrints().contains(expectedOutput));
+    }
+
+    @Then("^the list of recommendations will not include \"([^\"]*)\"$")
+    public void the_list_of_recommendations_will_not_include(String unexpectedOutput) throws Throwable {
+        assertFalse(io.getPrints().contains(unexpectedOutput));
+    }
+
 //    @Given("^command login is selected$")
 //    public void command_login_selected() throws Throwable {
 //        inputLines.add("login");
