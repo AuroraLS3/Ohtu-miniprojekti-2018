@@ -18,9 +18,9 @@ import projekti.domain.Book.Properties;
  * @author Rsl1122
  */
 public class BookDAO implements Dao<Book, Integer> {
-    
+
     private static final String TABLE_NAME = "RECOMMENDATION";
-    
+
     private final DatabaseManager databaseManager;
 
     /**
@@ -81,12 +81,12 @@ public class BookDAO implements Dao<Book, Integer> {
     @Override
     public Book create(Book book) throws SQLException {
         int bookId = -1;
-        
+
         String sql = "INSERT INTO " + TABLE_NAME + " (AUTHOR, NAME, ISBN, TYPE, DESCRIPTION) "
                 + "VALUES (?, ?, ?, ?,?)";
         try (Connection connection = databaseManager.connect()) {
             PreparedStatement stmt = connection.prepareStatement(sql);
-            
+
             stmt.setString(1, book.getProperty(Properties.AUTHOR).orElse(null));
             stmt.setString(2, book.getProperty(Properties.TITLE).orElse(null));
             stmt.setString(3, book.getProperty(Properties.ISBN).orElse(null));
@@ -117,9 +117,9 @@ public class BookDAO implements Dao<Book, Integer> {
         try (Connection conn = databaseManager.connect()) {
             PreparedStatement stmt = conn.prepareStatement("SELECT ID, AUTHOR, NAME, ISBN, DESCRIPTION FROM " + TABLE_NAME + " WHERE ID = ?");
             stmt.setInt(1, key);
-            
+
             ResultSet result = stmt.executeQuery();
-            
+
             if (!result.next()) {
                 return null;
             }
@@ -140,14 +140,14 @@ public class BookDAO implements Dao<Book, Integer> {
      * @throws SQLException
      */
     @Override
-    public Book update(Book object) throws SQLException {
+    public boolean update(Book object) throws SQLException {
         try (Connection conn = databaseManager.connect()) {
             String statementString = "UPDATE RECOMMENDATION "
-                    + "SET AUTHOR = ? "
-                    + "SET NAME = ? "
-                    + "SET ISBN = ? "
-                    + "SET TYPE = ? "
-                    + "SET DESCRPIION = ? "
+                    + "SET AUTHOR = ?, "
+                    + "NAME = ?, "
+                    + "ISBN = ?, "
+                    + "TYPE = ?, "
+                    + "DESCRIPTION = ? "
                     + "WHERE RECOMMENDATION.ID = ? ;";
             PreparedStatement stmnt = conn.prepareStatement(statementString);
             stmnt.setString(1, object.getProperty(Properties.AUTHOR).orElse(null));
@@ -159,8 +159,9 @@ public class BookDAO implements Dao<Book, Integer> {
             int count = stmnt.executeUpdate();
             if (count == 0) {
                 Logger.getGlobal().log(Level.WARNING, "No matches for update in the db");
+                return false;
             }
-            return object;
+            return true;
         }
     }
 
@@ -178,5 +179,5 @@ public class BookDAO implements Dao<Book, Integer> {
             stmt.close();
         }
     }
-    
+
 }
