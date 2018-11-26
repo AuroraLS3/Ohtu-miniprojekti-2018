@@ -47,7 +47,9 @@ public class TUI {
                     io.print("\nlopetetaan ohjelman suoritus \n");
                     break;
                 case "select":
-                    selectBook();
+                    Book book = selectBook();
+                    io.print("\n" + book.getDescription());
+                    
                     break;
                 case "update":
                     updateBook();
@@ -61,7 +63,7 @@ public class TUI {
         }
     }
 
-    private void selectBook() throws SQLException {
+    private Book selectBook() throws SQLException {
         io.print("syötä olion id tai palaa jättämällä tyhjäksi\n");
         io.print("ID: ");
         String id_String = io.getInput();
@@ -71,7 +73,7 @@ public class TUI {
             Book book = bookDao.findOne(ID);
             Check.notNull(book, () -> new NullPointerException("No book found"));
             io.print(book.getAuthor() + ": " + book.getTitle() + ", ISBN: " + book.getISBN() + "\n"); //myöhemmin myös kuvaus
-
+            return book;
         } catch (IllegalArgumentException ex) {
             if (!id_String.equals("")) {
                 io.print("\n Not a valid ID. Has to be a number.");
@@ -79,6 +81,7 @@ public class TUI {
         } catch (NullPointerException ex) {
             io.print(ex.getMessage());
         }
+        return null;
     }
 
     private void createBook() throws SQLException {
