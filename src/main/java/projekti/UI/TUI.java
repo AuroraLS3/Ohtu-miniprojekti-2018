@@ -144,7 +144,8 @@ public class TUI {
         }
 
         if (bookDao.create(book) != null) {
-            io.println("\nnew book recommendation added");
+            io.println();
+            io.println("new book recommendation added");
         } else {
             io.println("\nvinkkiä ei lisätty");
         }
