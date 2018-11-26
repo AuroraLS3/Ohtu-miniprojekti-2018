@@ -1,6 +1,7 @@
 package projekti.db;
 
 import projekti.domain.Book;
+import projekti.domain.Book.Properties;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import projekti.domain.Book.Properties;
 
 /**
  * Data Access Object for Books.
@@ -124,9 +124,12 @@ public class BookDAO implements Dao<Book, Integer> {
                 return null;
             }
             Integer id = result.getInt("ID");
-            Book book = new Book(result.getString("AUTHOR"), result.getString("NAME"),
+            Book book = new Book(
+                    result.getString("AUTHOR"),
+                    result.getString("NAME"),
                     result.getString("ISBN"),
-                    result.getString("DESCRIPTION"));
+                    result.getString("DESCRIPTION")
+            );
             book.setID(id);
             return book;
         }
