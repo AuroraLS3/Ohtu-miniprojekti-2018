@@ -47,10 +47,13 @@ public class TUI {
                     io.print("\nlopetetaan ohjelman suoritus \n");
                     break;
                 case "select":
+                    
                     Book book = selectBook();
-                    io.print("\n" + book.getDescription());
+                    if (book == null) break;
+
+                    
                     String s_input ="";
-                    io.print("\tedit \tmuokkaa valittua vinkkiä\n");
+                    io.print("\ntoiminnot: \n\tedit \tmuokkaa valittua vinkkiä\n");
                     io.print("\tdelete \tpoista valittu vinkki\n");
                     io.print("\treturn \tlopeta vinkin tarkastelu\n");
                     while(!s_input.equals("return")){
@@ -94,7 +97,9 @@ public class TUI {
 
             Book book = bookDao.findOne(ID);
             Check.notNull(book, () -> new NullPointerException("No book found"));
-            io.print(book.getAuthor() + ": " + book.getTitle() + ", ISBN: " + book.getISBN() + "\n"); //myöhemmin myös kuvaus
+            io.print(book.getProperty(Properties.AUTHOR).orElse(null) + ": " + book.getProperty(Properties.TITLE).orElse(null) + ", ISBN: " 
+            + book.getProperty(Properties.ISBN).orElse(null) + "\n"); 
+            io.print("\nDescription: \n" + book.getProperty(Properties.DESCRIPTION).orElse(null) + "\n");
             return book;
         } catch (IllegalArgumentException ex) {
             if (!id_String.equals("")) {
