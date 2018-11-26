@@ -48,7 +48,12 @@ public class TUI {
                 case "select":
                     Book book = selectBook();
                     String s_input ="";
-                    while(!input.equals("return")){
+                    io.print("\tedit \tmuokkaa valittua vinkkiä\n");
+                    io.print("\tdelete \tpoista valittu vinkki\n");
+                    io.print("\treturn \tlopeta vinkin tarkastelu\n");
+                    while(!s_input.equals("return")){
+
+                        s_input = io.getInput();
                         switch(s_input) {
                             case "edit":
                             break;
