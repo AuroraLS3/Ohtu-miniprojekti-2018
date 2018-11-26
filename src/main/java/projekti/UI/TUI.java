@@ -28,7 +28,7 @@ public class TUI {
         io.print("\tend \tsulkee ohjelman \n");
         String input = "";
         while (!input.equals("end")) {
-            io.print("\ntoiminto: \n");
+            io.print("\ntoiminto: ");
             input = io.getInput();
             switch (input) { // kaikki toiminnot voidaan refaktoroida omaksi metodikseen myöhemmin
                 case "new": //luodaan uusi vinkki tietokantaan
@@ -46,39 +46,65 @@ public class TUI {
                 case "end":
                     io.print("\nlopetetaan ohjelman suoritus \n");
                     break;
-                case "select":
-                    selectBook();
+                case "select":                    
+                    Book book = selectBook();
+                    if (book == null) { 
+                        break;
+                    }
+
+                    String s_input = "";
+                    while (!s_input.equals("return")) {
+                        io.print("\ntoiminnot valitulle vinkille: \n\tedit \tmuokkaa valittua vinkkiä\n");
+                        io.print("\tdelete \tpoista valittu vinkki\n");
+                        io.print("\treturn \tlopeta vinkin tarkastelu\n");
+                    
+                        s_input = io.getInput();
+                        switch (s_input) {
+                            case "edit":
+                                updateBook(book.getProperty(Properties.ID).orElse(null));
+                                break;
+
+                            case "delete":
+                                deleteBook(book.getProperty(Properties.ID).orElse(null));
+                                s_input = "return";
+                                break;
+                        
+                            case "return":
+                                io.print("\n");
+                                break;
+                        }
+
+                    }
+
                     break;
+
                 case "update":
-                    updateBook();
+                    updateBook(null);
                     break;
                 case "delete":
-                    deleteBook();
+                    deleteBook(null);
+                    
+                
                     break;
                 default:
                     io.print("\nei tuettu toiminto \n");
             }
         }
     }
-
-    private void selectBook() throws SQLException {
-        io.print("syötä olion id tai palaa jättämällä tyhjäksi\n");
-        io.print("ID: ");
-        String id_String = io.getInput();
+    private Book selectBook() throws SQLException {
         try {
-            Integer ID = Integer.parseInt(id_String);
+            Integer ID = selectID();
 
             Book book = bookDao.findOne(ID);
             Check.notNull(book, () -> new NullPointerException("No book found"));
-            io.print(book.getAuthor() + ": " + book.getTitle() + ", ISBN: " + book.getISBN() + "\n"); //myöhemmin myös kuvaus
-
-        } catch (IllegalArgumentException ex) {
-            if (!id_String.equals("")) {
-                io.print("\n Not a valid ID. Has to be a number.");
-            }
+            io.print("\n" + book.getProperty(Properties.AUTHOR).orElse(null) + ": " + book.getProperty(Properties.TITLE).orElse(null) + ", ISBN: " 
+                + book.getProperty(Properties.ISBN).orElse(null) + "\n"); 
+            io.print("\nDescription: \n" + book.getProperty(Properties.DESCRIPTION).orElse(null) + "\n");
+            return book;
         } catch (NullPointerException ex) {
             io.print(ex.getMessage());
         }
+        return null;
     }
 
     private void createBook() throws SQLException {
@@ -115,7 +141,20 @@ public class TUI {
         }
         // oletetaan toistaiseksi, että onnistuu. Daon kanssa ongelmia. io.print("\nuutta vinkkiä ei lisätty");
     }
-
+    private Integer selectID() {
+        io.print("syötä olion id tai palaa jättämällä tyhjäksi\n");
+        io.print("ID: ");
+        String id_String = io.getInput();
+        try {
+            Integer ID = Integer.parseInt(id_String);
+            return ID;
+        } catch (IllegalArgumentException ex) {
+            if (!id_String.equals("")) {
+                io.print("Not a valid ID. Has to be a number.");
+            }
+        }
+        return null;
+    }
     private boolean confirm(String message) {
         io.print(message + "\n");
         String optionString = "y/n";
@@ -132,15 +171,18 @@ public class TUI {
         }
     }
 
-    private void deleteBook() throws SQLException {
-        io.print("syötä poistettavan olion id tai palaa jättämällä tyhjäksi\n");
-        io.print("ID: ");
-        String id_String = io.getInput();
+    private void deleteBook(Integer knownID) throws SQLException {
         try {
-            Integer ID = Integer.parseInt(id_String);
+            Integer ID = -1;
+            if (knownID == null) {
+                ID = selectID();
+            } else {
+                ID = knownID;
+            }
+            Integer idFinal = ID;        //valittaa muuten että pitää olla final
             Book book = bookDao.findOne(ID);
-            Check.notNull(book, () -> new NullPointerException("No book found with id " + id_String));
-            if (confirm("oletko varma, että haluat poistaa lukuvinkin numero " + id_String + "?")) {
+            Check.notNull(book, () -> new NullPointerException("No book found with id " + idFinal));
+            if (confirm("oletko varma, että haluat poistaa lukuvinkin numero " + ID + "?")) {
                 bookDao.delete(ID);
                 io.print("\n");
                 io.print("vinkin poistaminen onnistui");
@@ -150,12 +192,6 @@ public class TUI {
                 io.print("recommendation deletion canceled");
                 io.print("\n");
             }
-        } catch (IllegalArgumentException ex) {
-            if (!id_String.equals("")) {
-                io.print("\n");
-                io.print("Not a valid ID. Has to be a number.");
-                io.print("\n");
-            }
         } catch (NullPointerException ex) {
             io.print("\n");
             io.print(ex.getMessage());
@@ -163,14 +199,18 @@ public class TUI {
         }
     }
 
-    private void updateBook() throws SQLException {
-        io.print("syötä muokattavan olion id tai palaa jättämällä tyhjäksi\n");
-        io.print("ID: ");
-        String id_String = io.getInput();
+    private void updateBook(Integer knownID) throws SQLException {
+        
         try {
-            Integer ID = Integer.parseInt(id_String);
+            Integer ID = -1;
+            if (knownID == null) {
+                ID = selectID();
+            } else {
+                ID = knownID;
+            }
+            Integer idFinal = ID;       //valittaa muuten että pitää olla final
             Book oldBook = bookDao.findOne(ID);
-            Check.notNull(oldBook, () -> new NullPointerException("No book found with id " + id_String));
+            Check.notNull(oldBook, () -> new NullPointerException("No book found with id " + idFinal));
             Book updatedBook = new Book(oldBook.getProperty(Properties.AUTHOR).orElse(""),
                     oldBook.getProperty(Properties.TITLE).orElse(""),
                     oldBook.getProperty(Properties.ISBN).orElse(""),
@@ -196,7 +236,7 @@ public class TUI {
             if (!description.equals("")) {
                 updatedBook.setDescription(description);
             }
-            if (confirm("oletko varma, että haluat muokata lukuvinkkiä numero " + id_String + "?")) {
+            if (confirm("oletko varma, että haluat muokata lukuvinkkiä numero " + ID + "?")) {
                 if (bookDao.update(updatedBook)) {
                     io.print("\n");
                     io.print("vinkin muokkaaminen onnistui");
@@ -211,13 +251,7 @@ public class TUI {
                 io.print("recommendation update canceled");
                 io.print("\n");
             }
-        } catch (IllegalArgumentException ex) {
-            if (!id_String.equals("")) {
-                io.print("\n");
-                io.print("Not a valid ID. Has to be a number.");
-                io.print("\n");
-            }
-        } catch (NullPointerException ex) {
+        }  catch (NullPointerException ex) {
             io.print("\n");
             io.print(ex.getMessage());
             io.print("\n");
