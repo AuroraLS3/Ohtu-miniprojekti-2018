@@ -46,29 +46,32 @@ public class TUI {
                 case "end":
                     io.print("\nlopetetaan ohjelman suoritus \n");
                     break;
-                case "select":
-                    
+                case "select":                    
                     Book book = selectBook();
-                    if (book == null) break;
+                    if (book == null) { 
+                        break;
+                    }
 
+                    String s_input = "";
+                    while (!s_input.equals("return")) {
+                        io.print("\ntoiminnot valitulle vinkille: \n\tedit \tmuokkaa valittua vinkkiä\n");
+                        io.print("\tdelete \tpoista valittu vinkki\n");
+                        io.print("\treturn \tlopeta vinkin tarkastelu\n");
                     
-                    String s_input ="";
-                    io.print("\ntoiminnot: \n\tedit \tmuokkaa valittua vinkkiä\n");
-                    io.print("\tdelete \tpoista valittu vinkki\n");
-                    io.print("\treturn \tlopeta vinkin tarkastelu\n");
-                    while(!s_input.equals("return")){
-
                         s_input = io.getInput();
-                        switch(s_input) {
+                        switch (s_input) {
                             case "edit":
-                            break;
+                                updateBook(book.getProperty(Properties.ID).orElse(null));
+                                break;
 
                             case "delete":
-                            break;
+                                deleteBook(book.getProperty(Properties.ID).orElse(null));
+                                s_input = "return";
+                                break;
                         
                             case "return":
-                            io.print("\n");
-                            break;
+                                io.print("\n");
+                                break;
                         }
 
                     }
@@ -76,10 +79,10 @@ public class TUI {
                     break;
 
                 case "update":
-                    updateBook();
+                    updateBook(null);
                     break;
                 case "delete":
-                    deleteBook();
+                    deleteBook(null);
                     
                 
                     break;
@@ -95,7 +98,7 @@ public class TUI {
             Book book = bookDao.findOne(ID);
             Check.notNull(book, () -> new NullPointerException("No book found"));
             io.print("\n" + book.getProperty(Properties.AUTHOR).orElse(null) + ": " + book.getProperty(Properties.TITLE).orElse(null) + ", ISBN: " 
-            + book.getProperty(Properties.ISBN).orElse(null) + "\n"); 
+                + book.getProperty(Properties.ISBN).orElse(null) + "\n"); 
             io.print("\nDescription: \n" + book.getProperty(Properties.DESCRIPTION).orElse(null) + "\n");
             return book;
         } catch (NullPointerException ex) {
@@ -138,7 +141,7 @@ public class TUI {
         }
         // oletetaan toistaiseksi, että onnistuu. Daon kanssa ongelmia. io.print("\nuutta vinkkiä ei lisätty");
     }
-    private Integer selectID(){
+    private Integer selectID() {
         io.print("syötä olion id tai palaa jättämällä tyhjäksi\n");
         io.print("ID: ");
         String id_String = io.getInput();
@@ -168,11 +171,17 @@ public class TUI {
         }
     }
 
-    private void deleteBook() throws SQLException {
+    private void deleteBook(Integer knownID) throws SQLException {
         try {
-            Integer ID = selectID();
+            Integer ID = -1;
+            if (knownID == null) {
+                ID = selectID();
+            } else {
+                ID = knownID;
+            }
+            Integer idFinal = ID;        //valittaa muuten että pitää olla final
             Book book = bookDao.findOne(ID);
-            Check.notNull(book, () -> new NullPointerException("No book found with id " + ID));
+            Check.notNull(book, () -> new NullPointerException("No book found with id " + idFinal));
             if (confirm("oletko varma, että haluat poistaa lukuvinkin numero " + ID + "?")) {
                 bookDao.delete(ID);
                 io.print("\n");
@@ -190,12 +199,18 @@ public class TUI {
         }
     }
 
-    private void updateBook() throws SQLException {
+    private void updateBook(Integer knownID) throws SQLException {
         
         try {
-            Integer ID = selectID();
+            Integer ID = -1;
+            if (knownID == null) {
+                ID = selectID();
+            } else {
+                ID = knownID;
+            }
+            Integer idFinal = ID;       //valittaa muuten että pitää olla final
             Book oldBook = bookDao.findOne(ID);
-            Check.notNull(oldBook, () -> new NullPointerException("No book found with id " +ID));
+            Check.notNull(oldBook, () -> new NullPointerException("No book found with id " + idFinal));
             Book updatedBook = new Book(oldBook.getProperty(Properties.AUTHOR).orElse(""),
                     oldBook.getProperty(Properties.TITLE).orElse(""),
                     oldBook.getProperty(Properties.ISBN).orElse(""),
