@@ -49,20 +49,42 @@ public class TUI {
                 case "select":
                     Book book = selectBook();
                     io.print("\n" + book.getDescription());
-                    
+                    String s_input ="";
+                    io.print("\tedit \tmuokkaa valittua vinkkiä\n");
+                    io.print("\tdelete \tpoista valittu vinkki\n");
+                    io.print("\treturn \tlopeta vinkin tarkastelu\n");
+                    while(!s_input.equals("return")){
+
+                        s_input = io.getInput();
+                        switch(s_input) {
+                            case "edit":
+                            break;
+
+                            case "delete":
+                            break;
+                        
+                            case "return":
+                            io.print("\n");
+                            break;
+                        }
+
+                    }
+
                     break;
+
                 case "update":
                     updateBook();
                     break;
                 case "delete":
                     deleteBook();
+                    
+                
                     break;
                 default:
                     io.print("\nei tuettu toiminto \n");
             }
         }
     }
-
     private Book selectBook() throws SQLException {
         io.print("syötä olion id tai palaa jättämällä tyhjäksi\n");
         io.print("ID: ");
