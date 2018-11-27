@@ -7,6 +7,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Object that represents a book.
@@ -54,9 +55,9 @@ public class Book extends AbstractPropertyStore {
     /**
      * Create a new book.
      *
-     * @param author Author of the book, not null or empty.
-     * @param title Title of the book, not null or empty.
-     * @param isbn ISBN of the book, not null or empty.
+     * @param author      Author of the book, not null or empty.
+     * @param title       Title of the book, not null or empty.
+     * @param isbn        ISBN of the book, not null or empty.
      * @param description Description of the book, can be empty
      */
     public Book(String author, String title, String isbn, String description) {
@@ -77,7 +78,7 @@ public class Book extends AbstractPropertyStore {
     }
 
     public Book(String author, String title, String isbn) {
-        this(author, title, isbn, "");
+        this(author, title, isbn, null);
     }
 
     public void setAuthor(String author) {
@@ -171,4 +172,35 @@ public class Book extends AbstractPropertyStore {
         return Objects.hash(type);
     }
 
+    @Override
+    public String toString() {
+        return getProperty(Properties.ID).orElse(-1) + ". "
+                + getProperty(Properties.AUTHOR).orElse("Not Specified")
+                + ": " + getProperty(Properties.TITLE).orElse("Not Specified")
+                + ", ISBN: " + getProperty(Properties.ISBN).orElse("-");
+    }
+
+    public String toStringWithDescription() {
+        StringBuilder builder = new StringBuilder(toString());
+        Optional<String> descriptionProperty = getProperty(Properties.DESCRIPTION);
+        if (descriptionProperty.isPresent()) {
+
+            int currentLength = 0;
+            int charPerLine = 100;
+            String[] words = descriptionProperty.get().split(" ");
+            // Split description on multiple lines, split between space characters if over 100 characters.
+            for (String word : words) {
+                builder.append(word).append(" ");
+                currentLength += word.length();
+
+                if (currentLength > charPerLine) {
+                    builder.append("\n");
+                    currentLength = 0;
+                }
+            }
+
+        }
+
+        return builder.toString();
+    }
 }
