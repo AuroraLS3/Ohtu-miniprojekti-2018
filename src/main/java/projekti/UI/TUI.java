@@ -99,7 +99,7 @@ public class TUI {
             Check.notNull(book, () -> new NullPointerException("No book found"));
             io.print("\n" + book.getProperty(Properties.AUTHOR).orElse(null) + ": " + book.getProperty(Properties.TITLE).orElse(null) + ", ISBN: " 
                 + book.getProperty(Properties.ISBN).orElse(null) + "\n"); 
-            io.print("\nDescription: \n" + book.getProperty(Properties.DESCRIPTION).orElse(null) + "\n");
+            io.print("Description: " + book.getProperty(Properties.DESCRIPTION).orElse(null));
             return book;
         } catch (NullPointerException ex) {
             io.print(ex.getMessage());

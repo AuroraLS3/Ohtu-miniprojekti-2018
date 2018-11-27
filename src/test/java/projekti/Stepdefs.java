@@ -75,6 +75,11 @@ public class Stepdefs {
         inputLines.add("update");
     }
 
+    @Given("^command select is selected$")
+    public void command_select_is_selected() throws Throwable {
+        inputLines.add("select");
+    }
+
     @When("^author \"([^\"]*)\" title \"([^\"]*)\" and ISBN \"([^\"]*)\" are entered$")
     public void author_title_and_ISBN_are_entered(String author, String title, String ISBN) throws Throwable {
         inputLines.add(author);
@@ -96,7 +101,10 @@ public class Stepdefs {
         app = new TUI(bDao, io);
         app.run();
     }
-
+    @When("^command return is entered$")
+    public void command_return_is_entered() throws Throwable {
+        inputLines.add("return");
+    }
     @When("^existing recommendation id \"([^\"]*)\" is entered$")
     public void existing_recommendation_id_is_entered(String id) throws Throwable {
         inputLines.add(id);
@@ -144,6 +152,9 @@ public class Stepdefs {
 
     @Then("^system will respond with \"([^\"]*)\"$")
     public void system_will_respond_with(String expectedOutput) throws Throwable {
+        for (int i=0; i<io.getPrints().size(); i++){
+            System.out.println(i + ": " + io.getPrints().get(i));
+        }
         assertTrue(io.getPrints().contains(expectedOutput));
     }
 
@@ -158,7 +169,7 @@ public class Stepdefs {
     public void the_list_of_recommendations_will_include(String expectedOutput) throws Throwable {
         assertTrue(io.getPrints().contains(expectedOutput));
     }
-
+    
     @Then("^the list of recommendations will not include \"([^\"]*)\"$")
     public void the_list_of_recommendations_will_not_include(String unexpectedOutput) throws Throwable {
         assertFalse(io.getPrints().contains(unexpectedOutput));
