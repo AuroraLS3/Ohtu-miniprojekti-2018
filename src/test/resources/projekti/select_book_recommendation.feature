@@ -6,4 +6,4 @@ Feature: Users can select specific recommendation
        When existing recommendation id "2" is entered
        And command return is entered
        And   the app processes the input
-       Then  system will respond with "Description: hyva kirja"
+       Then  system will respond with "2. Reetta: Great Book, ISBN: 111122222, hyva kirja "
