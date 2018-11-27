@@ -4,7 +4,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class BookTest {
 
@@ -34,7 +35,7 @@ public class BookTest {
     public void canNotCreateBookWithoutTitle() {
         expected.expect(IllegalArgumentException.class);
         expected.expectMessage("Title should not be null");
-        new Book("Matti Meikäläinen",  null, "1323213", "");
+        new Book("Matti Meikäläinen", null, "1323213", "");
     }
 
     @Test
@@ -48,7 +49,7 @@ public class BookTest {
     public void canNotCreateBookWithoutISBN() {
         expected.expect(IllegalArgumentException.class);
         expected.expectMessage("ISBN should not be null");
-        new Book("Matti Meikäläinen",  "Esimerkki-ihmisen arkipäivä", null, "");
+        new Book("Matti Meikäläinen", "Esimerkki-ihmisen arkipäivä", null, "");
     }
 
     @Test
@@ -56,6 +57,19 @@ public class BookTest {
         expected.expect(IllegalArgumentException.class);
         expected.expectMessage("ISBN should not be empty");
         new Book("Matti Meikäläinen", "Esimerkki-ihmisen arkipäivä", "", "");
+    }
+
+    @Test
+    public void propertiesAreReturned() {
+        assertFalse(Book.Properties.getAll().isEmpty());
+    }
+
+    @Test
+    public void propertiesAreReturnedByABook() {
+        assertEquals(
+                Book.Properties.getAll(),
+                new Book("Matti Meikäläinen", "Esimerkki-ihmisen arkipäivä", "1323213", "Description").getProperties()
+        );
     }
 
 }
