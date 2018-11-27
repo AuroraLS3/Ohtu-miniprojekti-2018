@@ -108,6 +108,10 @@ public class Stepdefs {
     public void command_return_is_entered() throws Throwable {
         inputLines.add("return");
     }
+    @When("^command edit is entered$")
+    public void command_edit_is_entered() throws Throwable {
+        inputLines.add("edit");
+    }
     @When("^existing recommendation id \"([^\"]*)\" is entered$")
     public void existing_recommendation_id_is_entered(String id) {
         inputLines.add(id);
