@@ -78,6 +78,21 @@ public class Stepdefs {
         inputLines.add("update");
     }
 
+    @When("^command select is selected$")
+    public void commandSelectIsSelected() {
+        inputLines.add("select");
+    }
+
+    @When("^command all is selected$")
+    public void command_all_is_selected() {
+        inputLines.add("all");
+    }
+
+    @When("^command edit is selected$")
+    public void commandEditIsSelected() {
+        inputLines.add("edit");
+    }
+
     @When("^author \"([^\"]*)\" title \"([^\"]*)\" and ISBN \"([^\"]*)\" are entered$")
     public void author_title_and_ISBN_are_entered(String author, String title, String ISBN) {
         inputLines.add(author);
@@ -86,9 +101,17 @@ public class Stepdefs {
         inputLines.add("");
     }
 
-    @When("^command all is selected$")
-    public void command_all_is_selected() {
-        inputLines.add("all");
+    @When("^description \"([^\"]*)\" is entered in edit mode$")
+    public void descriptionIsEnteredToEditMode(String description) {
+        inputLines.add("");
+        inputLines.add("");
+        inputLines.add("");
+        inputLines.add(description);
+    }
+
+    @When("^user exits select mode$")
+    public void userExitsSelectMode() {
+        inputLines.add("return");
     }
 
     @When("^the app processes the input$")

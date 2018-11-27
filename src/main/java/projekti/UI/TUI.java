@@ -32,7 +32,11 @@ public class TUI {
         while (!input.equalsIgnoreCase("end")) {
             io.println("\ntoiminto: ");
             input = io.getInput();
-            performAction(input);
+            try {
+                performAction(input);
+            } catch (IllegalArgumentException e) {
+                io.println(e.getMessage());
+            }
         }
     }
 
@@ -56,10 +60,12 @@ public class TUI {
                 bookSelection();
                 break;
             case "update":
-                updateBook(null);
+                Integer updateID = selectID();
+                updateBook(updateID);
                 break;
             case "delete":
-                deleteBook(null);
+                Integer deleteID = selectID();
+                deleteBook(deleteID);
                 break;
             default:
                 io.println("\nei tuettu toiminto");
@@ -78,7 +84,6 @@ public class TUI {
         selectionLoop:
         while (!input.equals("return")) {
             io.println(book.toStringWithDescription());
-            io.println();
 
             io.println("\ntoiminnot valitulle vinkille:");
             io.println("\tedit \tmuokkaa valittua vinkkiä");
@@ -105,31 +110,25 @@ public class TUI {
     }
 
     private Book askForBook() throws SQLException {
-        try {
-            Integer ID = selectID();
+        Integer ID = selectID();
 
-            Book book = bookDao.findOne(ID);
-            Check.notNull(book, () -> new NullPointerException("No book found"));
-            io.println(book.toStringWithDescription());
-            return book;
-        } catch (NullPointerException ex) {
-            io.print(ex.getMessage());
-        }
-        return null;
+        Book book = bookDao.findOne(ID);
+        Check.notNull(book, () -> new IllegalArgumentException("No book found"));
+        return book;
     }
 
     private void createBook() throws SQLException {
         io.print("kirjailija: ");
-        String author = io.getInput();
+        String author = io.getInput().trim();
 
         io.print("nimi: ");
-        String title = io.getInput();
+        String title = io.getInput().trim();
 
         io.print("ISBN: ");
-        String ISBN = io.getInput();
+        String ISBN = io.getInput().trim();
 
         io.print("Kuvaus (valinnainen): ");
-        String description = io.getInput();
+        String description = io.getInput().trim();
 
         Book book;
         try {
@@ -138,9 +137,8 @@ public class TUI {
                 book.setDescription(description);
             }
         } catch (IllegalArgumentException ex) {
-            io.println("\n " + ex.getMessage());
             io.println("\n Book recommendation was not added.");
-            return;
+            throw ex;
         }
 
         if (bookDao.create(book) != null) {
@@ -159,11 +157,11 @@ public class TUI {
         try {
             return Integer.parseInt(id_String);
         } catch (IllegalArgumentException ex) {
-            if (!id_String.equals("")) {
+            if (!id_String.isEmpty()) {
                 io.println("Not a valid ID. Has to be a number.");
             }
+            throw ex;
         }
-        return null;
     }
 
     private boolean confirm(String message) {
@@ -183,82 +181,57 @@ public class TUI {
     }
 
     private void deleteBook(Integer knownID) throws SQLException {
-        try {
-            Integer ID = -1;
-            if (knownID == null) {
-                ID = selectID();
-            } else {
-                ID = knownID;
-            }
-            Integer idFinal = ID;        //valittaa muuten että pitää olla final
-            Book book = bookDao.findOne(ID);
-            Check.notNull(book, () -> new NullPointerException("No book found with id " + idFinal));
-            if (confirm("oletko varma, että haluat poistaa lukuvinkin numero " + ID + "?")) {
-                bookDao.delete(ID);
-                io.println();
-                io.println("vinkin poistaminen onnistui");
-            } else {
-                io.println();
-                io.println("recommendation deletion canceled");
-            }
-        } catch (NullPointerException ex) {
+        Book book = bookDao.findOne(knownID);
+        Check.notNull(book, () -> new IllegalArgumentException("No book found with id " + knownID));
+        if (confirm("oletko varma, että haluat poistaa lukuvinkin numero " + knownID + "?")) {
+            bookDao.delete(knownID);
             io.println();
-            io.println(ex.getMessage());
+            io.println("vinkin poistaminen onnistui");
+        } else {
+            io.println();
+            io.println("recommendation deletion canceled");
         }
     }
 
     private void updateBook(Integer knownID) throws SQLException {
-
-        try {
-            Integer ID = -1;
-            if (knownID == null) {
-                ID = selectID();
-            } else {
-                ID = knownID;
-            }
-            Integer idFinal = ID;       //valittaa muuten että pitää olla final
-            Book oldBook = bookDao.findOne(ID);
-            Check.notNull(oldBook, () -> new NullPointerException("No book found with id " + idFinal));
-            Book updatedBook = new Book(oldBook.getProperty(Properties.AUTHOR).orElse(""),
-                    oldBook.getProperty(Properties.TITLE).orElse(""),
-                    oldBook.getProperty(Properties.ISBN).orElse(""),
-                    oldBook.getProperty(Properties.DESCRIPTION).orElse(""));
-            updatedBook.setID(oldBook.getProperty(Properties.ID).orElse(-1));
-            io.print("enter new author (or empty input to leave it unchanged): ");
-            String author = io.getInput();
-            if (!author.isEmpty()) {
-                updatedBook.setAuthor(author);
-            }
-            io.print("enter new title (or empty input to leave it unchanged): ");
-            String title = io.getInput();
-            if (!title.isEmpty()) {
-                updatedBook.setTitle(title);
-            }
-            io.print("enter new ISBN (or empty input to leave it unchanged): ");
-            String isbn = io.getInput();
-            if (!isbn.isEmpty()) {
-                updatedBook.setISBN(isbn);
-            }
-            io.print("enter new description (or empty input to leave it unchanged): ");
-            String description = io.getInput();
-            if (!description.isEmpty()) {
-                updatedBook.setDescription(description);
-            }
-            if (confirm("oletko varma, että haluat muokata lukuvinkkiä numero " + ID + "?")) {
-                if (bookDao.update(updatedBook)) {
-                    io.println();
-                    io.println("vinkin muokkaaminen onnistui");
-                } else {
-                    io.println();
-                    io.println("vinkin muokkaaminen epäonnistui");
-                }
+        Book oldBook = bookDao.findOne(knownID);
+        Check.notNull(oldBook, () -> new IllegalArgumentException("No book found with id " + knownID));
+        Book updatedBook = new Book(oldBook.getProperty(Properties.AUTHOR).orElse(""),
+                oldBook.getProperty(Properties.TITLE).orElse(""),
+                oldBook.getProperty(Properties.ISBN).orElse(""),
+                oldBook.getProperty(Properties.DESCRIPTION).orElse(""));
+        updatedBook.setID(oldBook.getProperty(Properties.ID).orElse(-1));
+        io.print("enter new author (or empty input to leave it unchanged): ");
+        String author = io.getInput();
+        if (!author.isEmpty()) {
+            updatedBook.setAuthor(author);
+        }
+        io.print("enter new title (or empty input to leave it unchanged): ");
+        String title = io.getInput();
+        if (!title.isEmpty()) {
+            updatedBook.setTitle(title);
+        }
+        io.print("enter new ISBN (or empty input to leave it unchanged): ");
+        String isbn = io.getInput();
+        if (!isbn.isEmpty()) {
+            updatedBook.setISBN(isbn);
+        }
+        io.print("enter new description (or empty input to leave it unchanged): ");
+        String description = io.getInput();
+        if (!description.isEmpty()) {
+            updatedBook.setDescription(description);
+        }
+        if (confirm("oletko varma, että haluat muokata lukuvinkkiä numero " + knownID + "?")) {
+            if (bookDao.update(updatedBook)) {
+                io.println();
+                io.println("vinkin muokkaaminen onnistui");
             } else {
                 io.println();
-                io.println("recommendation update canceled");
+                io.println("vinkin muokkaaminen epäonnistui");
             }
-        } catch (NullPointerException ex) {
+        } else {
             io.println();
-            io.println(ex.getMessage());
+            io.println("recommendation update canceled");
         }
     }
 }
