@@ -19,18 +19,18 @@ public class TUI {
     }
 
     public void run() throws SQLException {
-        io.println("Tervetuloa lukuvinkkiapplikaatioon!");
-        io.println("Tuetut toiminnot:");
-        io.println("\tnew \tlisää uusi lukuvinkki");
-        io.println("\tall \tlistaa kaikki lukuvinkit");
-        io.println("\tselect \ttarkastele tiettyä vinkkiä");
-        io.println("\tupdate \tmuokkaa tiettyä vinkkiä");
-        io.println("\tdelete \tpoista tietyn vinkin");
-        io.println("\tend \tsulkee ohjelman");
+        io.println("Welcome to the reading recommendation app!");
+        io.println("Supported commands:");
+        io.println("\tnew \tadd a new recommendation");
+        io.println("\tall \tlist all existing recommendations");
+        io.println("\tselect \tselect a specific recommendation");
+        io.println("\tupdate \tupdate information for an existing recommendation");
+        io.println("\tdelete \tremove a recommendation");
+        io.println("\tend \tclose the program");
 
         String input = "";
         while (!input.equalsIgnoreCase("end")) {
-            io.println("\ntoiminto: ");
+            io.println("\ncommand: ");
             input = io.getInput();
             try {
                 performAction(input);
@@ -41,12 +41,12 @@ public class TUI {
     }
 
     private void performAction(String input) throws SQLException {
-        switch (input.toLowerCase()) { // kaikki toiminnot voidaan refaktoroida omaksi metodikseen myöhemmin
-            case "new": //luodaan uusi vinkki tietokantaan
+        switch (input.toLowerCase()) { 
+            case "new": 
                 //Käyttäjä valitsee vinkin tyyypin, nyt vain kirjat tuettu
                 createBook();
                 break;
-            case "all": //listataan kaikki vinkit tietokannasta;
+            case "all":
                 List<Book> books = bookDao.findAll();
 
                 books.forEach(book -> {
@@ -54,7 +54,7 @@ public class TUI {
                 });
                 break;
             case "end":
-                io.println("\nlopetetaan ohjelman suoritus");
+                io.println("\nshutting down program");
                 break;
             case "select":
                 bookSelection();
@@ -68,7 +68,7 @@ public class TUI {
                 deleteBook(deleteID);
                 break;
             default:
-                io.println("\nei tuettu toiminto");
+                io.println("\nnon-supported command");
                 break;
         }
     }
@@ -86,10 +86,10 @@ public class TUI {
             io.println(book.toStringWithDescription());
             io.println();
 
-            io.println("\ntoiminnot valitulle vinkille:");
-            io.println("\tedit \tmuokkaa valittua vinkkiä");
-            io.println("\tdelete \tpoista valittu vinkki");
-            io.println("\treturn \tlopeta vinkin tarkastelu");
+            io.println("\ncommands for the selected recommendation: ");
+            io.println("\tedit \tedit the recommendation");
+            io.println("\tdelete \tremove the recommendation");
+            io.println("\treturn \treturn to the main program");
 
             input = io.getInput();
             switch (input) {
@@ -104,7 +104,7 @@ public class TUI {
                     io.println();
                     break;
                 default:
-                    io.println("\nei tuettu toiminto");
+                    io.println("\nnon-supported command");
                     break;
             }
 
@@ -120,16 +120,16 @@ public class TUI {
     }
 
     private void createBook() throws SQLException {
-        io.print("kirjailija: ");
+        io.print("author: ");
         String author = io.getInput().trim();
 
-        io.print("nimi: ");
+        io.print("title: ");
         String title = io.getInput().trim();
 
         io.print("ISBN: ");
         String ISBN = io.getInput().trim();
 
-        io.print("Kuvaus (valinnainen): ");
+        io.print("Description (optional): ");
         String description = io.getInput().trim();
 
         Book book;
@@ -147,9 +147,9 @@ public class TUI {
             io.println();
             io.println("new book recommendation added");
         } else {
-            io.println("\nvinkkiä ei lisätty");
+            io.println("\nrecommendation not added");
         }
-        // oletetaan toistaiseksi, että onnistuu. Daon kanssa ongelmia. io.print("\nuutta vinkkiä ei lisätty");
+       
     }
 
     private Integer selectID() {
@@ -176,7 +176,7 @@ public class TUI {
         } else if (val.toLowerCase().contains("n")) {
             return false;
         } else {
-            String failMessage = "Valintaa ei tunnistettu.";
+            String failMessage = "Invalid input";
             io.println(failMessage);
             return confirm(message);
         }
@@ -186,10 +186,10 @@ public class TUI {
         Book book = bookDao.findOne(knownID);
         Check.notNull(book, () -> new IllegalArgumentException("No book found with id " + knownID));
 
-        if (confirm("oletko varma, että haluat poistaa lukuvinkin numero " + knownID + "?")) {
+        if (confirm("Are you sure you want to delete recommendation " + knownID + "?")) {
             bookDao.delete(knownID);
             io.println();
-            io.println("vinkin poistaminen onnistui");
+            io.println("recommendation successfully deleted");
         } else {
             io.println();
             io.println("recommendation deletion canceled");
@@ -224,14 +224,14 @@ public class TUI {
         if (!description.isEmpty()) {
             updatedBook.setDescription(description);
         }
-        if (confirm("oletko varma, että haluat muokata lukuvinkkiä numero " + knownID + "?")) {
+        if (confirm("are you sure you want to update recommendation " + knownID + "?")) {
             if (bookDao.update(updatedBook)) {
                 io.println();
-                io.println("vinkin muokkaaminen onnistui");
+                io.println("update successful");
                 return updatedBook;
             } else {
                 io.println();
-                io.println("vinkin muokkaaminen epäonnistui");
+                io.println("update failed");
                 return oldBook;
             }
         } else {

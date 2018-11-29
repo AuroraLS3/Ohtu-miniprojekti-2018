@@ -11,7 +11,7 @@ Feature: Users can update existing book recommendations
        And   affirmative response is given when asked for confirmation
        And   command all is selected
        And   the app processes the input
-       Then  system will respond with "vinkin muokkaaminen onnistui"
+       Then  system will respond with "update successful"
        And   the list of recommendations will include "2. Minna: Jolly Book, ISBN: 987655555"
 
     Scenario: user gets a warning message when trying to update a nonexisting recommendation
