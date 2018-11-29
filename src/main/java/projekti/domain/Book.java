@@ -182,25 +182,31 @@ public class Book extends AbstractPropertyStore {
 
     public String toStringWithDescription() {
         StringBuilder builder = new StringBuilder(toString());
+        builder.append("\nKuvaus: ");
         Optional<String> descriptionProperty = getProperty(Properties.DESCRIPTION);
         if (descriptionProperty.isPresent()) {
 
             int currentLength = 0;
             int charPerLine = 100;
-            String[] words = descriptionProperty.get().split(" ");
             // Split description on multiple lines, split between space characters if over 100 characters.
-            builder.append(", ");
-            currentLength += 2;
-            for (String word : words) {
-                builder.append(word).append(" ");
+            String[] words = descriptionProperty.get().split(" ");
+
+            for (int i = 0; i < words.length; i++) {
+                String word = words[i];
+                builder.append(word);
                 currentLength += word.length();
 
                 if (currentLength > charPerLine) {
                     builder.append("\n");
                     currentLength = 0;
                 }
-            }
 
+                // Separate words with spaces again, but don't add trailing space
+                if (i < words.length - 1) {
+                    builder.append(" ");
+                    currentLength++;
+                }
+            }
         }
 
         return builder.toString();
