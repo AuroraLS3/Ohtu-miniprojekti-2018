@@ -78,19 +78,9 @@ public class Stepdefs {
         inputLines.add("update");
     }
 
-    @When("^command select is selected$")
-    public void commandSelectIsSelected() {
+    @Given("^command select is selected$")
+    public void command_select_is_selected() throws Throwable {
         inputLines.add("select");
-    }
-
-    @When("^command all is selected$")
-    public void command_all_is_selected() {
-        inputLines.add("all");
-    }
-
-    @When("^command edit is selected$")
-    public void commandEditIsSelected() {
-        inputLines.add("edit");
     }
 
     @When("^author \"([^\"]*)\" title \"([^\"]*)\" and ISBN \"([^\"]*)\" are entered$")
@@ -101,6 +91,11 @@ public class Stepdefs {
         inputLines.add("");
     }
 
+    @When("^command all is selected$")
+    public void command_all_is_selected() {
+        inputLines.add("all");
+    }
+
     @When("^description \"([^\"]*)\" is entered in edit mode$")
     public void descriptionIsEnteredToEditMode(String description) {
         inputLines.add("");
@@ -109,9 +104,9 @@ public class Stepdefs {
         inputLines.add(description);
     }
 
-    @When("^user exits select mode$")
-    public void userExitsSelectMode() {
-        inputLines.add("return");
+    @When("^command edit is selected$")
+    public void commandEditIsSelected() {
+        inputLines.add("edit");
     }
 
     @When("^the app processes the input$")
@@ -122,7 +117,14 @@ public class Stepdefs {
         app = new TUI(bDao, io);
         app.run();
     }
-
+    @When("^command return is entered$")
+    public void command_return_is_entered() throws Throwable {
+        inputLines.add("return");
+    }
+    @When("^command edit is entered$")
+    public void command_edit_is_entered() throws Throwable {
+        inputLines.add("edit");
+    }
     @When("^existing recommendation id \"([^\"]*)\" is entered$")
     public void existing_recommendation_id_is_entered(String id) {
         inputLines.add(id);

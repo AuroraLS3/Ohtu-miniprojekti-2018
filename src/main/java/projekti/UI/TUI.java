@@ -48,7 +48,7 @@ public class TUI {
                 break;
             case "all": //listataan kaikki vinkit tietokannasta;
                 List<Book> books = bookDao.findAll();
-                // tulostusasun voisi määrittää kirjan toStringnä
+
                 books.forEach(book -> {
                     io.println(book.toString());
                 });
@@ -75,15 +75,16 @@ public class TUI {
 
     private void bookSelection() throws SQLException {
         Book book = askForBook();
-        if (book == null) {
-            return;
-        }
 
         String input = "";
 
         selectionLoop:
         while (!input.equals("return")) {
+            if (book == null) {
+                return;
+            }
             io.println(book.toStringWithDescription());
+            io.println();
 
             io.println("\ntoiminnot valitulle vinkille:");
             io.println("\tedit \tmuokkaa valittua vinkkiä");
@@ -93,8 +94,9 @@ public class TUI {
             input = io.getInput();
             switch (input) {
                 case "edit":
-                    updateBook(book.getProperty(Properties.ID).orElse(null));
+                    book = updateBook(book.getProperty(Properties.ID).orElse(null));
                     break;
+
                 case "delete":
                     deleteBook(book.getProperty(Properties.ID).orElse(null));
                     break selectionLoop;
@@ -183,6 +185,7 @@ public class TUI {
     private void deleteBook(Integer knownID) throws SQLException {
         Book book = bookDao.findOne(knownID);
         Check.notNull(book, () -> new IllegalArgumentException("No book found with id " + knownID));
+
         if (confirm("oletko varma, että haluat poistaa lukuvinkin numero " + knownID + "?")) {
             bookDao.delete(knownID);
             io.println();
@@ -193,7 +196,7 @@ public class TUI {
         }
     }
 
-    private void updateBook(Integer knownID) throws SQLException {
+    private Book updateBook(Integer knownID) throws SQLException {
         Book oldBook = bookDao.findOne(knownID);
         Check.notNull(oldBook, () -> new IllegalArgumentException("No book found with id " + knownID));
         Book updatedBook = new Book(oldBook.getProperty(Properties.AUTHOR).orElse(""),
@@ -225,13 +228,16 @@ public class TUI {
             if (bookDao.update(updatedBook)) {
                 io.println();
                 io.println("vinkin muokkaaminen onnistui");
+                return updatedBook;
             } else {
                 io.println();
                 io.println("vinkin muokkaaminen epäonnistui");
+                return oldBook;
             }
         } else {
             io.println();
             io.println("recommendation update canceled");
+            return oldBook;
         }
     }
 }
