@@ -96,6 +96,19 @@ public class Stepdefs {
         inputLines.add("all");
     }
 
+    @When("^description \"([^\"]*)\" is entered in edit mode$")
+    public void descriptionIsEnteredToEditMode(String description) {
+        inputLines.add("");
+        inputLines.add("");
+        inputLines.add("");
+        inputLines.add(description);
+    }
+
+    @When("^command edit is selected$")
+    public void commandEditIsSelected() {
+        inputLines.add("edit");
+    }
+
     @When("^the app processes the input$")
     public void the_app_processes_the_input() throws Throwable {
         inputLines.add("end");
@@ -178,7 +191,7 @@ public class Stepdefs {
     public void the_list_of_recommendations_will_include(String expectedOutput) {
         assertTrue(io.getPrints().contains(expectedOutput));
     }
-    
+
     @Then("^the list of recommendations will not include \"([^\"]*)\"$")
     public void the_list_of_recommendations_will_not_include(String unexpectedOutput) {
         assertFalse(io.getPrints().contains(unexpectedOutput));

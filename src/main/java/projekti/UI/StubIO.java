@@ -1,6 +1,7 @@
 package projekti.UI;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class StubIO implements IO {
@@ -15,8 +16,13 @@ public class StubIO implements IO {
     }
 
     @Override
-    public void print(String s) {
-        prints.add(s);
+    public synchronized void print(String s) {
+        if (s.contains("\n")) {
+            // Split by line break characters
+            prints.addAll(Arrays.asList(s.split("\\R")));
+        } else {
+            prints.add(s);
+        }
     }
 
     @Override
