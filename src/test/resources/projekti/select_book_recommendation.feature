@@ -34,7 +34,7 @@ Feature: Users can select specific recommendation
        Given some book recommendations have been created
        And   command select is selected
        When  existing recommendation id "2" is entered
-       And command delete is selected
+       And   command delete is selected
        And   affirmative response is given when asked for confirmation
        And   the app processes the input
        Then  system will respond with "vinkin poistaminen onnistui"
