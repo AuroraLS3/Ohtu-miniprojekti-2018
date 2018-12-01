@@ -39,5 +39,5 @@ Feature: Users can select specific recommendation
     And command delete is selected
     And   affirmative response is given when asked for confirmation
     And   the app processes the input
-    Then  system will respond with "vinkin poistaminen onnistui"
+    Then  system will respond with "recommendation successfully deleted"
     

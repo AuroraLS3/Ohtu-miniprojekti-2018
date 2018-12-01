@@ -6,7 +6,7 @@ Feature: Users can delete book recommendations
        When  existing recommendation id "2" is entered
        And   affirmative response is given when asked for confirmation
        And   the app processes the input
-       Then  system will respond with "vinkin poistaminen onnistui"
+       Then  system will respond with "recommendation successfully deleted"
 
     Scenario: user gets a warning message when trying to delete a nonexisting recommendation
        Given some book recommendations have been created
