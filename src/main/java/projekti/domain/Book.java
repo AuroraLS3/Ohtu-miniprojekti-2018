@@ -24,9 +24,9 @@ public class Book extends AbstractPropertyStore {
     public static class Properties {
 
         public static final Property<String> AUTHOR = new Property<>("AUTHOR", String.class, author -> author != null && !author.isEmpty());
-        public static final Property<String> TITLE = new Property<>("NAME", String.class, title -> title != null && !title.isEmpty());
+        public static final Property<String> TITLE = CommonProperties.TITLE;
         public static final Property<String> ISBN = new Property<>("ISBN", String.class, isbn -> isbn != null && !isbn.isEmpty());
-        public static final Property<String> DESCRIPTION = new Property<>("DESCRIPTION", String.class);
+        public static final Property<String> DESCRIPTION = CommonProperties.DESCRIPTION;
         public static final Property<Integer> ID = CommonProperties.ID;
 
         public static List<Property> getAll() {
