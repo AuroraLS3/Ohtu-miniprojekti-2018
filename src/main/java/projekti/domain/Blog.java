@@ -22,8 +22,7 @@ public class Blog extends AbstractPropertyStore implements Recommendation {
     public static class Properties {
 
         public static final Property<String> TITLE = CommonProperties.TITLE;
-        // TODO Add URL Validator (Move the best URL Property definition to CommonProperties and refer to that here)
-        public static final Property<String> URL = new Property<>("URL", String.class, url -> true);
+        public static final Property<String> URL = CommonProperties.URL;
         public static final Property<String> DESCRIPTION = CommonProperties.DESCRIPTION;
         public static final Property<Integer> ID = CommonProperties.ID;
 
