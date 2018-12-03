@@ -68,6 +68,9 @@ public class Blog extends AbstractPropertyStore implements Recommendation {
         this(title, url, null);
     }
 
+    Blog() {
+        this.type = "BLOG";
+    }
 
     public void setTitle(String title) {
         addProperty(Properties.TITLE, title);
