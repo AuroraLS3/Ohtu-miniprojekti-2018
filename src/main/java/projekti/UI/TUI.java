@@ -1,6 +1,7 @@
 package projekti.UI;
 
 import projekti.db.Dao;
+import projekti.domain.Blog;
 import projekti.domain.Book;
 import projekti.domain.Book.Properties;
 import projekti.util.Check;
@@ -11,10 +12,16 @@ import java.util.List;
 public class TUI {
 
     private Dao<Book, Integer> bookDao;
+    private Dao<Blog, Integer> blogDAO;
     private IO io;
 
-    public TUI(Dao<Book, Integer> bd, IO io) {
-        bookDao = bd;
+    public TUI(
+            Dao<Book, Integer> bookDAO,
+            Dao<Blog, Integer> blogDAO,
+            IO io
+    ) {
+        bookDao = bookDAO;
+        this.blogDAO = blogDAO;
         this.io = io;
     }
 
