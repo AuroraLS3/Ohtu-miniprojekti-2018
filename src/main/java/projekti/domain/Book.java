@@ -101,57 +101,8 @@ public class Book extends AbstractPropertyStore {
         addProperty(Properties.DESCRIPTION, description);
     }
 
-    /**
-     * Get the database ID of the book.
-     *
-     * @return database ID of the book.
-     * @deprecated Use {@code book.getProperty(Properties.ID)} instead.
-     */
-    @Deprecated
-    public Integer getID() {
-        return getProperty(Properties.ID).orElse(null);
-    }
-
-    /**
-     * Get the author of the book.
-     *
-     * @return Author of the book.
-     * @deprecated Use {@code book.getProperty(Properties.AUTHOR)} instead.
-     */
-    @Deprecated
-    public String getAuthor() {
-        return getProperty(Properties.AUTHOR).orElse(null);
-    }
-
-    /**
-     * Get the title of the book.
-     *
-     * @return Title of the book.
-     * @deprecated Use {@code book.getProperty(Properties.TITLE)} instead.
-     */
-    @Deprecated
-    public String getTitle() {
-        return getProperty(Properties.TITLE).orElse(null);
-    }
-
-    /**
-     * Get the ISBN of the book.
-     *
-     * @return ISBN of the book.
-     * @deprecated Use {@code book.getProperty(Properties.ISBN)} instead.
-     */
-    @Deprecated
-    public String getISBN() {
-        return getProperty(Properties.ISBN).orElse(null);
-    }
-
     public String getType() {
         return type;
-    }
-
-    @Deprecated
-    public String getDescription() {
-        return getProperty(Properties.DESCRIPTION).orElse(null);
     }
 
     @Override
