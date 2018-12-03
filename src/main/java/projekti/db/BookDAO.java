@@ -96,7 +96,7 @@ public class BookDAO implements Dao<Book, Integer> {
             stmt.setString(2, book.getProperty(Properties.TITLE).orElse(null));
             stmt.setString(3, book.getProperty(Properties.ISBN).orElse(null));
             stmt.setString(4, book.getType());
-            stmt.setString(5, book.getProperty(Properties.URL).orElse(""));
+            stmt.setString(5, book.getProperty(Properties.URL).orElse(null));
             stmt.setString(6, book.getProperty(Properties.DESCRIPTION).orElse(""));
             stmt.executeUpdate();
             ResultSet rs = stmt.getGeneratedKeys();
@@ -156,7 +156,7 @@ public class BookDAO implements Dao<Book, Integer> {
             stmnt.setString(2, object.getProperty(Properties.TITLE).orElse(null));
             stmnt.setString(3, object.getProperty(Properties.ISBN).orElse(null));
             stmnt.setString(4, object.getType());
-            stmnt.setString(5, object.getProperty(Properties.URL).orElse(""));
+            stmnt.setString(5, object.getProperty(Properties.URL).orElse(null));
             stmnt.setString(6, object.getProperty(Properties.DESCRIPTION).orElse(""));
             stmnt.setInt(7, object.getProperty(Properties.ID).orElse(null));
             int count = stmnt.executeUpdate();

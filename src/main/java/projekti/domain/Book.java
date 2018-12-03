@@ -69,24 +69,30 @@ public class Book extends AbstractPropertyStore implements Recommendation {
         Check.notNull(isbn, () -> new IllegalArgumentException("ISBN should not be null"));
         Check.isFalse(author.isEmpty(), () -> new IllegalArgumentException("Author should not be empty"));
         Check.isFalse(title.isEmpty(), () -> new IllegalArgumentException("Title should not be empty"));
-        Check.isTrue(new UrlValidator().isValid(url) || url.isEmpty(), () -> new IllegalArgumentException("URL should be valid or empty"));
         Check.isFalse(isbn.isEmpty(), () -> new IllegalArgumentException("ISBN should not be empty"));
         addProperty(Properties.AUTHOR, author);
         addProperty(Properties.TITLE, title);
         addProperty(Properties.ISBN, isbn);
-        addProperty(Properties.URL, url);
         addProperty(Properties.DESCRIPTION, description);
+        handleUrlProperty(url);
         this.type = "BOOK";
+    }
+    
+    private void handleUrlProperty(String url) {
+    	if (url != null) {
+            Check.isTrue(new UrlValidator().isValid(url), () -> new IllegalArgumentException("URL should be valid"));
+            addProperty(Properties.URL, url);
+    	}
     }
     
     @Deprecated
     public Book(String author, String title, String isbn, String description) {
-    	this(author, title, isbn, "", description);
+    	this(author, title, isbn, null, description);
     }
     
     @Deprecated
     public Book(String author, String title, String isbn) {
-        this(author, title, isbn, "", null);
+        this(author, title, isbn, null, null);
     }
 
     public void setAuthor(String author) {

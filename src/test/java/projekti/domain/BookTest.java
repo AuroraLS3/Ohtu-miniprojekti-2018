@@ -21,49 +21,49 @@ public class BookTest {
     public void canNotCreateBookWithoutAuthor() {
         expected.expect(IllegalArgumentException.class);
         expected.expectMessage("Author should not be null");
-        new Book(null, "Esimerkki-ihmisen arkipäivä", "1323213", "");
+        new Book(null, "Esimerkki-ihmisen arkipäivä", "1323213", "https://www.url.com", "");
     }
 
     @Test
     public void canNotCreateBookWithoutAuthorName() {
         expected.expect(IllegalArgumentException.class);
         expected.expectMessage("Author should not be empty");
-        new Book("", "Esimerkki-ihmisen arkipäivä", "1323213", "");
+        new Book("", "Esimerkki-ihmisen arkipäivä", "1323213", "https://www.url.com", "");
     }
 
     @Test
     public void canNotCreateBookWithoutTitle() {
         expected.expect(IllegalArgumentException.class);
         expected.expectMessage("Title should not be null");
-        new Book("Matti Meikäläinen", null, "1323213", "");
+        new Book("Matti Meikäläinen", null, "1323213", "https://www.url.com", "");
     }
 
     @Test
     public void canNotCreateBookWithEmptyTitle() {
         expected.expect(IllegalArgumentException.class);
         expected.expectMessage("Title should not be empty");
-        new Book("Matti Meikäläinen", "", "1323213", "");
+        new Book("Matti Meikäläinen", "", "1323213", "https://www.url.com", "");
     }
 
     @Test
     public void canNotCreateBookWithoutISBN() {
         expected.expect(IllegalArgumentException.class);
         expected.expectMessage("ISBN should not be null");
-        new Book("Matti Meikäläinen", "Esimerkki-ihmisen arkipäivä", null, "");
+        new Book("Matti Meikäläinen", "Esimerkki-ihmisen arkipäivä", null, "https://www.url.com", "");
     }
 
     @Test
     public void canNotCreateBookWithEmptyISBN() {
         expected.expect(IllegalArgumentException.class);
         expected.expectMessage("ISBN should not be empty");
-        new Book("Matti Meikäläinen", "Esimerkki-ihmisen arkipäivä", "", "");
+        new Book("Matti Meikäläinen", "Esimerkki-ihmisen arkipäivä", "", "https://www.url.com", "");
     }
     
     @Test
     public void canNotCreateBookWithInvalidURL() {
     	expected.expect(IllegalArgumentException.class);
-    	expected.expectMessage("URL should be valid or empty");
-    	new Book("Matti Meikäläinen", "Esimerkki-ihmisen arkipäivä", "ISBN:1512sdfaf", "asdfasgdwefsadf1414124-com", "olipas hieno!");
+    	expected.expectMessage("URL should be valid");
+    	new Book("Matti Meikäläinen", "Esimerkki-ihmisen arkipäivä", "ISBN:1512sdfaf", "fjlsöadjfasöh-com.fi", "olipas hieno!");
     }
 
     @Test
@@ -75,7 +75,7 @@ public class BookTest {
     public void propertiesAreReturnedByABook() {
         assertEquals(
                 Book.Properties.getAll(),
-                new Book("Matti Meikäläinen", "Esimerkki-ihmisen arkipäivä", "1323213", "Description").getProperties()
+                new Book("Matti Meikäläinen", "Esimerkki-ihmisen arkipäivä", "1323213", "https://www.url.com" ,"Description").getProperties()
         );
     }
 
