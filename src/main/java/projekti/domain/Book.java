@@ -114,7 +114,7 @@ public class Book extends AbstractPropertyStore implements Recommendation {
             return false;
         }
         Book book = (Book) o;
-        return Objects.equals(type, book.type);
+        return super.equals(o) && Objects.equals(type, book.type);
     }
 
     @Override

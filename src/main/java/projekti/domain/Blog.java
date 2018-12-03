@@ -99,7 +99,7 @@ public class Blog extends AbstractPropertyStore implements Recommendation {
             return false;
         }
         Blog blog = (Blog) o;
-        return Objects.equals(type, blog.type);
+        return super.equals(o) && Objects.equals(type, blog.type);
     }
 
     @Override

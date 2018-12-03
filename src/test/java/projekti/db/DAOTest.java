@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import projekti.domain.Blog;
 import projekti.domain.CommonProperties;
 import projekti.domain.Property;
 import projekti.domain.Recommendation;
@@ -18,7 +17,7 @@ import static org.junit.Assert.*;
 
 /**
  * Abstraction of DAOTest classes.
- *
+ * <p>
  * Tests that only affect a single DAO should be written in their appropriate classes.
  *
  * @author Rsl1122
@@ -32,7 +31,7 @@ public abstract class DAOTest<T extends Recommendation> {
     protected Dao<T, Integer> underTest;
     protected T testObject;
 
-    
+
     @Before
     public void setUp() throws Exception {
         underTest = setUpDAO();
@@ -40,20 +39,22 @@ public abstract class DAOTest<T extends Recommendation> {
     }
 
     protected abstract Dao<T, Integer> setUpDAO() throws Exception;
-    
+
     protected abstract T createTestObject();
+
+    protected abstract T updateObjectInSomeWay(T testObject);
 
     private void addObject() throws SQLException {
         testObject = underTest.create(testObject);
     }
 
     @Test
-    public void emptyListIsReturnedWithNoBlogsSaved() throws SQLException {
+    public void emptyListIsReturnedWithNoObjectsSaved() throws SQLException {
         assertEquals(Collections.emptyList(), underTest.findAll());
     }
 
     @Test
-    public void newBlogIsReturnedByFindAll() throws SQLException {
+    public void newObjectIsReturnedByFindAll() throws SQLException {
         addObject();
         assertEquals(Collections.singletonList(testObject), underTest.findAll());
     }
@@ -61,28 +62,28 @@ public abstract class DAOTest<T extends Recommendation> {
     @Test
     public void objectIsDeleted() throws SQLException {
         // Create and save new object
-        newBlogIsReturnedByFindAll();
+        newObjectIsReturnedByFindAll();
 
         Optional<Integer> idProperty = testObject.getProperty(CommonProperties.ID);
         assertTrue(idProperty.isPresent());
         underTest.delete(idProperty.get());
 
         // Check that database is now empty
-        emptyListIsReturnedWithNoBlogsSaved();
+        emptyListIsReturnedWithNoObjectsSaved();
     }
 
     @Test
     public void objectIsFoundById() throws SQLException {
         addObject();
 
-        Optional<Integer> idProperty = testObject.getProperty(Blog.Properties.ID);
+        Optional<Integer> idProperty = testObject.getProperty(CommonProperties.ID);
         assertTrue(idProperty.isPresent());
         T object = underTest.findOne(idProperty.get());
         assertEquals(testObject, object);
     }
 
     @Test
-    public void foundBlogsHaveAllProperties() throws SQLException {
+    public void foundObjectsHaveAllProperties() throws SQLException {
         addObject();
 
         List<T> found = underTest.findAll();
@@ -96,7 +97,7 @@ public abstract class DAOTest<T extends Recommendation> {
     }
 
     @Test
-    public void foundBlogHasAllProperties() throws SQLException {
+    public void foundObjectHasAllProperties() throws SQLException {
         addObject();
 
         Optional<Integer> idProperty = testObject.getProperty(CommonProperties.ID);
@@ -105,6 +106,23 @@ public abstract class DAOTest<T extends Recommendation> {
         for (Property property : object.getProperties()) {
             assertTrue("does not have " + property.getName() + " property when fetched with findOne.", object.getProperty(property).isPresent());
         }
+    }
 
+    @Test
+    public void updatedObjectIsSaved() throws SQLException {
+        addObject();
+
+        T updatedObject = updateObjectInSomeWay(testObject);
+        // Check that the object was actually updated
+        assertNotEquals(testObject, updatedObject);
+
+        // Update in db
+        assertTrue(underTest.update(updatedObject));
+
+        // Check that the updated object was saved
+        T found = underTest.findOne(updatedObject.getProperty(CommonProperties.ID).orElse(-1));
+        assertNotNull(found);
+
+        assertEquals(updatedObject, found);
     }
 }
