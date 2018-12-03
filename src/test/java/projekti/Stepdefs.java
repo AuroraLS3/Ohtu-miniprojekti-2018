@@ -6,9 +6,11 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import projekti.UI.StubIO;
 import projekti.UI.TUI;
+import projekti.db.BlogDAO;
 import projekti.db.BookDAO;
 import projekti.db.Dao;
 import projekti.db.DatabaseManager;
+import projekti.domain.Blog;
 import projekti.domain.Book;
 
 import java.io.File;
@@ -23,22 +25,24 @@ import static org.junit.Assert.assertTrue;
 
 public class Stepdefs {
 
-    DatabaseManager dbm;
-    Dao<Book, Integer> bDao;
+    DatabaseManager databaseManager;
+    Dao<Book, Integer> bookDAO;
+    Dao<Blog, Integer> blogDAO;
     TUI app;
     StubIO io;
     List<String> inputLines;
 
     @Before
     public void cleanDB() throws SQLException, IOException {
-        if (dbm != null) {
-            dbm.disconnect();
+        if (databaseManager != null) {
+            databaseManager.disconnect();
         }
         File testDB = new File("./build/test.mv.db");
         Files.deleteIfExists(testDB.toPath());
-        this.dbm = new DatabaseManager("jdbc:h2:./build/test", "sa", "");
-        bDao = new BookDAO(dbm);
-        bDao.findAll();
+        this.databaseManager = new DatabaseManager("jdbc:h2:./build/test", "sa", "");
+        bookDAO = new BookDAO(databaseManager);
+        blogDAO = new BlogDAO(databaseManager);
+
         inputLines = new ArrayList<>();
     }
 
@@ -114,17 +118,20 @@ public class Stepdefs {
         inputLines.add("end");
 
         io = new StubIO(inputLines);
-        app = new TUI(bDao, io);
+        app = new TUI(bookDAO, blogDAO, io);
         app.run();
     }
+
     @When("^command return is entered$")
     public void command_return_is_entered() throws Throwable {
         inputLines.add("return");
     }
+
     @When("^command edit is entered$")
     public void command_edit_is_entered() throws Throwable {
         inputLines.add("edit");
     }
+
     @When("^existing recommendation id \"([^\"]*)\" is entered$")
     public void existing_recommendation_id_is_entered(String id) {
         inputLines.add(id);
