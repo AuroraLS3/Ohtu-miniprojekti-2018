@@ -5,6 +5,7 @@ import projekti.domain.Blog;
 import projekti.domain.Book;
 import projekti.domain.Book.Properties;
 import projekti.domain.Other;
+import projekti.domain.Recommendation;
 import projekti.util.Check;
 
 import java.sql.SQLException;
@@ -27,6 +28,20 @@ public class TUI {
         this.blogDAO = blogDAO;
         this.otherDAO = otherDAO;
         this.io = io;
+    }
+
+    // Tallennus metodi jota voi käyttää myöhemmin
+    private Recommendation save(Recommendation recommendation) throws SQLException {
+        switch (recommendation.getType()) {
+            case "BOOK":
+                return bookDao.create((Book) recommendation);
+            case "BLOG":
+                return blogDAO.create((Blog) recommendation);
+            case "OTHER":
+                return otherDAO.create((Other) recommendation);
+            default:
+                throw new IllegalArgumentException("No save definition for recommendation of type: " + recommendation.getType());
+        }
     }
 
     public void run() throws SQLException {
