@@ -35,7 +35,13 @@ public class RecommendationFactoryTest {
 
     @Test
     public void bookCanBeCreatedWithValidParameters() {
-        Iterator<String> input = Arrays.asList("Matti Meikäläinen", "Esimerkki-ihmisen arkipäivä", "700-4343", "Hyvä kuvaus").iterator();
+        Iterator<String> input = Arrays.asList(
+                "Matti Meikäläinen",
+                "Esimerkki-ihmisen arkipäivä",
+                "700-4343",
+                "http://www.suomalainen.fi",
+                "Hyvä kuvaus"
+        ).iterator();
 
         Recommendation book = factory.selectType("BOOK")
                 .whileMissingProperties(property -> input.next())
