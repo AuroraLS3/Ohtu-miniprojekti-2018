@@ -14,7 +14,7 @@ public class BookTest {
 
     @Test
     public void canCreateBookWithAllParameters() {
-        new Book("Matti Meikäläinen", "Esimerkki-ihmisen arkipäivä", "1323213", "");
+        new Book("Matti Meikäläinen", "Esimerkki-ihmisen arkipäivä", "1323213", "https://www.hieno-tarina.com", "hyviä ajatuksia");
     }
 
     @Test
@@ -57,6 +57,13 @@ public class BookTest {
         expected.expect(IllegalArgumentException.class);
         expected.expectMessage("ISBN should not be empty");
         new Book("Matti Meikäläinen", "Esimerkki-ihmisen arkipäivä", "", "");
+    }
+    
+    @Test
+    public void canNotCreateBookWithInvalidURL() {
+    	expected.expect(IllegalArgumentException.class);
+    	expected.expectMessage("URL should be valid or empty");
+    	new Book("Matti Meikäläinen", "Esimerkki-ihmisen arkipäivä", "ISBN:1512sdfaf", "asdfasgdwefsadf1414124-com", "olipas hieno!");
     }
 
     @Test

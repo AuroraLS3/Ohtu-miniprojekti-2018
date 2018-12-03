@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
+import org.apache.commons.validator.routines.UrlValidator;
 /**
  * Object that represents a book.
  *
@@ -26,6 +26,7 @@ public class Book extends AbstractPropertyStore {
         public static final Property<String> AUTHOR = new Property<>("AUTHOR", String.class, author -> author != null && !author.isEmpty());
         public static final Property<String> TITLE = new Property<>("NAME", String.class, title -> title != null && !title.isEmpty());
         public static final Property<String> ISBN = new Property<>("ISBN", String.class, isbn -> isbn != null && !isbn.isEmpty());
+        public static final Property<String> URL = new Property<>("URL", String.class, new UrlValidator()::isValid);
         public static final Property<String> DESCRIPTION = new Property<>("DESCRIPTION", String.class);
         public static final Property<Integer> ID = CommonProperties.ID;
 
@@ -51,6 +52,12 @@ public class Book extends AbstractPropertyStore {
     }
 
     private final String type;
+    
+    public Book(String author, String title, String isbn, String url, String description) {
+    	this(author, title, isbn, description);
+        Check.isTrue(new UrlValidator().isValid(url) || url.isEmpty(), () -> new IllegalArgumentException("URL should be valid or empty"));
+        addProperty(Properties.URL, url);
+    }
 
     /**
      * Create a new book.

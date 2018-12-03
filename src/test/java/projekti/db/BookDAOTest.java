@@ -27,7 +27,7 @@ public class BookDAOTest {
     @Before
     public void setUp() throws SQLException, IOException {
         // It is assumed that this book has all properties.
-        testBook = new Book("Matti Meikäläinen", "Esimerkki-ihmisen arkipäivä", "4332652435", "Description");
+        testBook = new Book("Matti Meikäläinen", "Esimerkki-ihmisen arkipäivä", "4332652435", "https://www.google.com" ,"Description");
 
         File dbFile = temporaryFolder.newFile();
         DatabaseManager databaseManager = new DatabaseManager("jdbc:h2:" + dbFile.getAbsolutePath(), "sa", "");

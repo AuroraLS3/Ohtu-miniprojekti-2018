@@ -49,7 +49,19 @@ public class BookDAO implements Dao<Book, Integer> {
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
-
+    
+    private Book readABookFrom(ResultSet result) throws SQLException {
+        Integer id = result.getInt("ID");
+        Book book = new Book(
+                result.getString("AUTHOR"),
+                result.getString("NAME"),
+                result.getString("ISBN"),
+                result.getString("URL"),
+                result.getString("DESCRIPTION")
+        );
+        book.setID(id);
+        return book;
+    }
     /**
      * Read books from database using ResultSet.
      *
@@ -59,14 +71,7 @@ public class BookDAO implements Dao<Book, Integer> {
     private List<Book> readBooksFrom(ResultSet results) throws SQLException {
         List<Book> books = new ArrayList<>();
         while (results.next()) {
-            Integer id = results.getInt("ID");
-            Book book = new Book(
-                    results.getString("AUTHOR"),
-                    results.getString("NAME"),
-                    results.getString("ISBN"),
-                    results.getString("DESCRIPTION")
-            );
-            book.setID(id);
+            Book book = readABookFrom(results);
             books.add(book);
         }
         return books;
@@ -82,8 +87,8 @@ public class BookDAO implements Dao<Book, Integer> {
     public Book create(Book book) throws SQLException {
         int bookId = -1;
 
-        String sql = "INSERT INTO " + TABLE_NAME + " (AUTHOR, NAME, ISBN, TYPE, DESCRIPTION) "
-                + "VALUES (?, ?, ?, ?,?)";
+        String sql = "INSERT INTO " + TABLE_NAME + " (AUTHOR, NAME, ISBN, TYPE, URL, DESCRIPTION) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = databaseManager.connect()) {
             PreparedStatement stmt = connection.prepareStatement(sql);
 
@@ -91,7 +96,8 @@ public class BookDAO implements Dao<Book, Integer> {
             stmt.setString(2, book.getProperty(Properties.TITLE).orElse(null));
             stmt.setString(3, book.getProperty(Properties.ISBN).orElse(null));
             stmt.setString(4, book.getType());
-            stmt.setString(5, book.getProperty(Properties.DESCRIPTION).orElse(""));
+            stmt.setString(5, book.getProperty(Properties.URL).orElse(""));
+            stmt.setString(6, book.getProperty(Properties.DESCRIPTION).orElse(""));
             stmt.executeUpdate();
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
@@ -115,23 +121,14 @@ public class BookDAO implements Dao<Book, Integer> {
     @Override
     public Book findOne(Integer key) throws SQLException {
         try (Connection conn = databaseManager.connect()) {
-            PreparedStatement stmt = conn.prepareStatement("SELECT ID, AUTHOR, NAME, ISBN, DESCRIPTION FROM " + TABLE_NAME + " WHERE ID = ?");
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM " + TABLE_NAME + " WHERE ID = ?");
             stmt.setInt(1, key);
-
             ResultSet result = stmt.executeQuery();
 
             if (!result.next()) {
                 return null;
             }
-            Integer id = result.getInt("ID");
-            Book book = new Book(
-                    result.getString("AUTHOR"),
-                    result.getString("NAME"),
-                    result.getString("ISBN"),
-                    result.getString("DESCRIPTION")
-            );
-            book.setID(id);
-            return book;
+            return readABookFrom(result);
         }
     }
 
@@ -150,6 +147,7 @@ public class BookDAO implements Dao<Book, Integer> {
                     + "NAME = ?, "
                     + "ISBN = ?, "
                     + "TYPE = ?, "
+                    + "URL = ?, "
                     + "DESCRIPTION = ? "
                     + "WHERE RECOMMENDATION.ID = ? ;";
             PreparedStatement stmnt = conn.prepareStatement(statementString);
@@ -157,8 +155,9 @@ public class BookDAO implements Dao<Book, Integer> {
             stmnt.setString(2, object.getProperty(Properties.TITLE).orElse(null));
             stmnt.setString(3, object.getProperty(Properties.ISBN).orElse(null));
             stmnt.setString(4, object.getType());
-            stmnt.setString(5, object.getProperty(Properties.DESCRIPTION).orElse(""));
-            stmnt.setInt(6, object.getProperty(Properties.ID).orElse(null));
+            stmnt.setString(5, object.getProperty(Properties.URL).orElse(""));
+            stmnt.setString(6, object.getProperty(Properties.DESCRIPTION).orElse(""));
+            stmnt.setInt(7, object.getProperty(Properties.ID).orElse(null));
             int count = stmnt.executeUpdate();
             if (count == 0) {
                 Logger.getGlobal().log(Level.WARNING, "No matches for update in the db");
