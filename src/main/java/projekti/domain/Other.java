@@ -8,16 +8,16 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Object that represents a blog.
+ * Object that represents generic recommendation.
  *
  * @author Rsl1122
  */
-public class Blog extends AbstractPropertyStore implements Recommendation {
+public class Other extends AbstractPropertyStore implements Recommendation {
 
     /**
-     * Class that lists properties of a Blog object.
+     * Class that lists properties of an Other object.
      * <p>
-     * Use this to access properties {@code blog.getProperty(Properties.NAME)}
+     * Use this to access properties {@code other.getProperty(Properties.NAME)}
      */
     public static class Properties {
 
@@ -51,21 +51,21 @@ public class Blog extends AbstractPropertyStore implements Recommendation {
     private final String type;
 
     /**
-     * Create a new blog.
+     * Create a new other.
      *
-     * @param title       Title of the blog, not null or empty.
-     * @param url         url of the blog, not null or empty.
-     * @param description Description of the blog, can be empty
+     * @param title       Title of the other, not null or empty.
+     * @param url         url of the other, not null or empty.
+     * @param description Description of the other, can be empty
      */
-    public Blog(String title, String url, String description) {
+    public Other(String title, String url, String description) {
         addProperty(Properties.TITLE, title);
         addProperty(Properties.URL, url);
         addProperty(Properties.DESCRIPTION, description);
 
-        this.type = "BLOG";
+        this.type = "OTHER";
     }
 
-    public Blog(String title, String url) {
+    public Other(String title, String url) {
         this(title, url, null);
     }
 
@@ -98,8 +98,8 @@ public class Blog extends AbstractPropertyStore implements Recommendation {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Blog blog = (Blog) o;
-        return Objects.equals(type, blog.type);
+        Other other = (Other) o;
+        return Objects.equals(type, other.type);
     }
 
     @Override
