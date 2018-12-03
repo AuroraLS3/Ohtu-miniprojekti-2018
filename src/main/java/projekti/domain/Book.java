@@ -81,6 +81,10 @@ public class Book extends AbstractPropertyStore implements Recommendation {
         this(author, title, isbn, null);
     }
 
+    Book() {
+        this.type = "BOOK";
+    }
+
     public void setAuthor(String author) {
         addProperty(Properties.AUTHOR, author);
     }

@@ -65,6 +65,10 @@ public class Other extends AbstractPropertyStore implements Recommendation {
         this.type = "OTHER";
     }
 
+    Other() {
+        this.type = "OTHER";
+    }
+
     public Other(String title, String url) {
         this(title, url, null);
     }
