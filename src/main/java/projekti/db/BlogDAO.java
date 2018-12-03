@@ -49,6 +49,17 @@ public class BlogDAO implements Dao<Blog, Integer> {
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
+    
+    private Blog readABlogFrom(ResultSet results) throws SQLException {
+        Integer id = results.getInt("ID");
+        Blog blog = new Blog(
+                results.getString("NAME"),
+                results.getString("URL"),
+                results.getString("DESCRIPTION")
+        );
+        blog.setID(id);
+        return blog;
+    }
 
     /**
      * Read blogs from database using ResultSet.
@@ -59,13 +70,7 @@ public class BlogDAO implements Dao<Blog, Integer> {
     private List<Blog> readBlogsFrom(ResultSet results) throws SQLException {
         List<Blog> blogs = new ArrayList<>();
         while (results.next()) {
-            Integer id = results.getInt("ID");
-            Blog blog = new Blog(
-                    results.getString("NAME"),
-                    results.getString("URL"),
-                    results.getString("DESCRIPTION")
-            );
-            blog.setID(id);
+        	Blog blog = readABlogFrom(results);
             blogs.add(blog);
         }
         return blogs;
@@ -115,19 +120,12 @@ public class BlogDAO implements Dao<Blog, Integer> {
         try (Connection conn = databaseManager.connect()) {
             PreparedStatement stmt = conn.prepareStatement("SELECT ID, NAME, URL, DESCRIPTION FROM " + TABLE_NAME + " WHERE ID = ?");
             stmt.setInt(1, key);
-
             ResultSet result = stmt.executeQuery();
-
             if (!result.next()) {
                 return null;
             }
-            Integer id = result.getInt("ID");
-            Blog blog = new Blog(
-                    result.getString("NAME"),
-                    result.getString("URL"),
-                    result.getString("DESCRIPTION")
-            );
-            blog.setID(id);
+            Blog blog = readABlogFrom(result);
+            result.close();
             return blog;
         }
     }
@@ -155,6 +153,7 @@ public class BlogDAO implements Dao<Blog, Integer> {
             stmnt.setString(4, object.getProperty(Properties.DESCRIPTION).orElse(""));
             stmnt.setInt(5, object.getProperty(Properties.ID).orElse(null));
             int count = stmnt.executeUpdate();
+            stmnt.close();
             if (count == 0) {
                 Logger.getGlobal().log(Level.WARNING, "No matches for update in the db");
                 return false;
