@@ -6,6 +6,7 @@ import projekti.UI.TextIO;
 import projekti.db.BlogDAO;
 import projekti.db.BookDAO;
 import projekti.db.DatabaseManager;
+import projekti.db.OtherDAO;
 
 import java.sql.SQLException;
 
@@ -24,7 +25,8 @@ public class Main {
         databaseManager.setupSchema();
         BookDAO bookDAO = new BookDAO(databaseManager);
         BlogDAO blogDAO = new BlogDAO(databaseManager);
-        TUI app = new TUI(bookDAO, blogDAO, new TextIO());
+        OtherDAO otherDAO = new OtherDAO(databaseManager);
+        TUI app = new TUI(bookDAO, blogDAO, otherDAO, new TextIO());
         app.run();
     }
 

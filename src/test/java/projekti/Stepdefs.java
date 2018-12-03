@@ -6,12 +6,10 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import projekti.UI.StubIO;
 import projekti.UI.TUI;
-import projekti.db.BlogDAO;
-import projekti.db.BookDAO;
-import projekti.db.Dao;
-import projekti.db.DatabaseManager;
+import projekti.db.*;
 import projekti.domain.Blog;
 import projekti.domain.Book;
+import projekti.domain.Other;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +26,7 @@ public class Stepdefs {
     DatabaseManager databaseManager;
     Dao<Book, Integer> bookDAO;
     Dao<Blog, Integer> blogDAO;
+    Dao<Other, Integer> otherDAO;
     TUI app;
     StubIO io;
     List<String> inputLines;
@@ -42,6 +41,7 @@ public class Stepdefs {
         this.databaseManager = new DatabaseManager("jdbc:h2:./build/test", "sa", "");
         bookDAO = new BookDAO(databaseManager);
         blogDAO = new BlogDAO(databaseManager);
+        otherDAO = new OtherDAO(databaseManager);
 
         inputLines = new ArrayList<>();
     }
@@ -118,7 +118,7 @@ public class Stepdefs {
         inputLines.add("end");
 
         io = new StubIO(inputLines);
-        app = new TUI(bookDAO, blogDAO, io);
+        app = new TUI(bookDAO, blogDAO, otherDAO, io);
         app.run();
     }
 

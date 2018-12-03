@@ -4,6 +4,7 @@ import projekti.db.Dao;
 import projekti.domain.Blog;
 import projekti.domain.Book;
 import projekti.domain.Book.Properties;
+import projekti.domain.Other;
 import projekti.util.Check;
 
 import java.sql.SQLException;
@@ -13,15 +14,18 @@ public class TUI {
 
     private Dao<Book, Integer> bookDao;
     private Dao<Blog, Integer> blogDAO;
+    private Dao<Other, Integer> otherDAO;
     private IO io;
 
     public TUI(
             Dao<Book, Integer> bookDAO,
             Dao<Blog, Integer> blogDAO,
+            Dao<Other, Integer> otherDAO,
             IO io
     ) {
         bookDao = bookDAO;
         this.blogDAO = blogDAO;
+        this.otherDAO = otherDAO;
         this.io = io;
     }
 
@@ -48,8 +52,8 @@ public class TUI {
     }
 
     private void performAction(String input) throws SQLException {
-        switch (input.toLowerCase()) { 
-            case "new": 
+        switch (input.toLowerCase()) {
+            case "new":
                 //Käyttäjä valitsee vinkin tyyypin, nyt vain kirjat tuettu
                 createBook();
                 break;
@@ -156,7 +160,7 @@ public class TUI {
         } else {
             io.println("\nrecommendation not added");
         }
-       
+
     }
 
     private Integer selectID() {
