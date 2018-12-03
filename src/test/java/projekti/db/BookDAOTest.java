@@ -16,6 +16,6 @@ public class BookDAOTest extends DAOTest<Book> {
     @Override
     protected Book createTestObject() {
         // It is assumed that this book has all properties.
-        return new Book("Matti Meikäläinen", "Esimerkki-ihmisen arkipäivä", "4332652435", "Description");
+        return new Book("Matti Meikäläinen", "Esimerkki-ihmisen arkipäivä", "4332652435", "https://www.kirja.fi", "Description");
     }
 }

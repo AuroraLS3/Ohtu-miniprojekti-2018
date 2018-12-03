@@ -53,11 +53,6 @@ public class Book extends AbstractPropertyStore implements Recommendation {
 
     private final String type;
 
-    public Book(String author, String title, String isbn, String url, String description) {
-    	this(author, title, isbn, description);
-        Check.isTrue(new UrlValidator().isValid(url) || url.isEmpty(), () -> new IllegalArgumentException("URL should be valid or empty"));
-        addProperty(Properties.URL, url);
-    }
 
     /**
      * Create a new book.
@@ -65,27 +60,33 @@ public class Book extends AbstractPropertyStore implements Recommendation {
      * @param author      Author of the book, not null or empty.
      * @param title       Title of the book, not null or empty.
      * @param isbn        ISBN of the book, not null or empty.
+     * @param url		  URL address of the book, valid url or empty.
      * @param description Description of the book, can be empty
      */
-    public Book(String author, String title, String isbn, String description) {
+    public Book(String author, String title, String isbn, String url, String description) {
         Check.notNull(author, () -> new IllegalArgumentException("Author should not be null"));
         Check.notNull(title, () -> new IllegalArgumentException("Title should not be null"));
         Check.notNull(isbn, () -> new IllegalArgumentException("ISBN should not be null"));
-
         Check.isFalse(author.isEmpty(), () -> new IllegalArgumentException("Author should not be empty"));
         Check.isFalse(title.isEmpty(), () -> new IllegalArgumentException("Title should not be empty"));
+        Check.isTrue(new UrlValidator().isValid(url) || url.isEmpty(), () -> new IllegalArgumentException("URL should be valid or empty"));
         Check.isFalse(isbn.isEmpty(), () -> new IllegalArgumentException("ISBN should not be empty"));
-
         addProperty(Properties.AUTHOR, author);
         addProperty(Properties.TITLE, title);
         addProperty(Properties.ISBN, isbn);
+        addProperty(Properties.URL, url);
         addProperty(Properties.DESCRIPTION, description);
-
         this.type = "BOOK";
     }
-
+    
+    @Deprecated
+    public Book(String author, String title, String isbn, String description) {
+    	this(author, title, isbn, "", description);
+    }
+    
+    @Deprecated
     public Book(String author, String title, String isbn) {
-        this(author, title, isbn, null);
+        this(author, title, isbn, "", null);
     }
 
     public void setAuthor(String author) {

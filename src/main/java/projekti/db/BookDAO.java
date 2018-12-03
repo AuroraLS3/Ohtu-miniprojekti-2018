@@ -124,11 +124,12 @@ public class BookDAO implements Dao<Book, Integer> {
             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM " + TABLE_NAME + " WHERE ID = ?");
             stmt.setInt(1, key);
             ResultSet result = stmt.executeQuery();
-
             if (!result.next()) {
                 return null;
             }
-            return readABookFrom(result);
+            Book one = readABookFrom(result);
+            result.close();
+            return one;
         }
     }
 
@@ -159,6 +160,7 @@ public class BookDAO implements Dao<Book, Integer> {
             stmnt.setString(6, object.getProperty(Properties.DESCRIPTION).orElse(""));
             stmnt.setInt(7, object.getProperty(Properties.ID).orElse(null));
             int count = stmnt.executeUpdate();
+            stmnt.close();
             if (count == 0) {
                 Logger.getGlobal().log(Level.WARNING, "No matches for update in the db");
                 return false;
