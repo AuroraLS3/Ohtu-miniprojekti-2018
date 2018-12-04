@@ -114,7 +114,7 @@ public class Other extends AbstractPropertyStore implements Recommendation {
     @Override
     public String toString() {
         return getProperty(Properties.ID).orElse(-1) + ". "
-                + ": " + getProperty(Properties.TITLE).orElse("Not Specified")
+                + getProperty(Properties.TITLE).orElse("Not Specified")
                 + ", URL: " + getProperty(Properties.URL).orElse("-");
     }
 

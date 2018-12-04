@@ -29,7 +29,7 @@ public class Book extends AbstractPropertyStore implements Recommendation {
         public static final Property<Integer> ID = CommonProperties.ID;
         public static final Property<String> URL = CommonProperties.URL;
         public static final Property<String> DESCRIPTION = CommonProperties.DESCRIPTION;
-        
+
         public static List<Property> getAll() {
             List<Property> properties = new ArrayList<>();
             for (Field field : Properties.class.getDeclaredFields()) {
@@ -77,19 +77,19 @@ public class Book extends AbstractPropertyStore implements Recommendation {
         handleUrlProperty(url);
         this.type = "BOOK";
     }
-    
+
     private void handleUrlProperty(String url) {
     	if (url != null) {
             Check.isTrue(new UrlValidator().isValid(url), () -> new IllegalArgumentException("URL should be valid"));
             addProperty(Properties.URL, url);
     	}
     }
-    
+
     @Deprecated
     public Book(String author, String title, String isbn, String description) {
     	this(author, title, isbn, null, description);
     }
-    
+
     @Deprecated
     public Book(String author, String title, String isbn) {
         this(author, title, isbn, null, null);
@@ -99,25 +99,13 @@ public class Book extends AbstractPropertyStore implements Recommendation {
         this.type = "BOOK";
     }
 
-    public void setAuthor(String author) {
-        addProperty(Properties.AUTHOR, author);
-    }
-
-    public void setTitle(String title) {
-        addProperty(Properties.TITLE, title);
-    }
-
-    public void setISBN(String isbn) {
-        addProperty(Properties.ISBN, isbn);
-    }
-
-    public void setID(Integer id) {
-        addProperty(Properties.ID, id);
-    }
-
-    public void setDescription(String description) {
-        addProperty(Properties.DESCRIPTION, description);
-    }
+//    public void setID(Integer id) {
+//        addProperty(Properties.ID, id);
+//    }
+//
+//    public void setDescription(String description) {
+//        addProperty(Properties.DESCRIPTION, description);
+//    }
 
     public String getType() {
         return type;

@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import projekti.domain.Property;
 import projekti.domain.RecommendationFactory;
 
@@ -22,7 +21,6 @@ public class TUI {
     private Dao<Blog, Integer> blogDAO;
     private Dao<Other, Integer> otherDAO;
     private IO io;
-    private final Function<Property, String> requestProperty;
 
     public TUI(
             Dao<Book, Integer> bookDAO,
@@ -34,10 +32,6 @@ public class TUI {
         this.blogDAO = blogDAO;
         this.otherDAO = otherDAO;
         this.io = io;
-        this.requestProperty = (Property property) -> {
-            io.print(property.getName() + ": ");
-            return io.getInput().trim();
-        };
     }
 
     private Recommendation save(Recommendation recommendation) throws SQLException {
@@ -50,6 +44,48 @@ public class TUI {
                 return otherDAO.create((Other) recommendation);
             default:
                 throw new IllegalArgumentException("No save definition for recommendation of type: " + recommendation.getType());
+        }
+    }
+
+    private Recommendation retrieve(String recommendationType, Integer ID) throws SQLException {
+        switch (recommendationType) {
+            case "BOOK":
+                return bookDao.findOne(ID);
+            case "BLOG":
+                return blogDAO.findOne(ID);
+            case "OTHER":
+                return otherDAO.findOne(ID);
+            default:
+                throw new IllegalArgumentException("No retrieve definition for recommendation of type: " + recommendationType);
+        }
+    }
+
+    private boolean update(Recommendation recommendation) throws SQLException {
+        switch (recommendation.getType()) {
+            case "BOOK":
+                return bookDao.update((Book) recommendation);
+            case "BLOG":
+                return blogDAO.update((Blog) recommendation);
+            case "OTHER":
+                return otherDAO.update((Other) recommendation);
+            default:
+                throw new IllegalArgumentException("No retrieve definition for recommendation of type: " + recommendation.getType());
+        }
+    }
+
+    private void delete(Recommendation recommendation) throws SQLException {
+        switch (recommendation.getType()) {
+            case "BOOK":
+                bookDao.delete(recommendation.getProperty(Properties.ID).orElse(null));
+                return;
+            case "BLOG":
+                blogDAO.delete(recommendation.getProperty(Properties.ID).orElse(null));
+                return;
+            case "OTHER":
+                otherDAO.delete(recommendation.getProperty(Properties.ID).orElse(null));
+                return;
+            default:
+                throw new IllegalArgumentException("No retrieve definition for recommendation of type: " + recommendation.getType());
         }
     }
 
@@ -87,15 +123,13 @@ public class TUI {
                 io.println("\nshutting down program");
                 break;
             case "select":
-                bookSelection();
+                selectRecommendation();
                 break;
             case "update":
-                Integer updateID = selectID();
-                updateBook(updateID);
+                updateRecommendation(askForRecommendation());
                 break;
             case "delete":
-                Integer deleteID = selectID();
-                deleteBook(deleteID);
+                deleteRecommendation(askForRecommendation());
                 break;
             default:
                 io.println("\nnon-supported command");
@@ -103,17 +137,17 @@ public class TUI {
         }
     }
 
-    private void bookSelection() throws SQLException {
-        Book book = askForBook();
+    private void selectRecommendation() throws SQLException {
+        Recommendation recommendation = askForRecommendation();
 
         String input = "";
 
         selectionLoop:
         while (!input.equals("return")) {
-            if (book == null) {
+            if (recommendation == null) {
                 return;
             }
-            io.println(book.toStringWithDescription());
+            io.println(recommendation.toStringWithDescription());
             io.println();
 
             io.println("\ncommands for the selected recommendation: ");
@@ -124,35 +158,42 @@ public class TUI {
             input = io.getInput();
             switch (input) {
                 case "edit":
-                    book = updateBook(book.getProperty(Properties.ID).orElse(null));
+                    recommendation = updateRecommendation(recommendation);
                     break;
-
                 case "delete":
-                    deleteBook(book.getProperty(Properties.ID).orElse(null));
+                    deleteRecommendation(recommendation);
                     break selectionLoop;
                 case "return":
                     io.println();
                     break;
                 default:
-                    io.println("\nnon-supported command");
+                    io.println("\nunsupported command");
                     break;
             }
-
         }
     }
 
-    private Book askForBook() throws SQLException {
+    private Recommendation askForRecommendation() throws SQLException {
+        String recommendationType = askType();
         Integer ID = selectID();
 
-        Book book = bookDao.findOne(ID);
-        Check.notNull(book, () -> new IllegalArgumentException("No book found"));
-        return book;
+        Recommendation recommendation = retrieve(recommendationType, ID);
+        Check.notNull(recommendation, () -> new IllegalArgumentException("No recommendation found"));
+        return recommendation;
+    }
+
+    private String askType() throws SQLException {
+        io.println("enter recommendation type");
+        io.print("recommendation type (possible choices: book, blog, other): ");
+        return io.getInput().toUpperCase();
     }
 
     private void createRecommendation() throws SQLException {
-        io.println("enter recommendation type");
-        io.print("recommendation type (possible choices: book, blog, other): ");
-        String recommendationType = io.getInput().toLowerCase();
+        String recommendationType = askType().toLowerCase();
+        Function<Property, String> requestProperty = (Property property) -> {
+            io.print(property.getName() + ": ");
+            return io.getInput().trim();
+        };
         Recommendation recommendation;
         try {
             recommendation = RecommendationFactory.create()
@@ -209,12 +250,10 @@ public class TUI {
         }
     }
 
-    private void deleteBook(Integer knownID) throws SQLException {
-        Book book = bookDao.findOne(knownID);
-        Check.notNull(book, () -> new IllegalArgumentException("No book found with id " + knownID));
-
-        if (confirm("Are you sure you want to delete recommendation " + knownID + "?")) {
-            bookDao.delete(knownID);
+    private void deleteRecommendation(Recommendation recommendation) throws SQLException {
+        Integer ID = recommendation.getProperty(Properties.ID).orElse(null);
+        if (confirm("Are you sure you want to delete recommendation " + ID + "?")) {
+            delete(recommendation);
             io.println();
             io.println("recommendation successfully deleted");
         } else {
@@ -223,48 +262,92 @@ public class TUI {
         }
     }
 
-    private Book updateBook(Integer knownID) throws SQLException {
-        Book oldBook = bookDao.findOne(knownID);
-        Check.notNull(oldBook, () -> new IllegalArgumentException("No book found with id " + knownID));
-        Book updatedBook = new Book(oldBook.getProperty(Properties.AUTHOR).orElse(""),
-                oldBook.getProperty(Properties.TITLE).orElse(""),
-                oldBook.getProperty(Properties.ISBN).orElse(""),
-                oldBook.getProperty(Properties.DESCRIPTION).orElse(""));
-        updatedBook.setID(oldBook.getProperty(Properties.ID).orElse(-1));
-        io.print("enter new author (or empty input to leave it unchanged): ");
-        String author = io.getInput();
-        if (!author.isEmpty()) {
-            updatedBook.setAuthor(author);
+    private Recommendation updateRecommendation(Recommendation recommendation) throws SQLException {
+        Function<Property, String> requestProperty = (Property property) -> {
+            io.print("enter new " + property.getName() + " (or empty input to leave it unchanged): ");
+            String userInput = io.getInput().trim();
+            /* TODO return existing recommendation property if userInput is empty (this code doesn't work)
+            if (userInput.isEmpty()) {
+                return recommendation.getProperty(property).orElse("");
+            }
+            */
+            return userInput;
+        };
+
+        String recommendationType = recommendation.getType().toLowerCase();
+        Recommendation updatedRecommendation;
+        try {
+            updatedRecommendation = RecommendationFactory.create()
+                    .selectType(recommendationType)
+                    .whileMissingProperties(requestProperty)
+                    .build();
+        } catch (IllegalArgumentException ex) {
+            io.println("\n " + recommendationType + " recommendation was not updated.");
+            throw ex;
         }
-        io.print("enter new title (or empty input to leave it unchanged): ");
-        String title = io.getInput();
-        if (!title.isEmpty()) {
-            updatedBook.setTitle(title);
-        }
-        io.print("enter new ISBN (or empty input to leave it unchanged): ");
-        String isbn = io.getInput();
-        if (!isbn.isEmpty()) {
-            updatedBook.setISBN(isbn);
-        }
-        io.print("enter new description (or empty input to leave it unchanged): ");
-        String description = io.getInput();
-        if (!description.isEmpty()) {
-            updatedBook.setDescription(description);
-        }
-        if (confirm("are you sure you want to update recommendation " + knownID + "?")) {
-            if (bookDao.update(updatedBook)) {
+
+        Integer ID = recommendation.getProperty(Properties.ID).orElse(null);
+        updatedRecommendation.addProperty(Properties.ID, ID);
+
+        if (confirm("are you sure you want to update recommendation " + ID + "?")) {
+            if (update(updatedRecommendation)) {
                 io.println();
                 io.println("update successful");
-                return updatedBook;
+                return updatedRecommendation;
             } else {
                 io.println();
                 io.println("update failed");
-                return oldBook;
+                return recommendation;
             }
         } else {
             io.println();
             io.println("recommendation update canceled");
-            return oldBook;
+            return recommendation;
         }
     }
+
+//    private Book updateBook(Integer knownID) throws SQLException {
+//        Book oldBook = bookDao.findOne(knownID);
+//        Check.notNull(oldBook, () -> new IllegalArgumentException("No book found with id " + knownID));
+//        Book updatedBook = new Book(oldBook.getProperty(Properties.AUTHOR).orElse(""),
+//                oldBook.getProperty(Properties.TITLE).orElse(""),
+//                oldBook.getProperty(Properties.ISBN).orElse(""),
+//                oldBook.getProperty(Properties.DESCRIPTION).orElse(""));
+//        updatedBook.setID(oldBook.getProperty(Properties.ID).orElse(-1));
+//        io.print("enter new author (or empty input to leave it unchanged): ");
+//        String author = io.getInput();
+//        if (!author.isEmpty()) {
+//            updatedBook.setAuthor(author);
+//        }
+//        io.print("enter new title (or empty input to leave it unchanged): ");
+//        String title = io.getInput();
+//        if (!title.isEmpty()) {
+//            updatedBook.setTitle(title);
+//        }
+//        io.print("enter new ISBN (or empty input to leave it unchanged): ");
+//        String isbn = io.getInput();
+//        if (!isbn.isEmpty()) {
+//            updatedBook.setISBN(isbn);
+//        }
+//        io.print("enter new description (or empty input to leave it unchanged): ");
+//        String description = io.getInput();
+//        if (!description.isEmpty()) {
+//            updatedBook.setDescription(description);
+//        }
+//        if (confirm("are you sure you want to update recommendation " + knownID + "?")) {
+//            if (bookDao.update(updatedBook)) {
+//                io.println();
+//                io.println("update successful");
+//                return updatedBook;
+//            } else {
+//                io.println();
+//                io.println("update failed");
+//                return oldBook;
+//            }
+//        } else {
+//            io.println();
+//            io.println("recommendation update canceled");
+//            return oldBook;
+//        }
+//    }
 }
