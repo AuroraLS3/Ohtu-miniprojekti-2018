@@ -7,7 +7,7 @@ Feature: Users can select a specific recommendation
     When     existing recommendation id "2" is entered
     And      command return is entered
     And      the app processes the input
-    Then     system will respond with "2. Reetta: Great Book, ISBN: 111122222"
+    Then     system will respond with "2. Reetta: Great Book, ISBN: 111122222, URL: -"
     Then     system will respond with "Description: hyva kirja"
 
   Scenario: user gets a warning message when trying to select a nonexisting recommendation
@@ -33,7 +33,7 @@ Feature: Users can select a specific recommendation
     And     affirmative response is given when asked for confirmation
     And     command return is entered
     And     the app processes the input
-    Then    system will respond with "2. New Author: Greatest Book, ISBN: 77777711133"
+    Then    system will respond with "2. New Author: Greatest Book, ISBN: 77777711133, URL: http://www.faketestfaketestfaketesturl.com"
     Then     system will respond with "Description: new description"
 
   Scenario: user can delete selected recommendation

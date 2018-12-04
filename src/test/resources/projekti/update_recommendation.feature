@@ -14,9 +14,9 @@ Feature: Users can update existing recommendations
        And   command all is selected
        And   the app processes the input
        Then  system will respond with "update successful"
-       And   the list of recommendations will include "2. Reetta: Jolly Book, ISBN: 987655555"
+       And   the list of recommendations will include "2. Reetta: Jolly Book, ISBN: 987655555, URL: http://www.faketestfaketestfaketesturl.com"
 
-    
+
     Scenario: user gets a warning message when trying to update a nonexisting recommendation
        Given some book recommendations have been created
        And   command update is selected
@@ -40,7 +40,7 @@ Feature: Users can update existing recommendations
        And   the app processes the input
        Then  system will respond with "recommendation update canceled"
        And   the list of recommendations will not include "3. Minna: Jolly Book, ISBN: 987655555"
-       And   the list of recommendations will include "3. Heli: Kirjojen Kirja, ISBN: 777777333"
+       And   the list of recommendations will include "3. Heli: Kirjojen Kirja, ISBN: 777777333, URL: -"
 
     Scenario: user gets a warning message when entering a non-integer ID
        Given some book recommendations have been created
