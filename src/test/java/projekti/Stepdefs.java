@@ -58,6 +58,7 @@ public class Stepdefs {
         inputLines.add("Helka");
         inputLines.add("Super Hieno Kirja");
         inputLines.add("987654321");
+        inputLines.add("");
         inputLines.add("hyva kirja");
 
         inputLines.add("new");
@@ -65,6 +66,7 @@ public class Stepdefs {
         inputLines.add("Reetta");
         inputLines.add("Great Book");
         inputLines.add("111122222");
+        inputLines.add("");
         inputLines.add("hyva kirja");
 
         inputLines.add("new");
@@ -72,6 +74,7 @@ public class Stepdefs {
         inputLines.add("Heli");
         inputLines.add("Kirjojen Kirja");
         inputLines.add("777777333");
+        inputLines.add("");
         inputLines.add("hyva kirja");
     }
 

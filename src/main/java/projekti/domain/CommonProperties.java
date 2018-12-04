@@ -15,9 +15,6 @@ public class CommonProperties {
     public static final Property<String> URL = new Property<>("URL", String.class, url -> validateUrl(url));
 
     private static boolean validateUrl(String url) {
-        if (url.isEmpty()) {
-            return true;
-        }
-        return new UrlValidator().isValid(url);
+        return url == null || url.isEmpty() || new UrlValidator().isValid(url);
     }
 }
