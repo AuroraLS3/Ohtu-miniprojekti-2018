@@ -14,3 +14,4 @@ Codecov: [![codecov](https://codecov.io/gh/Rsl1122/Ohtu-miniprojekti-2018/branch
 - Komponentti on refraktoroitu helposti ylläpidettäväksi
 - Komponentti on integroitu
 - Komponentti on saatettu tuotantoon
+
