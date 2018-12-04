@@ -107,7 +107,7 @@ public class Book extends AbstractPropertyStore implements Recommendation {
         addProperty(Properties.TITLE, title);
     }
 
-    public void setISBN(String isbn) {
+    public void setIsbn(String isbn) {
         addProperty(Properties.ISBN, isbn);
     }
 

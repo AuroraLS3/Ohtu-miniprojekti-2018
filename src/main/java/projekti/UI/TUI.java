@@ -1,5 +1,6 @@
 package projekti.UI;
 
+import java.lang.reflect.Method;
 import projekti.db.Dao;
 import projekti.domain.Blog;
 import projekti.domain.Book;
@@ -230,26 +231,12 @@ public class TUI {
                 oldBook.getProperty(Properties.ISBN).orElse(""),
                 oldBook.getProperty(Properties.DESCRIPTION).orElse(""));
         updatedBook.setID(oldBook.getProperty(Properties.ID).orElse(-1));
-        io.print("enter new author (or empty input to leave it unchanged): ");
-        String author = io.getInput();
-        if (!author.isEmpty()) {
-            updatedBook.setAuthor(author);
-        }
-        io.print("enter new title (or empty input to leave it unchanged): ");
-        String title = io.getInput();
-        if (!title.isEmpty()) {
-            updatedBook.setTitle(title);
-        }
-        io.print("enter new ISBN (or empty input to leave it unchanged): ");
-        String isbn = io.getInput();
-        if (!isbn.isEmpty()) {
-            updatedBook.setISBN(isbn);
-        }
-        io.print("enter new description (or empty input to leave it unchanged): ");
-        String description = io.getInput();
-        if (!description.isEmpty()) {
-            updatedBook.setDescription(description);
-        }
+
+        this.updateField("author", updatedBook);
+        this.updateField("title", updatedBook);
+        this.updateField("isbn", updatedBook);
+        this.updateField("description", updatedBook);
+
         if (confirm("are you sure you want to update recommendation " + knownID + "?")) {
             if (bookDao.update(updatedBook)) {
                 io.println();
@@ -264,6 +251,21 @@ public class TUI {
             io.println();
             io.println("recommendation update canceled");
             return oldBook;
+        }
+    }
+
+    private void updateField(String field, Book book) {
+        io.print("enter new " + field + " (or empty input to leave it unchanged): ");
+        String newInput = io.getInput();
+        if (newInput.isEmpty()) return;
+        String methodName = "set" + Character.toUpperCase(field.charAt(0))
+                + field.substring(1, field.length());
+        try {
+            Method method = book.getClass().getMethod(methodName);
+            method.invoke(book, newInput);
+        } catch (Exception ex) {
+            System.out.println(ex);
+            throw new IllegalStateException("there is no method " + methodName + " in class Book");
         }
     }
 }
