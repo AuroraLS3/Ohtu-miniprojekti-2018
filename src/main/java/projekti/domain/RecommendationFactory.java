@@ -95,7 +95,10 @@ public class RecommendationFactory {
             // Attempt to get a property from user 3 times.
             for (int i = 0; i < 3; i++) {
                 // Ask for property
-                String givenValue = requestProperty.apply(wantedProperty);
+                String givenValue = requestProperty.apply(wantedProperty).trim();
+                if (givenValue.isEmpty()) {
+                    givenValue = null;
+                }
                 if (suggestProperty(wantedProperty, givenValue)) {
                     // Check that the property is valid and exit loop if valid
                     continue propertyLoop;
