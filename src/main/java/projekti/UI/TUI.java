@@ -9,7 +9,12 @@ import projekti.domain.Recommendation;
 import projekti.util.Check;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import projekti.domain.Property;
+import projekti.domain.RecommendationFactory;
 
 public class TUI {
 
@@ -17,6 +22,7 @@ public class TUI {
     private Dao<Blog, Integer> blogDAO;
     private Dao<Other, Integer> otherDAO;
     private IO io;
+    private final Function<Property, String> requestProperty;
 
     public TUI(
             Dao<Book, Integer> bookDAO,
@@ -28,9 +34,12 @@ public class TUI {
         this.blogDAO = blogDAO;
         this.otherDAO = otherDAO;
         this.io = io;
+        this.requestProperty = (Property property) -> {
+            io.print(property.getName() + ": ");
+            return io.getInput().trim();
+        };
     }
 
-    // Tallennus metodi jota voi käyttää myöhemmin
     private Recommendation save(Recommendation recommendation) throws SQLException {
         switch (recommendation.getType()) {
             case "BOOK":
@@ -69,15 +78,10 @@ public class TUI {
     private void performAction(String input) throws SQLException {
         switch (input.toLowerCase()) {
             case "new":
-                //Käyttäjä valitsee vinkin tyyypin, nyt vain kirjat tuettu
-                createBook();
+                createRecommendation();
                 break;
             case "all":
-                List<Book> books = bookDao.findAll();
-
-                books.forEach(book -> {
-                    io.println(book.toString());
-                });
+                listRecommendations();
                 break;
             case "end":
                 io.println("\nshutting down program");
@@ -145,41 +149,38 @@ public class TUI {
         return book;
     }
 
-    private void createBook() throws SQLException {
-        io.print("author: ");
-        String author = io.getInput().trim();
-
-        io.print("title: ");
-        String title = io.getInput().trim();
-
-        io.print("ISBN: ");
-        String ISBN = io.getInput().trim();
-
-        io.print("Description (optional): ");
-        String description = io.getInput().trim();
-
-        Book book;
+    private void createRecommendation() throws SQLException {
+        io.println("enter recommendation type");
+        io.print("recommendation type (possible choices: book, blog, other): ");
+        String recommendationType = io.getInput().toLowerCase();
+        Recommendation recommendation;
         try {
-            book = new Book(author, title, ISBN);
-            if (!description.isEmpty()) {
-                book.setDescription(description);
-            }
+            recommendation = RecommendationFactory.create()
+                    .selectType(recommendationType)
+                    .whileMissingProperties(requestProperty)
+                    .build();
         } catch (IllegalArgumentException ex) {
-            io.println("\n Book recommendation was not added.");
+            io.println("\n " + recommendationType + " recommendation was not added.");
             throw ex;
         }
-
-        if (bookDao.create(book) != null) {
+        if (save(recommendation) != null) {
             io.println();
-            io.println("new book recommendation added");
+            io.println("new " + recommendationType + " recommendation added");
         } else {
             io.println("\nrecommendation not added");
         }
+    }
 
+    private void listRecommendations() throws SQLException {
+        List<Recommendation> recommendations = new ArrayList<>();
+        recommendations.addAll(bookDao.findAll());
+        recommendations.addAll(blogDAO.findAll());
+        recommendations.addAll(otherDAO.findAll());
+        recommendations.forEach(r -> io.println(r.toString()));
     }
 
     private Integer selectID() {
-        io.println("syötä olion id tai palaa jättämällä tyhjäksi");
+        io.println("enter recommendation id (or empty input to go back)");
         io.print("ID: ");
         String id_String = io.getInput();
         try {

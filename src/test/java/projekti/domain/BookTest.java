@@ -58,7 +58,7 @@ public class BookTest {
         expected.expectMessage("ISBN should not be empty");
         new Book("Matti Meikäläinen", "Esimerkki-ihmisen arkipäivä", "", "https://www.url.com", "");
     }
-    
+
     @Test
     public void canNotCreateBookWithInvalidURL() {
     	expected.expect(IllegalArgumentException.class);
@@ -75,7 +75,7 @@ public class BookTest {
     public void propertiesAreReturnedByABook() {
         assertEquals(
                 Book.Properties.getAll(),
-                new Book("Matti Meikäläinen", "Esimerkki-ihmisen arkipäivä", "1323213", "https://www.url.com" ,"Description").getProperties()
+                new Book("Matti Meikäläinen", "Esimerkki-ihmisen arkipäivä", "1323213", "https://www.url.com", "Description").getProperties()
         );
     }
 

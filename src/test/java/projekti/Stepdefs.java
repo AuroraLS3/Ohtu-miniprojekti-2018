@@ -54,21 +54,27 @@ public class Stepdefs {
     @Given("^some book recommendations have been created$")
     public void some_book_recommendations_have_been_created() {
         inputLines.add("new");
+        inputLines.add("book");
         inputLines.add("Helka");
         inputLines.add("Super Hieno Kirja");
         inputLines.add("987654321");
+        inputLines.add("");
         inputLines.add("hyva kirja");
 
         inputLines.add("new");
+        inputLines.add("book");
         inputLines.add("Reetta");
         inputLines.add("Great Book");
         inputLines.add("111122222");
+        inputLines.add("");
         inputLines.add("hyva kirja");
 
         inputLines.add("new");
+        inputLines.add("book");
         inputLines.add("Heli");
         inputLines.add("Kirjojen Kirja");
         inputLines.add("777777333");
+        inputLines.add("");
         inputLines.add("hyva kirja");
     }
 
@@ -85,6 +91,11 @@ public class Stepdefs {
     @Given("^command select is selected$")
     public void command_select_is_selected() throws Throwable {
         inputLines.add("select");
+    }
+
+    @Given("^recommendation type \"([^\"]*)\" is selected$")
+    public void recommendation_type_is_selected(String recommendationType) throws Throwable {
+        inputLines.add(recommendationType);
     }
 
     @When("^author \"([^\"]*)\" title \"([^\"]*)\" and ISBN \"([^\"]*)\" are entered$")
