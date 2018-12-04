@@ -79,4 +79,13 @@ public class BookTest {
         );
     }
 
+    @Test
+    public void propertiesAreCopied() {
+        Book original = new Book("Matti Meikäläinen", "Esimerkki-ihmisen arkipäivä", "1323213", "Description");
+        Book fake = new Book("a", "b", "c");
+
+        fake.copyFrom(original);
+        assertEquals(original, fake);
+    }
+
 }

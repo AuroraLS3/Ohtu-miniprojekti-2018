@@ -24,4 +24,13 @@ public class OtherDAOTest extends DAOTest<Other> {
         return new Other("WHATEVER", "https://www.google.com", "Search stuff");
     }
 
+    @Override
+    protected Other updateObjectInSomeWay(Other testObject) {
+        Other updatedObject = createTestObject();
+        updatedObject.copyFrom(testObject);
+
+        updatedObject.setDescription("Updated Description");
+        return updatedObject;
+    }
+
 }

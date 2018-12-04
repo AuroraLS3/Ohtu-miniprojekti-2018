@@ -24,4 +24,12 @@ public class BlogDAOTest extends DAOTest<Blog> {
         return new Blog("Medium", "http://www.medium.com", "Description");
     }
 
+    @Override
+    protected Blog updateObjectInSomeWay(Blog testObject) {
+        Blog updatedObject = createTestObject();
+        updatedObject.copyFrom(testObject);
+
+        updatedObject.setDescription("Updated Description");
+        return updatedObject;
+    }
 }

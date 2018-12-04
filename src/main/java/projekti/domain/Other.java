@@ -103,7 +103,7 @@ public class Other extends AbstractPropertyStore implements Recommendation {
             return false;
         }
         Other other = (Other) o;
-        return Objects.equals(type, other.type);
+        return super.equals(o) && Objects.equals(type, other.type);
     }
 
     @Override
