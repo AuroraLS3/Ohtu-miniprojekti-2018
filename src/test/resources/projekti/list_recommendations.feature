@@ -1,4 +1,4 @@
-Feature: Users can see a list of existing book recommendations
+Feature: Users can see a list of existing recommendations
 
     Scenario: user can see a list of existing book recommendations
        Given some book recommendations have been created

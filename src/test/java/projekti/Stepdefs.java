@@ -89,12 +89,12 @@ public class Stepdefs {
     }
 
     @Given("^command select is selected$")
-    public void command_select_is_selected() throws Throwable {
+    public void command_select_is_selected() {
         inputLines.add("select");
     }
 
     @Given("^recommendation type \"([^\"]*)\" is selected$")
-    public void recommendation_type_is_selected(String recommendationType) throws Throwable {
+    public void recommendation_type_is_selected(String recommendationType) {
         inputLines.add(recommendationType);
     }
 
@@ -134,12 +134,12 @@ public class Stepdefs {
     }
 
     @When("^command return is entered$")
-    public void command_return_is_entered() throws Throwable {
+    public void command_return_is_entered() {
         inputLines.add("return");
     }
 
     @When("^command edit is entered$")
-    public void command_edit_is_entered() throws Throwable {
+    public void command_edit_is_entered() {
         inputLines.add("edit");
     }
 
@@ -193,6 +193,11 @@ public class Stepdefs {
         inputLines.add("");
     }
 
+    @When("^new url \"([^\"]*)\" is entered$")
+    public void new_url_is_entered(String url) {
+        inputLines.add(url);
+    }
+
     @Then("^system will respond with \"([^\"]*)\"$")
     public void system_will_respond_with(String expectedOutput) {
         assertTrue("Did not respond correctly expected to contain '" + expectedOutput + "', output: " + io.getPrints().toString(), io.getPrints().contains(expectedOutput));
@@ -214,35 +219,4 @@ public class Stepdefs {
     public void the_list_of_recommendations_will_not_include(String unexpectedOutput) {
         assertFalse(io.getPrints().contains(unexpectedOutput));
     }
-
-//    @Given("^command login is selected$")
-//    public void command_login_selected() throws Throwable {
-//        inputLines.add("login");
-//    }
-//
-//    @Given("^command new user is selected$")
-//    public void command_new_user_is_selected() throws Throwable {
-//        inputLines.add("new");
-//    }
-//
-//    @Given("^user \"([^\"]*)\" with password \"([^\"]*)\" is created$")
-//    public void user_with_password_is_created(String username, String password) throws Throwable {
-//        inputLines.add("new");
-//        inputLines.add(username);
-//        inputLines.add(password);
-//    }
-
-//    @When("^username \"([^\"]*)\" and password \"([^\"]*)\" are entered$")
-//    public void a_username_and_password_are_entered(String username, String password) throws Throwable {
-//       inputLines.add(username);
-//       inputLines.add(password);
-//
-//       io = new StubIO(inputLines);
-//       app = new App(io, auth);
-//       app.run();
-//    }
-//    @Then("^system will respond with \"([^\"]*)\"$")
-//    public void system_will_respond_with(String expectedOutput) throws Throwable {
-//        assertTrue(io.getPrints().contains(expectedOutput));
-//    }
 }
