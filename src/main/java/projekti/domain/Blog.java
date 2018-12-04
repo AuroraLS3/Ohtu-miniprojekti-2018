@@ -120,7 +120,7 @@ public class Blog extends AbstractPropertyStore implements Recommendation {
     @Override
     public String toStringWithDescription() {
         StringBuilder builder = new StringBuilder(toString());
-        builder.append("\nKuvaus: ");
+        builder.append("\nDescription: ");
         Optional<String> descriptionProperty = getProperty(Properties.DESCRIPTION);
         if (descriptionProperty.isPresent()) {
 

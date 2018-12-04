@@ -266,11 +266,12 @@ public class TUI {
         Function<Property, String> requestProperty = (Property property) -> {
             io.print("enter new " + property.getName() + " (or empty input to leave it unchanged): ");
             String userInput = io.getInput().trim();
-            /* TODO return existing recommendation property if userInput is empty (this code doesn't work)
+            // TODO return existing recommendation property if userInput is empty (this code doesn't work)
             if (userInput.isEmpty()) {
-                return recommendation.getProperty(property).orElse("");
+                
+                return (String) recommendation.getProperty(property).orElse("");
             }
-            */
+          
             return userInput;
         };
 

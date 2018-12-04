@@ -139,7 +139,7 @@ public class Book extends AbstractPropertyStore implements Recommendation {
 
     public String toStringWithDescription() {
         StringBuilder builder = new StringBuilder(toString());
-        builder.append("\nKuvaus: ");
+        builder.append("\nDescription: ");
         Optional<String> descriptionProperty = getProperty(Properties.DESCRIPTION);
         if (descriptionProperty.isPresent()) {
 
