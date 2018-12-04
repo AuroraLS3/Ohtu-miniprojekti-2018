@@ -5,7 +5,7 @@ Feature: Users can update existing recommendations
        And   command update is selected
        And   recommendation type "book" is selected
        When  existing recommendation id "2" is entered
-       And   new author "Minna" is entered
+       And   new author "Reetta" is entered
        And   new title "Jolly Book" is entered
        And   new ISBN "987655555" is entered
        And   new url "http://www.faketestfaketestfaketesturl.com" is entered
@@ -14,8 +14,9 @@ Feature: Users can update existing recommendations
        And   command all is selected
        And   the app processes the input
        Then  system will respond with "update successful"
-       And   the list of recommendations will include "2. Minna: Jolly Book, ISBN: 987655555"
+       And   the list of recommendations will include "2. Reetta: Jolly Book, ISBN: 987655555"
 
+    
     Scenario: user gets a warning message when trying to update a nonexisting recommendation
        Given some book recommendations have been created
        And   command update is selected

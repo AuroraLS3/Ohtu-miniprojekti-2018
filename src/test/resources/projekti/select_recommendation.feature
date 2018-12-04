@@ -8,7 +8,7 @@ Feature: Users can select a specific recommendation
     And      command return is entered
     And      the app processes the input
     Then     system will respond with "2. Reetta: Great Book, ISBN: 111122222"
-    Then     system will respond with "Kuvaus: hyva kirja"
+    Then     system will respond with "Description: hyva kirja"
 
   Scenario: user gets a warning message when trying to select a nonexisting recommendation
     Given   some book recommendations have been created
@@ -34,7 +34,7 @@ Feature: Users can select a specific recommendation
     And     command return is entered
     And     the app processes the input
     Then    system will respond with "2. New Author: Greatest Book, ISBN: 77777711133"
-    Then     system will respond with "Kuvaus: new description"
+    Then     system will respond with "Description: new description"
 
   Scenario: user can delete selected recommendation
     Given some book recommendations have been created
