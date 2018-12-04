@@ -199,6 +199,10 @@ public class Stepdefs {
     public void negative_response_is_given_when_asked_for_confirmation() {
         inputLines.add("n");
     }
+    @When("^other response is given when asked for confirmation$")
+    public void invalid_response_is_given_when_asked_for_confirmation() {
+        inputLines.add("maybe");
+    }
 
     @When("^nonexisting recommendation id \"([^\"]*)\" is entered$")
     public void nonexisting_recommendation_id_is_entered(String id) {

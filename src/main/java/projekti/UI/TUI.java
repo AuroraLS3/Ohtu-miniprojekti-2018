@@ -239,9 +239,9 @@ public class TUI {
         String optionString = "y/n";
         io.println(optionString);
         String val = io.getInput();
-        if (val.toLowerCase().contains("y")) {
+        if (val.toLowerCase().equals("y")) {
             return true;
-        } else if (val.toLowerCase().contains("n")) {
+        } else if (val.toLowerCase().equals("n")) {
             return false;
         } else {
             String failMessage = "Invalid input";
