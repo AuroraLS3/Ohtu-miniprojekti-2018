@@ -78,6 +78,48 @@ public class Stepdefs {
         inputLines.add("hyva kirja");
     }
 
+    @Given("^some blog recommendations have been created$")
+    public void some_blog_recommendations_have_been_created() {
+        inputLines.add("new");
+        inputLines.add("blog");
+        inputLines.add("Super Hieno Blogi");
+        inputLines.add("http://www.faketestfaketestfaketesturl.com/1/");
+        inputLines.add("hyva blogi");
+
+        inputLines.add("new");
+        inputLines.add("blog");
+        inputLines.add("Great Blog");
+        inputLines.add("http://www.faketestfaketestfaketesturl.com/2/");
+        inputLines.add("hyva blogi");
+
+
+        inputLines.add("new");
+        inputLines.add("blog");
+        inputLines.add("Blogien Blogi");
+        inputLines.add("http://www.faketestfaketestfaketesturl.com/3/");
+        inputLines.add("hyva blogi");
+    }
+
+    @Given("^some other recommendations have been created$")
+    public void some_other_recommendations_have_been_created() {
+        inputLines.add("new");
+        inputLines.add("other");
+        inputLines.add("Super Hieno Sivusto");
+        inputLines.add("http://www.faketestfaketestfaketesturl.com/1/");
+        inputLines.add("hyva sivusto");
+
+        inputLines.add("new");
+        inputLines.add("other");
+        inputLines.add("Great Website");
+        inputLines.add("http://www.faketestfaketestfaketesturl.com/2/");
+        inputLines.add("hyva sivusto");
+
+        inputLines.add("new");
+        inputLines.add("other");
+        inputLines.add("Sivustojen Sivusto");
+        inputLines.add("http://www.faketestfaketestfaketesturl.com/3/");
+        inputLines.add("hyva sivusto");
+    }
     @Given("^command delete is selected$")
     public void command_delete_is_selected() {
         inputLines.add("delete");
