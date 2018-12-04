@@ -24,6 +24,10 @@ public abstract class AbstractPropertyStore {
         return Optional.ofNullable((T) propertyMap.get(property));
     }
 
+    public void copyFrom(AbstractPropertyStore from) {
+        propertyMap.putAll(from.propertyMap);
+    }
+
     public abstract List<Property> getProperties();
 
     @Override

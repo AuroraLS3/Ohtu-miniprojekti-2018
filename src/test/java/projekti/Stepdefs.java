@@ -6,10 +6,10 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import projekti.UI.StubIO;
 import projekti.UI.TUI;
-import projekti.db.BookDAO;
-import projekti.db.Dao;
-import projekti.db.DatabaseManager;
+import projekti.db.*;
+import projekti.domain.Blog;
 import projekti.domain.Book;
+import projekti.domain.Other;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,22 +23,26 @@ import static org.junit.Assert.assertTrue;
 
 public class Stepdefs {
 
-    DatabaseManager dbm;
-    Dao<Book, Integer> bDao;
+    DatabaseManager databaseManager;
+    Dao<Book, Integer> bookDAO;
+    Dao<Blog, Integer> blogDAO;
+    Dao<Other, Integer> otherDAO;
     TUI app;
     StubIO io;
     List<String> inputLines;
 
     @Before
     public void cleanDB() throws SQLException, IOException {
-        if (dbm != null) {
-            dbm.disconnect();
+        if (databaseManager != null) {
+            databaseManager.disconnect();
         }
         File testDB = new File("./build/test.mv.db");
         Files.deleteIfExists(testDB.toPath());
-        this.dbm = new DatabaseManager("jdbc:h2:./build/test", "sa", "");
-        bDao = new BookDAO(dbm);
-        bDao.findAll();
+        this.databaseManager = new DatabaseManager("jdbc:h2:./build/test", "sa", "");
+        bookDAO = new BookDAO(databaseManager);
+        blogDAO = new BlogDAO(databaseManager);
+        otherDAO = new OtherDAO(databaseManager);
+
         inputLines = new ArrayList<>();
     }
 
@@ -50,21 +54,27 @@ public class Stepdefs {
     @Given("^some book recommendations have been created$")
     public void some_book_recommendations_have_been_created() {
         inputLines.add("new");
+        inputLines.add("book");
         inputLines.add("Helka");
         inputLines.add("Super Hieno Kirja");
         inputLines.add("987654321");
+        inputLines.add("");
         inputLines.add("hyva kirja");
 
         inputLines.add("new");
+        inputLines.add("book");
         inputLines.add("Reetta");
         inputLines.add("Great Book");
         inputLines.add("111122222");
+        inputLines.add("");
         inputLines.add("hyva kirja");
 
         inputLines.add("new");
+        inputLines.add("book");
         inputLines.add("Heli");
         inputLines.add("Kirjojen Kirja");
         inputLines.add("777777333");
+        inputLines.add("");
         inputLines.add("hyva kirja");
     }
 
@@ -81,6 +91,11 @@ public class Stepdefs {
     @Given("^command select is selected$")
     public void command_select_is_selected() throws Throwable {
         inputLines.add("select");
+    }
+
+    @Given("^recommendation type \"([^\"]*)\" is selected$")
+    public void recommendation_type_is_selected(String recommendationType) throws Throwable {
+        inputLines.add(recommendationType);
     }
 
     @When("^author \"([^\"]*)\" title \"([^\"]*)\" and ISBN \"([^\"]*)\" are entered$")
@@ -114,17 +129,20 @@ public class Stepdefs {
         inputLines.add("end");
 
         io = new StubIO(inputLines);
-        app = new TUI(bDao, io);
+        app = new TUI(bookDAO, blogDAO, otherDAO, io);
         app.run();
     }
+
     @When("^command return is entered$")
     public void command_return_is_entered() throws Throwable {
         inputLines.add("return");
     }
+
     @When("^command edit is entered$")
     public void command_edit_is_entered() throws Throwable {
         inputLines.add("edit");
     }
+
     @When("^existing recommendation id \"([^\"]*)\" is entered$")
     public void existing_recommendation_id_is_entered(String id) {
         inputLines.add(id);

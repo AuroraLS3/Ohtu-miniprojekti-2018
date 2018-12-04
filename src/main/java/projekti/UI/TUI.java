@@ -1,36 +1,71 @@
 package projekti.UI;
 
 import projekti.db.Dao;
+import projekti.domain.Blog;
 import projekti.domain.Book;
 import projekti.domain.Book.Properties;
+import projekti.domain.Other;
+import projekti.domain.Recommendation;
 import projekti.util.Check;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import projekti.domain.Property;
+import projekti.domain.RecommendationFactory;
 
 public class TUI {
 
     private Dao<Book, Integer> bookDao;
+    private Dao<Blog, Integer> blogDAO;
+    private Dao<Other, Integer> otherDAO;
     private IO io;
+    private final Function<Property, String> requestProperty;
 
-    public TUI(Dao<Book, Integer> bd, IO io) {
-        bookDao = bd;
+    public TUI(
+            Dao<Book, Integer> bookDAO,
+            Dao<Blog, Integer> blogDAO,
+            Dao<Other, Integer> otherDAO,
+            IO io
+    ) {
+        bookDao = bookDAO;
+        this.blogDAO = blogDAO;
+        this.otherDAO = otherDAO;
         this.io = io;
+        this.requestProperty = (Property property) -> {
+            io.print(property.getName() + ": ");
+            return io.getInput().trim();
+        };
+    }
+
+    private Recommendation save(Recommendation recommendation) throws SQLException {
+        switch (recommendation.getType()) {
+            case "BOOK":
+                return bookDao.create((Book) recommendation);
+            case "BLOG":
+                return blogDAO.create((Blog) recommendation);
+            case "OTHER":
+                return otherDAO.create((Other) recommendation);
+            default:
+                throw new IllegalArgumentException("No save definition for recommendation of type: " + recommendation.getType());
+        }
     }
 
     public void run() throws SQLException {
-        io.println("Tervetuloa lukuvinkkiapplikaatioon!");
-        io.println("Tuetut toiminnot:");
-        io.println("\tnew \tlisää uusi lukuvinkki");
-        io.println("\tall \tlistaa kaikki lukuvinkit");
-        io.println("\tselect \ttarkastele tiettyä vinkkiä");
-        io.println("\tupdate \tmuokkaa tiettyä vinkkiä");
-        io.println("\tdelete \tpoista tietyn vinkin");
-        io.println("\tend \tsulkee ohjelman");
+        io.println("Welcome to the reading recommendation app!");
+        io.println("Supported commands:");
+        io.println("\tnew \tadd a new recommendation");
+        io.println("\tall \tlist all existing recommendations");
+        io.println("\tselect \tselect a specific recommendation");
+        io.println("\tupdate \tupdate information for an existing recommendation");
+        io.println("\tdelete \tremove a recommendation");
+        io.println("\tend \tclose the program");
 
         String input = "";
         while (!input.equalsIgnoreCase("end")) {
-            io.println("\ntoiminto: ");
+            io.println("\ncommand: ");
             input = io.getInput();
             try {
                 performAction(input);
@@ -41,20 +76,15 @@ public class TUI {
     }
 
     private void performAction(String input) throws SQLException {
-        switch (input.toLowerCase()) { // kaikki toiminnot voidaan refaktoroida omaksi metodikseen myöhemmin
-            case "new": //luodaan uusi vinkki tietokantaan
-                //Käyttäjä valitsee vinkin tyyypin, nyt vain kirjat tuettu
-                createBook();
+        switch (input.toLowerCase()) {
+            case "new":
+                createRecommendation();
                 break;
-            case "all": //listataan kaikki vinkit tietokannasta;
-                List<Book> books = bookDao.findAll();
-
-                books.forEach(book -> {
-                    io.println(book.toString());
-                });
+            case "all":
+                listRecommendations();
                 break;
             case "end":
-                io.println("\nlopetetaan ohjelman suoritus");
+                io.println("\nshutting down program");
                 break;
             case "select":
                 bookSelection();
@@ -68,7 +98,7 @@ public class TUI {
                 deleteBook(deleteID);
                 break;
             default:
-                io.println("\nei tuettu toiminto");
+                io.println("\nnon-supported command");
                 break;
         }
     }
@@ -86,10 +116,10 @@ public class TUI {
             io.println(book.toStringWithDescription());
             io.println();
 
-            io.println("\ntoiminnot valitulle vinkille:");
-            io.println("\tedit \tmuokkaa valittua vinkkiä");
-            io.println("\tdelete \tpoista valittu vinkki");
-            io.println("\treturn \tlopeta vinkin tarkastelu");
+            io.println("\ncommands for the selected recommendation: ");
+            io.println("\tedit \tedit the recommendation");
+            io.println("\tdelete \tremove the recommendation");
+            io.println("\treturn \treturn to the main program");
 
             input = io.getInput();
             switch (input) {
@@ -104,7 +134,7 @@ public class TUI {
                     io.println();
                     break;
                 default:
-                    io.println("\nei tuettu toiminto");
+                    io.println("\nnon-supported command");
                     break;
             }
 
@@ -119,41 +149,38 @@ public class TUI {
         return book;
     }
 
-    private void createBook() throws SQLException {
-        io.print("kirjailija: ");
-        String author = io.getInput().trim();
-
-        io.print("nimi: ");
-        String title = io.getInput().trim();
-
-        io.print("ISBN: ");
-        String ISBN = io.getInput().trim();
-
-        io.print("Kuvaus (valinnainen): ");
-        String description = io.getInput().trim();
-
-        Book book;
+    private void createRecommendation() throws SQLException {
+        io.println("enter recommendation type");
+        io.print("recommendation type (possible choices: book, blog, other): ");
+        String recommendationType = io.getInput().toLowerCase();
+        Recommendation recommendation;
         try {
-            book = new Book(author, title, ISBN);
-            if (!description.isEmpty()) {
-                book.setDescription(description);
-            }
+            recommendation = RecommendationFactory.create()
+                    .selectType(recommendationType)
+                    .whileMissingProperties(requestProperty)
+                    .build();
         } catch (IllegalArgumentException ex) {
-            io.println("\n Book recommendation was not added.");
+            io.println("\n " + recommendationType + " recommendation was not added.");
             throw ex;
         }
-
-        if (bookDao.create(book) != null) {
+        if (save(recommendation) != null) {
             io.println();
-            io.println("new book recommendation added");
+            io.println("new " + recommendationType + " recommendation added");
         } else {
-            io.println("\nvinkkiä ei lisätty");
+            io.println("\nrecommendation not added");
         }
-        // oletetaan toistaiseksi, että onnistuu. Daon kanssa ongelmia. io.print("\nuutta vinkkiä ei lisätty");
+    }
+
+    private void listRecommendations() throws SQLException {
+        List<Recommendation> recommendations = new ArrayList<>();
+        recommendations.addAll(bookDao.findAll());
+        recommendations.addAll(blogDAO.findAll());
+        recommendations.addAll(otherDAO.findAll());
+        recommendations.forEach(r -> io.println(r.toString()));
     }
 
     private Integer selectID() {
-        io.println("syötä olion id tai palaa jättämällä tyhjäksi");
+        io.println("enter recommendation id (or empty input to go back)");
         io.print("ID: ");
         String id_String = io.getInput();
         try {
@@ -176,7 +203,7 @@ public class TUI {
         } else if (val.toLowerCase().contains("n")) {
             return false;
         } else {
-            String failMessage = "Valintaa ei tunnistettu.";
+            String failMessage = "Invalid input";
             io.println(failMessage);
             return confirm(message);
         }
@@ -186,10 +213,10 @@ public class TUI {
         Book book = bookDao.findOne(knownID);
         Check.notNull(book, () -> new IllegalArgumentException("No book found with id " + knownID));
 
-        if (confirm("oletko varma, että haluat poistaa lukuvinkin numero " + knownID + "?")) {
+        if (confirm("Are you sure you want to delete recommendation " + knownID + "?")) {
             bookDao.delete(knownID);
             io.println();
-            io.println("vinkin poistaminen onnistui");
+            io.println("recommendation successfully deleted");
         } else {
             io.println();
             io.println("recommendation deletion canceled");
@@ -224,14 +251,14 @@ public class TUI {
         if (!description.isEmpty()) {
             updatedBook.setDescription(description);
         }
-        if (confirm("oletko varma, että haluat muokata lukuvinkkiä numero " + knownID + "?")) {
+        if (confirm("are you sure you want to update recommendation " + knownID + "?")) {
             if (bookDao.update(updatedBook)) {
                 io.println();
-                io.println("vinkin muokkaaminen onnistui");
+                io.println("update successful");
                 return updatedBook;
             } else {
                 io.println();
-                io.println("vinkin muokkaaminen epäonnistui");
+                io.println("update failed");
                 return oldBook;
             }
         } else {
