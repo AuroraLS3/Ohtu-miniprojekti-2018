@@ -78,6 +78,48 @@ public class Stepdefs {
         inputLines.add("hyva kirja");
     }
 
+    @Given("^some blog recommendations have been created$")
+    public void some_blog_recommendations_have_been_created() {
+        inputLines.add("new");
+        inputLines.add("blog");
+        inputLines.add("Super Hieno Blogi");
+        inputLines.add("http://www.faketestfaketestfaketesturl.com/1/");
+        inputLines.add("hyva blogi");
+
+        inputLines.add("new");
+        inputLines.add("blog");
+        inputLines.add("Great Blog");
+        inputLines.add("http://www.faketestfaketestfaketesturl.com/2/");
+        inputLines.add("hyva blogi");
+
+
+        inputLines.add("new");
+        inputLines.add("blog");
+        inputLines.add("Blogien Blogi");
+        inputLines.add("http://www.faketestfaketestfaketesturl.com/3/");
+        inputLines.add("hyva blogi");
+    }
+
+    @Given("^some other recommendations have been created$")
+    public void some_other_recommendations_have_been_created() {
+        inputLines.add("new");
+        inputLines.add("other");
+        inputLines.add("Super Hieno Sivusto");
+        inputLines.add("http://www.faketestfaketestfaketesturl.com/1/");
+        inputLines.add("hyva sivusto");
+
+        inputLines.add("new");
+        inputLines.add("other");
+        inputLines.add("Great Website");
+        inputLines.add("http://www.faketestfaketestfaketesturl.com/2/");
+        inputLines.add("hyva sivusto");
+
+        inputLines.add("new");
+        inputLines.add("other");
+        inputLines.add("Sivustojen Sivusto");
+        inputLines.add("http://www.faketestfaketestfaketesturl.com/3/");
+        inputLines.add("hyva sivusto");
+    }
     @Given("^command delete is selected$")
     public void command_delete_is_selected() {
         inputLines.add("delete");
@@ -89,12 +131,12 @@ public class Stepdefs {
     }
 
     @Given("^command select is selected$")
-    public void command_select_is_selected() throws Throwable {
+    public void command_select_is_selected() {
         inputLines.add("select");
     }
 
     @Given("^recommendation type \"([^\"]*)\" is selected$")
-    public void recommendation_type_is_selected(String recommendationType) throws Throwable {
+    public void recommendation_type_is_selected(String recommendationType) {
         inputLines.add(recommendationType);
     }
 
@@ -134,12 +176,12 @@ public class Stepdefs {
     }
 
     @When("^command return is entered$")
-    public void command_return_is_entered() throws Throwable {
+    public void command_return_is_entered() {
         inputLines.add("return");
     }
 
     @When("^command edit is entered$")
-    public void command_edit_is_entered() throws Throwable {
+    public void command_edit_is_entered() {
         inputLines.add("edit");
     }
 
@@ -156,6 +198,10 @@ public class Stepdefs {
     @When("^negative response is given when asked for confirmation$")
     public void negative_response_is_given_when_asked_for_confirmation() {
         inputLines.add("n");
+    }
+    @When("^other response is given when asked for confirmation$")
+    public void invalid_response_is_given_when_asked_for_confirmation() {
+        inputLines.add("maybe");
     }
 
     @When("^nonexisting recommendation id \"([^\"]*)\" is entered$")
@@ -193,6 +239,11 @@ public class Stepdefs {
         inputLines.add("");
     }
 
+    @When("^new url \"([^\"]*)\" is entered$")
+    public void new_url_is_entered(String url) {
+        inputLines.add(url);
+    }
+
     @Then("^system will respond with \"([^\"]*)\"$")
     public void system_will_respond_with(String expectedOutput) {
         assertTrue("Did not respond correctly expected to contain '" + expectedOutput + "', output: " + io.getPrints().toString(), io.getPrints().contains(expectedOutput));
@@ -200,9 +251,9 @@ public class Stepdefs {
 
     @Then("^system will show a list of existing book recommendations$")
     public void system_will_show_a_list_of_existing_book_recommendations() {
-        assertTrue(io.getPrints().contains("1. Helka: Super Hieno Kirja, ISBN: 987654321"));
-        assertTrue(io.getPrints().contains("2. Reetta: Great Book, ISBN: 111122222"));
-        assertTrue(io.getPrints().contains("3. Heli: Kirjojen Kirja, ISBN: 777777333"));
+        assertTrue(io.getPrints().contains("1. Helka: Super Hieno Kirja, ISBN: 987654321, URL: -"));
+        assertTrue(io.getPrints().contains("2. Reetta: Great Book, ISBN: 111122222, URL: -"));
+        assertTrue(io.getPrints().contains("3. Heli: Kirjojen Kirja, ISBN: 777777333, URL: -"));
     }
 
     @Then("^the list of recommendations will include \"([^\"]*)\"$")
@@ -214,35 +265,4 @@ public class Stepdefs {
     public void the_list_of_recommendations_will_not_include(String unexpectedOutput) {
         assertFalse(io.getPrints().contains(unexpectedOutput));
     }
-
-//    @Given("^command login is selected$")
-//    public void command_login_selected() throws Throwable {
-//        inputLines.add("login");
-//    }
-//
-//    @Given("^command new user is selected$")
-//    public void command_new_user_is_selected() throws Throwable {
-//        inputLines.add("new");
-//    }
-//
-//    @Given("^user \"([^\"]*)\" with password \"([^\"]*)\" is created$")
-//    public void user_with_password_is_created(String username, String password) throws Throwable {
-//        inputLines.add("new");
-//        inputLines.add(username);
-//        inputLines.add(password);
-//    }
-
-//    @When("^username \"([^\"]*)\" and password \"([^\"]*)\" are entered$")
-//    public void a_username_and_password_are_entered(String username, String password) throws Throwable {
-//       inputLines.add(username);
-//       inputLines.add(password);
-//
-//       io = new StubIO(inputLines);
-//       app = new App(io, auth);
-//       app.run();
-//    }
-//    @Then("^system will respond with \"([^\"]*)\"$")
-//    public void system_will_respond_with(String expectedOutput) throws Throwable {
-//        assertTrue(io.getPrints().contains(expectedOutput));
-//    }
 }

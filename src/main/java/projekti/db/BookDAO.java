@@ -49,7 +49,7 @@ public class BookDAO implements Dao<Book, Integer> {
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
-    
+
     private Book readABookFrom(ResultSet result) throws SQLException {
         Integer id = result.getInt("ID");
         Book book = new Book(
@@ -59,7 +59,7 @@ public class BookDAO implements Dao<Book, Integer> {
                 result.getString("URL"),
                 result.getString("DESCRIPTION")
         );
-        book.setID(id);
+        book.addProperty(Properties.ID, id);
         return book;
     }
     /**

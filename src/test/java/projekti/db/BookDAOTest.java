@@ -1,6 +1,7 @@
 package projekti.db;
 
 import projekti.domain.Book;
+import projekti.domain.Book.Properties;
 
 import java.io.File;
 
@@ -24,7 +25,7 @@ public class BookDAOTest extends DAOTest<Book> {
         Book updatedObject = createTestObject();
         updatedObject.copyFrom(testObject);
 
-        updatedObject.setDescription("Updated Description");
+        updatedObject.addProperty(Properties.DESCRIPTION, "Updated Description");
         return updatedObject;
     }
 }
