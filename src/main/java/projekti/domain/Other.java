@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import projekti.util.Check;
 
 /**
  * Object that represents generic recommendation.
@@ -57,6 +58,9 @@ public class Other extends AbstractPropertyStore implements Recommendation {
      * @param description Description of the other, can be empty
      */
     public Other(String title, String url, String description) {
+        Check.notNull(title, () -> new IllegalArgumentException("Title should not be null"));
+        Check.isFalse(title.isEmpty(), () -> new IllegalArgumentException("Title should not be empty"));
+
         addProperty(Properties.TITLE, title);
         addProperty(Properties.URL, url);
         addProperty(Properties.DESCRIPTION, description);
