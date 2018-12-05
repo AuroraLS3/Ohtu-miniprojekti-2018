@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import org.apache.commons.validator.routines.UrlValidator;
 import projekti.util.Check;
 
 /**
@@ -62,10 +63,17 @@ public class Other extends AbstractPropertyStore implements Recommendation {
         Check.isFalse(title.isEmpty(), () -> new IllegalArgumentException("Title should not be empty"));
 
         addProperty(Properties.TITLE, title);
-        addProperty(Properties.URL, url);
         addProperty(Properties.DESCRIPTION, description);
+        handleUrlProperty(url);
 
         this.type = "OTHER";
+    }
+    
+     private void handleUrlProperty(String url) {
+    	if (url != null) {
+            Check.isTrue(new UrlValidator().isValid(url), () -> new IllegalArgumentException("URL should be valid"));
+            addProperty(Book.Properties.URL, url);
+    	}
     }
 
     Other() {
