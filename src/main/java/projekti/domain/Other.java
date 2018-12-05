@@ -54,8 +54,8 @@ public class Other extends AbstractPropertyStore implements Recommendation {
     /**
      * Create a new other.
      *
-     * @param title       Title of the other, not null or empty.
-     * @param url         url of the other, not null or empty.
+     * @param title Title of the other, not null or empty.
+     * @param url url of the other, not null or empty.
      * @param description Description of the other, can be empty
      */
     public Other(String title, String url, String description) {
@@ -68,12 +68,12 @@ public class Other extends AbstractPropertyStore implements Recommendation {
 
         this.type = "OTHER";
     }
-    
-     private void handleUrlProperty(String url) {
-    	if (url != null) {
+
+    private void handleUrlProperty(String url) {
+        if (url != null) {
             Check.isTrue(new UrlValidator().isValid(url), () -> new IllegalArgumentException("URL should be valid"));
             addProperty(Book.Properties.URL, url);
-    	}
+        }
     }
 
     Other() {
@@ -83,7 +83,6 @@ public class Other extends AbstractPropertyStore implements Recommendation {
     public Other(String title, String url) {
         this(title, url, null);
     }
-
 
     public void setTitle(String title) {
         addProperty(Properties.TITLE, title);
