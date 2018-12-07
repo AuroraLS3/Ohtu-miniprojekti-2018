@@ -251,9 +251,9 @@ public class Stepdefs {
 
     @Then("^system will show a list of existing book recommendations$")
     public void system_will_show_a_list_of_existing_book_recommendations() {
-        assertTrue(io.getPrints().contains("1. Helka: Super Hieno Kirja, ISBN: 987654321, URL: -"));
-        assertTrue(io.getPrints().contains("2. Reetta: Great Book, ISBN: 111122222, URL: -"));
-        assertTrue(io.getPrints().contains("3. Heli: Kirjojen Kirja, ISBN: 777777333, URL: -"));
+        assertTrue(io.getPrints().contains("0. Helka: Super Hieno Kirja, ISBN: 987654321, URL: -"));
+        assertTrue(io.getPrints().contains("1. Reetta: Great Book, ISBN: 111122222, URL: -"));
+        assertTrue(io.getPrints().contains("2. Heli: Kirjojen Kirja, ISBN: 777777333, URL: -"));
     }
 
     @Then("^the list of recommendations will include \"([^\"]*)\"$")

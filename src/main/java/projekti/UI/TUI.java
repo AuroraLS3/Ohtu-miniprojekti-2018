@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import projekti.domain.Property;
 import projekti.domain.RecommendationFactory;
 
@@ -21,17 +22,19 @@ public class TUI {
     private Dao<Blog, Integer> blogDAO;
     private Dao<Other, Integer> otherDAO;
     private IO io;
+    private List<Integer> IDList;
 
     public TUI(
             Dao<Book, Integer> bookDAO,
             Dao<Blog, Integer> blogDAO,
             Dao<Other, Integer> otherDAO,
             IO io
-    ) {
+    ) throws SQLException {
         bookDao = bookDAO;
         this.blogDAO = blogDAO;
         this.otherDAO = otherDAO;
         this.io = io;
+        updateIDList();
     }
 
     private Recommendation save(Recommendation recommendation) throws SQLException {
@@ -147,7 +150,7 @@ public class TUI {
             if (recommendation == null) {
                 return;
             }
-            io.println(recommendation.toStringWithDescription());
+            io.println(getListID(recommendation) + recommendation.toStringWithDescription());
             io.println();
 
             io.println("\ncommands for the selected recommendation: ");
@@ -207,25 +210,73 @@ public class TUI {
         if (save(recommendation) != null) {
             io.println();
             io.println("new " + recommendationType + " recommendation added");
+            updateIDList();
         } else {
             io.println("\nrecommendation not added");
         }
     }
 
     private void listRecommendations() throws SQLException {
+        List<Recommendation> recommendations = getAllRecommendations();
+        updateIDList(recommendations);
+        for (int i = 0; i < recommendations.size(); i++) {
+            io.println(i + recommendations.get(i).toString());
+        }
+    }
+
+    private List<Recommendation> getAllRecommendations() throws SQLException {
         List<Recommendation> recommendations = new ArrayList<>();
         recommendations.addAll(bookDao.findAll());
         recommendations.addAll(blogDAO.findAll());
         recommendations.addAll(otherDAO.findAll());
-        recommendations.forEach(r -> io.println(r.toString()));
+        return recommendations;
+    }
+
+    /**
+     * updates the IDList (list of "fake" IDs displayed to the user, used for
+     * selecting, updating or deleting a Recommendation)
+     * @param allRecommendations list of all Recommendation, already obtained
+     * by calling getAllRecommendations()
+     */
+    private void updateIDList(List<Recommendation> allRecommendations) {
+        this.IDList = allRecommendations.stream()
+                .map(r -> r.getProperty(Properties.ID).orElse(-1))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * fetches all Recommendations from the database and updates the IDList
+     * (list of "fake" IDs displayed to the user, used for selecting,
+     * updating or deleting a Recommendation)
+     * @throws SQLException
+     */
+    private void updateIDList() throws SQLException {
+        updateIDList(getAllRecommendations());
+    }
+
+    /**
+     * returns the list ID (the one used by the user to refer to a specific
+     * recommendation) of the recommendation given as a parameter
+     * @param recommendation the given recommendation
+     * @return the recommendation's list ID
+     */
+    private Integer getListID(Recommendation recommendation) {
+        Integer ID = recommendation.getProperty(Properties.ID).orElse(null);
+        return IDList.indexOf(ID);
     }
 
     private Integer selectID() {
         io.println("enter recommendation id (or empty input to go back)");
         io.print("ID: ");
         String id_String = io.getInput();
+        Integer ID;
         try {
-            return Integer.parseInt(id_String);
+            ID = Integer.parseInt(id_String);
+            if (ID < 0 || ID >= IDList.size()) {
+                // just some value that can't be a true ID in the database
+                return -1;
+            }
+            return IDList.get(ID);
         } catch (IllegalArgumentException ex) {
             if (!id_String.isEmpty()) {
                 io.println("Not a valid ID. Has to be a number.");
@@ -251,11 +302,12 @@ public class TUI {
     }
 
     private void deleteRecommendation(Recommendation recommendation) throws SQLException {
-        Integer ID = recommendation.getProperty(Properties.ID).orElse(null);
+        Integer ID = getListID(recommendation);
         if (confirm("Are you sure you want to delete recommendation " + ID + "?")) {
             delete(recommendation);
             io.println();
             io.println("recommendation successfully deleted");
+            updateIDList();
         } else {
             io.println();
             io.println("recommendation deletion canceled");
@@ -266,12 +318,11 @@ public class TUI {
         Function<Property, String> requestProperty = (Property property) -> {
             io.print("enter new " + property.getName() + " (or empty input to leave it unchanged): ");
             String userInput = io.getInput().trim();
-            // TODO return existing recommendation property if userInput is empty (this code doesn't work)
             if (userInput.isEmpty()) {
-                
+
                 return (String) recommendation.getProperty(property).orElse("");
             }
-          
+
             return userInput;
         };
 
@@ -289,11 +340,13 @@ public class TUI {
 
         Integer ID = recommendation.getProperty(Properties.ID).orElse(null);
         updatedRecommendation.addProperty(Properties.ID, ID);
+        ID = IDList.indexOf(ID);
 
         if (confirm("are you sure you want to update recommendation " + ID + "?")) {
             if (update(updatedRecommendation)) {
                 io.println();
                 io.println("update successful");
+                updateIDList();
                 return updatedRecommendation;
             } else {
                 io.println();
@@ -306,49 +359,4 @@ public class TUI {
             return recommendation;
         }
     }
-
-//    private Book updateBook(Integer knownID) throws SQLException {
-//        Book oldBook = bookDao.findOne(knownID);
-//        Check.notNull(oldBook, () -> new IllegalArgumentException("No book found with id " + knownID));
-//        Book updatedBook = new Book(oldBook.getProperty(Properties.AUTHOR).orElse(""),
-//                oldBook.getProperty(Properties.TITLE).orElse(""),
-//                oldBook.getProperty(Properties.ISBN).orElse(""),
-//                oldBook.getProperty(Properties.DESCRIPTION).orElse(""));
-//        updatedBook.setID(oldBook.getProperty(Properties.ID).orElse(-1));
-//        io.print("enter new author (or empty input to leave it unchanged): ");
-//        String author = io.getInput();
-//        if (!author.isEmpty()) {
-//            updatedBook.setAuthor(author);
-//        }
-//        io.print("enter new title (or empty input to leave it unchanged): ");
-//        String title = io.getInput();
-//        if (!title.isEmpty()) {
-//            updatedBook.setTitle(title);
-//        }
-//        io.print("enter new ISBN (or empty input to leave it unchanged): ");
-//        String isbn = io.getInput();
-//        if (!isbn.isEmpty()) {
-//            updatedBook.setISBN(isbn);
-//        }
-//        io.print("enter new description (or empty input to leave it unchanged): ");
-//        String description = io.getInput();
-//        if (!description.isEmpty()) {
-//            updatedBook.setDescription(description);
-//        }
-//        if (confirm("are you sure you want to update recommendation " + knownID + "?")) {
-//            if (bookDao.update(updatedBook)) {
-//                io.println();
-//                io.println("update successful");
-//                return updatedBook;
-//            } else {
-//                io.println();
-//                io.println("update failed");
-//                return oldBook;
-//            }
-//        } else {
-//            io.println();
-//            io.println("recommendation update canceled");
-//            return oldBook;
-//        }
-//    }
 }
