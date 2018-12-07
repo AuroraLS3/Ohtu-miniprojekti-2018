@@ -19,6 +19,7 @@ repositories {
 dependencies {
     compile 'com.h2database:h2:1.4.195'
     compile 'com.google.guava:guava:20.0'
+    compile 'com.google.code.gson:gson:2.8.5'
     compile 'commons-validator:commons-validator:' + validatorVersion
     testCompile 'info.cukes:cucumber-java:' + cucumberVersion
     testCompile 'info.cukes:cucumber-junit:' + cucumberVersion
