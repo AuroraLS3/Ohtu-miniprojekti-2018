@@ -6,10 +6,9 @@
 package projekti.language;
 
 /**
- *
  * @author vililipo
  */
-public enum LanguageKeys {
+public enum LanguageKeys implements Lang {
     GREET("greetMessage"),
     MAINCOMMANDS("mainCommands"),
     COMMAND("command"),
@@ -29,14 +28,17 @@ public enum LanguageKeys {
     ORLEAVE("orLeave"),
     NOTUP("notUpdated"),
     UPDATECONFIR("updateConfirmation"),
-    
+
     ;
-    
+
     private final String key;
-    
-    
-    private LanguageKeys(String key) {
+
+    LanguageKeys(String key) {
         this.key = key;
     }
-    
+
+    @Override
+    public String getKey() {
+        return key;
+    }
 }
