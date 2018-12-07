@@ -32,7 +32,7 @@
   "orLeave":" (or empty input to leave it unchanged): ",
   "notUpdated":" recommendation was not updated.",
   "updateConfirmation":"are you sure you want to update recommendation ",
-  "updateSucces": "update succesful",
+  "updateSuccess": "update succesful",
   "updateFail": "update failed",
   "updateCancel": "recommendation update cancelled"
 }

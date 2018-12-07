@@ -306,49 +306,4 @@ public class TUI {
             return recommendation;
         }
     }
-
-//    private Book updateBook(Integer knownID) throws SQLException {
-//        Book oldBook = bookDao.findOne(knownID);
-//        Check.notNull(oldBook, () -> new IllegalArgumentException("No book found with id " + knownID));
-//        Book updatedBook = new Book(oldBook.getProperty(Properties.AUTHOR).orElse(""),
-//                oldBook.getProperty(Properties.TITLE).orElse(""),
-//                oldBook.getProperty(Properties.ISBN).orElse(""),
-//                oldBook.getProperty(Properties.DESCRIPTION).orElse(""));
-//        updatedBook.setID(oldBook.getProperty(Properties.ID).orElse(-1));
-//        io.print("enter new author (or empty input to leave it unchanged): ");
-//        String author = io.getInput();
-//        if (!author.isEmpty()) {
-//            updatedBook.setAuthor(author);
-//        }
-//        io.print("enter new title (or empty input to leave it unchanged): ");
-//        String title = io.getInput();
-//        if (!title.isEmpty()) {
-//            updatedBook.setTitle(title);
-//        }
-//        io.print("enter new ISBN (or empty input to leave it unchanged): ");
-//        String isbn = io.getInput();
-//        if (!isbn.isEmpty()) {
-//            updatedBook.setISBN(isbn);
-//        }
-//        io.print("enter new description (or empty input to leave it unchanged): ");
-//        String description = io.getInput();
-//        if (!description.isEmpty()) {
-//            updatedBook.setDescription(description);
-//        }
-//        if (confirm("are you sure you want to update recommendation " + knownID + "?")) {
-//            if (bookDao.update(updatedBook)) {
-//                io.println();
-//                io.println("update successful");
-//                return updatedBook;
-//            } else {
-//                io.println();
-//                io.println("update failed");
-//                return oldBook;
-//            }
-//        } else {
-//            io.println();
-//            io.println("recommendation update canceled");
-//            return oldBook;
-//        }
-//    }
 }
