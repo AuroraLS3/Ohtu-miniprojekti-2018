@@ -307,11 +307,11 @@ public class TUI {
             delete(recommendation);
             io.println();
             io.println("recommendation successfully deleted");
+            updateIDList();
         } else {
             io.println();
             io.println("recommendation deletion canceled");
         }
-        updateIDList();
     }
 
     private Recommendation updateRecommendation(Recommendation recommendation) throws SQLException {
