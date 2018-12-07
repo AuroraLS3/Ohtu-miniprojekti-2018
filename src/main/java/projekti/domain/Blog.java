@@ -117,7 +117,7 @@ public class Blog extends AbstractPropertyStore implements Recommendation {
 
     @Override
     public String toString() {
-        return getProperty(Properties.ID).orElse(-1) + ". "
+        return ". "
                 + getProperty(Properties.TITLE).orElse("Not Specified")
                 + ", URL: " + getProperty(Properties.URL).orElse("-");
     }
