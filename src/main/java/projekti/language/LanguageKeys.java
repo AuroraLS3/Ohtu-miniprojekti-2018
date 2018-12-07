@@ -16,6 +16,7 @@ public enum LanguageKeys {
     QUIT("exitMessage"),
     NONSUP("nonSupportedCommand"),
     NOREC("noRecommendationFound"),
+    SELECTEDCOMMANDS("selectedCommands"),
     TYPELIST("typeListings"),
     RECADDED("recommendationAdded"),
     RECNOTADDED("recommendationNotAdded"),
@@ -29,8 +30,9 @@ public enum LanguageKeys {
     ORLEAVE("orLeave"),
     NOTUP("notUpdated"),
     UPDATECONFIR("updateConfirmation"),
-    
-    ;
+    UPDATEFAIL("updateFail"),
+    UPDATECANCEL("updateCancel"),
+    UPDATESUCCES("");
     
     private final String key;
     
