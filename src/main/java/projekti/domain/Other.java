@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import org.apache.commons.validator.routines.UrlValidator;
+import projekti.util.Check;
 
 /**
  * Object that represents generic recommendation.
@@ -52,16 +54,26 @@ public class Other extends AbstractPropertyStore implements Recommendation {
     /**
      * Create a new other.
      *
-     * @param title       Title of the other, not null or empty.
-     * @param url         url of the other, not null or empty.
+     * @param title Title of the other, not null or empty.
+     * @param url url of the other, not null or empty.
      * @param description Description of the other, can be empty
      */
     public Other(String title, String url, String description) {
+        Check.notNull(title, () -> new IllegalArgumentException("Title should not be null"));
+        Check.isFalse(title.isEmpty(), () -> new IllegalArgumentException("Title should not be empty"));
+
         addProperty(Properties.TITLE, title);
-        addProperty(Properties.URL, url);
         addProperty(Properties.DESCRIPTION, description);
+        handleUrlProperty(url);
 
         this.type = "OTHER";
+    }
+
+    private void handleUrlProperty(String url) {
+        if (url != null) {
+            Check.isTrue(new UrlValidator().isValid(url), () -> new IllegalArgumentException("URL should be valid"));
+            addProperty(Book.Properties.URL, url);
+        }
     }
 
     Other() {
@@ -71,7 +83,6 @@ public class Other extends AbstractPropertyStore implements Recommendation {
     public Other(String title, String url) {
         this(title, url, null);
     }
-
 
     public void setTitle(String title) {
         addProperty(Properties.TITLE, title);
