@@ -54,4 +54,6 @@ public interface Dao<T, K> {
 
     void delete(K key) throws SQLException;
 
+    boolean tooLongPropertyFound(T object) throws SQLException;
+
 }

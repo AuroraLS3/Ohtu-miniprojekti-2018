@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import projekti.util.Check;
 
 /**
  * Object that represents a blog.
@@ -57,6 +58,10 @@ public class Blog extends AbstractPropertyStore implements Recommendation {
      * @param description Description of the blog, can be empty
      */
     public Blog(String title, String url, String description) {
+        Check.notNull(title, () -> new IllegalArgumentException("Title should not be null"));
+        Check.notNull(url, () -> new IllegalArgumentException("URL should not be null"));
+        Check.isFalse(title.isEmpty(), () -> new IllegalArgumentException("Title should not be empty"));
+        Check.isFalse(url.isEmpty(), () -> new IllegalArgumentException("URL should not be empty"));
         addProperty(Properties.TITLE, title);
         addProperty(Properties.URL, url);
         addProperty(Properties.DESCRIPTION, description);

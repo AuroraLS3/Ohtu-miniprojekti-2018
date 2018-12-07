@@ -4,6 +4,7 @@ import projekti.domain.Other;
 import projekti.domain.Other.Properties;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import projekti.domain.Property;
 
 /**
  * Data Access Object for Others.
@@ -81,25 +83,28 @@ public class OtherDAO implements Dao<Other, Integer> {
     public Other create(Other other) throws SQLException {
         int otherId = -1;
 
-        String sql = "INSERT INTO " + TABLE_NAME + " (NAME, URL, TYPE, DESCRIPTION) "
-                + "VALUES (?, ?, ?, ?)";
-        try (Connection connection = databaseManager.connect()) {
-            PreparedStatement stmt = connection.prepareStatement(sql);
+        if (!tooLongPropertyFound(other)) {
 
-            stmt.setString(1, other.getProperty(Properties.TITLE).orElse(null));
-            stmt.setString(2, other.getProperty(Properties.URL).orElse(null));
-            stmt.setString(3, other.getType());
-            stmt.setString(4, other.getProperty(Properties.DESCRIPTION).orElse(""));
-            stmt.executeUpdate();
-            ResultSet rs = stmt.getGeneratedKeys();
-            if (rs.next()) {
-                otherId = rs.getInt(1);
+            String sql = "INSERT INTO " + TABLE_NAME + " (NAME, URL, TYPE, DESCRIPTION) "
+                    + "VALUES (?, ?, ?, ?)";
+            try (Connection connection = databaseManager.connect()) {
+                PreparedStatement stmt = connection.prepareStatement(sql);
+
+                stmt.setString(1, other.getProperty(Properties.TITLE).orElse(null));
+                stmt.setString(2, other.getProperty(Properties.URL).orElse(null));
+                stmt.setString(3, other.getType());
+                stmt.setString(4, other.getProperty(Properties.DESCRIPTION).orElse(""));
+                stmt.executeUpdate();
+                ResultSet rs = stmt.getGeneratedKeys();
+                if (rs.next()) {
+                    otherId = rs.getInt(1);
+                }
+                rs.close();
+                stmt.close();
+            } catch (SQLException e) {
+                // Unchecked exception is thrown if SQL error occurs during closing or execution.
+                throw new IllegalStateException(e.getMessage(), e);
             }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            // Unchecked exception is thrown if SQL error occurs during closing or execution.
-            throw new IllegalStateException(e.getMessage(), e);
         }
         return findOne(otherId);
     }
@@ -141,26 +146,31 @@ public class OtherDAO implements Dao<Other, Integer> {
      */
     @Override
     public boolean update(Other object) throws SQLException {
-        try (Connection conn = databaseManager.connect()) {
-            String statementString = "UPDATE RECOMMENDATION "
-                    + "SET NAME = ?, "
-                    + "URL = ?, "
-                    + "TYPE = ?, "
-                    + "DESCRIPTION = ? "
-                    + "WHERE RECOMMENDATION.ID = ? ;";
-            PreparedStatement stmnt = conn.prepareStatement(statementString);
-            stmnt.setString(1, object.getProperty(Properties.TITLE).orElse(null));
-            stmnt.setString(2, object.getProperty(Properties.URL).orElse(null));
-            stmnt.setString(3, object.getType());
-            stmnt.setString(4, object.getProperty(Properties.DESCRIPTION).orElse(""));
-            stmnt.setInt(5, object.getProperty(Properties.ID).orElse(null));
-            int count = stmnt.executeUpdate();
-            if (count == 0) {
-                Logger.getGlobal().log(Level.WARNING, "No matches for update in the db");
-                return false;
+        if (!tooLongPropertyFound(object)) {
+
+            try (Connection conn = databaseManager.connect()) {
+                String statementString = "UPDATE RECOMMENDATION "
+                        + "SET NAME = ?, "
+                        + "URL = ?, "
+                        + "TYPE = ?, "
+                        + "DESCRIPTION = ? "
+                        + "WHERE RECOMMENDATION.ID = ? ;";
+                PreparedStatement stmnt = conn.prepareStatement(statementString);
+                stmnt.setString(1, object.getProperty(Properties.TITLE).orElse(null));
+                stmnt.setString(2, object.getProperty(Properties.URL).orElse(null));
+                stmnt.setString(3, object.getType());
+                stmnt.setString(4, object.getProperty(Properties.DESCRIPTION).orElse(""));
+                stmnt.setInt(5, object.getProperty(Properties.ID).orElse(null));
+                int count = stmnt.executeUpdate();
+                if (count == 0) {
+                    Logger.getGlobal().log(Level.WARNING, "No matches for update in the db");
+                    return false;
+                }
+
+                return true;
             }
-            return true;
         }
+        return false;
     }
 
     /*
@@ -176,6 +186,51 @@ public class OtherDAO implements Dao<Other, Integer> {
             stmt.executeUpdate();
             stmt.close();
         }
+    }
+
+    /**
+     * Checks if property content is too long considering column sizes.
+     *
+     * @param the name and content of the property to be checked
+     * @return true if property is too long, false if note
+     * @throws SQLException
+     */
+    public boolean propertyTooLong(String name, String property) throws SQLException {
+        boolean tooLong = false;
+        try (Connection conn = databaseManager.connect()) {
+            DatabaseMetaData meta = conn.getMetaData();
+            ResultSet column = meta.getColumns(null, null, "RECOMMENDATION", name);
+            while (column.next()) {
+                if (property.length() > column.getInt("COLUMN_SIZE")) {
+                    tooLong = true;
+                    System.out.println(name + " should not be more than " + column.getInt("COLUMN_SIZE") + " characters long");
+                }
+            }
+            column.close();
+        }
+        return tooLong;
+    }
+
+    /**
+     * Goes through a recommendation's properties and checks if any of the
+     * properties' content is too long considering column sizes.
+     *
+     * @param the recommendation object to be checked
+     * @return true if any of the properties in the property list is too long,
+     * false if not
+     * @throws SQLException
+     */
+    @Override
+    public boolean tooLongPropertyFound(Other other) throws SQLException {
+        List<Property> props = other.getProperties();
+        boolean tooLong = false;
+        for (int i = 0; i < props.size(); i++) {
+            Property p = props.get(i);
+            if (!p.getName().equals("ID") && propertyTooLong(p.getName(), other.getProperty(p).toString())) {
+                tooLong = true;
+            }
+        }
+        return tooLong;
     }
 
 }
