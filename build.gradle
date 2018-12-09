@@ -1,5 +1,5 @@
 plugins {
-  id 'com.github.johnrengelman.shadow' version '4.0.2'
+    id 'com.github.johnrengelman.shadow' version '4.0.2'
 }
 apply plugin: 'java'
 apply plugin: 'application'
@@ -40,13 +40,18 @@ jar {
 }
 
 run {
-  standardInput = System.in
+    standardInput = System.in
 }
 
 jacocoTestReport {
     reports {
         xml.enabled true
         html.enabled true
+    }
+    afterEvaluate {
+        classDirectories = files(classDirectories.files.collect {
+                fileTree(dir: it, exclude: 'projekti/main/Main.*')
+            })
     }
 }
 
