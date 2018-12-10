@@ -10,6 +10,7 @@ project.ext {
     cucumberVersion = '1.2.5'
     junitVersion = '4.12'
     validatorVersion = '1.4.0'
+    gsonVersion = '2.7'
 }
 
 repositories {
@@ -20,6 +21,7 @@ dependencies {
     compile 'com.h2database:h2:1.4.195'
     compile 'com.google.guava:guava:20.0'
     compile 'commons-validator:commons-validator:' + validatorVersion
+    compile 'com.google.code.gson:gson:' + gsonVersion
     testCompile 'info.cukes:cucumber-java:' + cucumberVersion
     testCompile 'info.cukes:cucumber-junit:' + cucumberVersion
     testCompile 'junit:junit:' + junitVersion
