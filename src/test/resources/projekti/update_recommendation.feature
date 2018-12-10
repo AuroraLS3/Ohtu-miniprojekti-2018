@@ -4,7 +4,7 @@ Feature: Users can update existing recommendations
        Given some book recommendations have been created
        And   command update is selected
        And   recommendation type "book" is selected
-       When  existing recommendation id "2" is entered
+       When  existing recommendation id "1" is entered
        And   new author "Reetta" is entered
        And   new title "Jolly Book" is entered
        And   new ISBN "987655555" is entered
@@ -14,13 +14,13 @@ Feature: Users can update existing recommendations
        And   command all is selected
        And   the app processes the input
        Then  system will respond with "update successful"
-       And   the list of recommendations will include "2. Reetta: Jolly Book, ISBN: 987655555, URL: http://www.faketestfaketestfaketesturl.com"
+       And   the list of recommendations will include "1. Reetta: Jolly Book, ISBN: 987655555, URL: http://www.faketestfaketestfaketesturl.com"
 
     Scenario: user can update an existing blog recommendation and receives a message upon succesful update
        Given some blog recommendations have been created
        And   command update is selected
        And   recommendation type "blog" is selected
-       When  existing recommendation id "2" is entered
+       When  existing recommendation id "1" is entered
        And   new title "Jolliest Blog" is entered
        And   new url "http://www.faketestfaketestfaketesturl.com" is entered
        And   new description "" is entered
@@ -28,13 +28,13 @@ Feature: Users can update existing recommendations
        And   command all is selected
        And   the app processes the input
        Then  system will respond with "update successful"
-       And   the list of recommendations will include "2. Jolliest Blog, URL: http://www.faketestfaketestfaketesturl.com"
+       And   the list of recommendations will include "1. Jolliest Blog, URL: http://www.faketestfaketestfaketesturl.com"
 
     Scenario: user can update an existing other recommendation and receives a message upon succesful update
        Given some other recommendations have been created
        And   command update is selected
        And   recommendation type "other" is selected
-       When  existing recommendation id "2" is entered
+       When  existing recommendation id "1" is entered
        And   new title "Jolliest Website" is entered
        And   new url "http://www.faketestfaketestfaketesturl.com" is entered
        And   new description "" is entered
@@ -42,7 +42,7 @@ Feature: Users can update existing recommendations
        And   command all is selected
        And   the app processes the input
        Then  system will respond with "update successful"
-       And   the list of recommendations will include "2. Jolliest Website, URL: http://www.faketestfaketestfaketesturl.com"
+       And   the list of recommendations will include "1. Jolliest Website, URL: http://www.faketestfaketestfaketesturl.com"
 
 
     Scenario: user gets a warning message when trying to update a nonexisting recommendation
@@ -57,7 +57,7 @@ Feature: Users can update existing recommendations
        Given some book recommendations have been created
        And   command update is selected
        And   recommendation type "book" is selected
-       When  existing recommendation id "3" is entered
+       When  existing recommendation id "2" is entered
        And   new author "Minna" is entered
        And   new title "Jolly Book" is entered
        And   new ISBN "987655555" is entered
@@ -67,8 +67,8 @@ Feature: Users can update existing recommendations
        And   command all is selected
        And   the app processes the input
        Then  system will respond with "recommendation update canceled"
-       And   the list of recommendations will not include "3. Minna: Jolly Book, ISBN: 987655555"
-       And   the list of recommendations will include "3. Heli: Kirjojen Kirja, ISBN: 777777333, URL: -"
+       And   the list of recommendations will not include "2. Minna: Jolly Book, ISBN: 987655555"
+       And   the list of recommendations will include "2. Heli: Kirjojen Kirja, ISBN: 777777333, URL: -"
 
     Scenario: user gets a warning message when entering a non-integer ID
        Given some book recommendations have been created

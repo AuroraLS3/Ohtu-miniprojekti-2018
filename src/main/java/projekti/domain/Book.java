@@ -131,7 +131,7 @@ public class Book extends AbstractPropertyStore implements Recommendation {
 
     @Override
     public String toString() {
-        return getProperty(Properties.ID).orElse(-1) + ". "
+        return ". "
                 + getProperty(Properties.AUTHOR).orElse("Not Specified")
                 + ": " + getProperty(Properties.TITLE).orElse("Not Specified")
                 + ", ISBN: " + getProperty(Properties.ISBN).orElse("-") + ", URL: " + getProperty(Properties.URL).orElse("-");

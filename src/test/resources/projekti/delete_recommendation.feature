@@ -26,6 +26,7 @@ Feature: Users can delete recommendations
        And   affirmative response is given when asked for confirmation
        And   the app processes the input
        Then  system will respond with "recommendation successfully deleted"
+
     Scenario: user gets a warning message when trying to delete a nonexisting recommendation
        Given some book recommendations have been created
        And   command delete is selected
@@ -38,7 +39,7 @@ Feature: Users can delete recommendations
        Given some book recommendations have been created
        And   command delete is selected
        And   recommendation type "book" is selected
-       When  existing recommendation id "3" is entered
+       When  existing recommendation id "1" is entered
        And   negative response is given when asked for confirmation
        And   the app processes the input
        Then  system will respond with "recommendation deletion canceled"
@@ -47,7 +48,7 @@ Feature: Users can delete recommendations
        Given some book recommendations have been created
        And   command delete is selected
        And   recommendation type "book" is selected
-       When  existing recommendation id "3" is entered
+       When  existing recommendation id "1" is entered
        And   other response is given when asked for confirmation
        And   negative response is given when asked for confirmation
        And   the app processes the input
