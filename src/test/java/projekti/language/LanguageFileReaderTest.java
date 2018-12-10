@@ -1,19 +1,18 @@
 package projekti.language;
 
-import org.junit.Test;
 import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 
+import org.junit.Test;
 
-public class LanguageReaderTest {
-	
+public class LanguageFileReaderTest {
 	@Test
 	public void readLanguageTest() {
-		LanguageReader lr = new LanguageReader();
-		ArrayList<Locale> locales = lr.readLanguages();
+		LanguageFileReader lr = new LanguageFileReader();
+		ArrayList<Locale> locales = lr.readLanguages("json/lang.json");
 		Locale locale = locales.get(0);
 		assertTrue("Welcome to the reading recommendation app !".contentEquals(locale.get(LanguageKeys.GREET)));
-		System.out.println(locale.get(LanguageKeys.MAINCOMMANDS));
 		Locale suomi = locales.get(1);
 		assertTrue("Tervetuloa lukuvinkki applikaatioon!".contentEquals(suomi.get(LanguageKeys.GREET)));
 		
