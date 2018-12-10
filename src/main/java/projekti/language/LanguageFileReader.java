@@ -32,7 +32,6 @@ public class LanguageFileReader {
 			@SuppressWarnings("unchecked")
 			HashMap<String, Object>[] json = gson.fromJson(br, HashMap[].class);
 			return json;
-
 		} catch (IOException ex) {
 			throw new IllegalStateException("Can't read language file");
 		}
