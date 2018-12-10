@@ -1,12 +1,15 @@
 package projekti.UI;
 
+import projekti.UI.commands.Command;
+import projekti.UI.commands.CreateRecommendation;
+import projekti.UI.commands.DBHelper;
+import projekti.UI.commands.RecHelper;
 import projekti.db.Dao;
 import projekti.domain.Blog;
 import projekti.domain.Book;
 import projekti.domain.Book.Properties;
 import projekti.domain.Other;
 import projekti.domain.Recommendation;
-import projekti.util.Check;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -17,60 +20,36 @@ import projekti.domain.Property;
 import projekti.domain.RecommendationFactory;
 
 public class TUI {
-
-    private Dao<Book, Integer> bookDao;
-    private Dao<Blog, Integer> blogDAO;
-    private Dao<Other, Integer> otherDAO;
     private IO io;
     private List<Integer> IDList;
 
+    private RecHelper rh;
+    private DBHelper db;
+    private Command create;
+    
     public TUI(
             Dao<Book, Integer> bookDAO,
             Dao<Blog, Integer> blogDAO,
             Dao<Other, Integer> otherDAO,
             IO io
     ) throws SQLException {
-        bookDao = bookDAO;
-        this.blogDAO = blogDAO;
-        this.otherDAO = otherDAO;
+        this.db = new DBHelper(bookDAO, blogDAO, otherDAO);
+        this.rh = new RecHelper(this, io, db);
+        this.create = new CreateRecommendation(rh, db);
+    
         this.io = io;
         updateIDList();
     }
 
-    private Recommendation save(Recommendation recommendation) throws SQLException {
-        switch (recommendation.getType()) {
-            case "BOOK":
-                return bookDao.create((Book) recommendation);
-            case "BLOG":
-                return blogDAO.create((Blog) recommendation);
-            case "OTHER":
-                return otherDAO.create((Other) recommendation);
-            default:
-                throw new IllegalArgumentException("No save definition for recommendation of type: " + recommendation.getType());
-        }
-    }
-
-    private Recommendation retrieve(String recommendationType, Integer ID) throws SQLException {
-        switch (recommendationType) {
-            case "BOOK":
-                return bookDao.findOne(ID);
-            case "BLOG":
-                return blogDAO.findOne(ID);
-            case "OTHER":
-                return otherDAO.findOne(ID);
-            default:
-                throw new IllegalArgumentException("No retrieve definition for recommendation of type: " + recommendationType);
-        }
-    }
-
+   
     private boolean update(Recommendation recommendation) throws SQLException {
         switch (recommendation.getType()) {
             case "BOOK":
-                return bookDao.update((Book) recommendation);
+                return db.getBookDAO().update((Book) recommendation);
             case "BLOG":
-                return blogDAO.update((Blog) recommendation);
+                return db.getBlogDAO().update((Blog) recommendation);
             case "OTHER":
-                return otherDAO.update((Other) recommendation);
+                return db.getOtherDAO().update((Other) recommendation);
             default:
                 throw new IllegalArgumentException("No retrieve definition for recommendation of type: " + recommendation.getType());
         }
@@ -79,13 +58,13 @@ public class TUI {
     private void delete(Recommendation recommendation) throws SQLException {
         switch (recommendation.getType()) {
             case "BOOK":
-                bookDao.delete(recommendation.getProperty(Properties.ID).orElse(null));
+                db.getBookDAO().delete(recommendation.getProperty(Properties.ID).orElse(null));
                 return;
             case "BLOG":
-                blogDAO.delete(recommendation.getProperty(Properties.ID).orElse(null));
+                db.getBlogDAO().delete(recommendation.getProperty(Properties.ID).orElse(null));
                 return;
             case "OTHER":
-                otherDAO.delete(recommendation.getProperty(Properties.ID).orElse(null));
+                db.getOtherDAO().delete(recommendation.getProperty(Properties.ID).orElse(null));
                 return;
             default:
                 throw new IllegalArgumentException("No retrieve definition for recommendation of type: " + recommendation.getType());
@@ -117,7 +96,8 @@ public class TUI {
     private void performAction(String input) throws SQLException {
         switch (input.toLowerCase()) {
             case "new":
-                createRecommendation();
+                create.execute();
+               
                 break;
             case "all":
                 listRecommendations();
@@ -129,10 +109,12 @@ public class TUI {
                 selectRecommendation();
                 break;
             case "update":
-                updateRecommendation(askForRecommendation());
+                updateRecommendation(rh.askForRecommendation());
+                updateIDList();
                 break;
             case "delete":
-                deleteRecommendation(askForRecommendation());
+                deleteRecommendation(rh.askForRecommendation());
+                updateIDList();
                 break;
             default:
                 io.println("\nnon-supported command");
@@ -141,7 +123,7 @@ public class TUI {
     }
 
     private void selectRecommendation() throws SQLException {
-        Recommendation recommendation = askForRecommendation();
+        Recommendation recommendation = rh.askForRecommendation();
 
         String input = "";
 
@@ -162,9 +144,11 @@ public class TUI {
             switch (input) {
                 case "edit":
                     recommendation = updateRecommendation(recommendation);
+                    updateIDList();
                     break;
                 case "delete":
                     deleteRecommendation(recommendation);
+                    updateIDList();
                     break selectionLoop;
                 case "return":
                     io.println();
@@ -176,45 +160,7 @@ public class TUI {
         }
     }
 
-    private Recommendation askForRecommendation() throws SQLException {
-        String recommendationType = askType();
-        Integer ID = selectID();
-
-        Recommendation recommendation = retrieve(recommendationType, ID);
-        Check.notNull(recommendation, () -> new IllegalArgumentException("No recommendation found"));
-        return recommendation;
-    }
-
-    private String askType() throws SQLException {
-        io.println("enter recommendation type");
-        io.print("recommendation type (possible choices: book, blog, other): ");
-        return io.getInput().toUpperCase();
-    }
-
-    private void createRecommendation() throws SQLException {
-        String recommendationType = askType().toLowerCase();
-        Function<Property, String> requestProperty = (Property property) -> {
-            io.print(property.getName() + ": ");
-            return io.getInput().trim();
-        };
-        Recommendation recommendation;
-        try {
-            recommendation = RecommendationFactory.create()
-                    .selectType(recommendationType)
-                    .whileMissingProperties(requestProperty)
-                    .build();
-        } catch (IllegalArgumentException ex) {
-            io.println("\n " + recommendationType + " recommendation was not added.");
-            throw ex;
-        }
-        if (save(recommendation) != null) {
-            io.println();
-            io.println("new " + recommendationType + " recommendation added");
-            updateIDList();
-        } else {
-            io.println("\nrecommendation not added");
-        }
-    }
+    
 
     private void listRecommendations() throws SQLException {
         List<Recommendation> recommendations = getAllRecommendations();
@@ -226,9 +172,9 @@ public class TUI {
 
     private List<Recommendation> getAllRecommendations() throws SQLException {
         List<Recommendation> recommendations = new ArrayList<>();
-        recommendations.addAll(bookDao.findAll());
-        recommendations.addAll(blogDAO.findAll());
-        recommendations.addAll(otherDAO.findAll());
+        recommendations.addAll(db.getBookDAO().findAll());
+        recommendations.addAll(db.getBlogDAO().findAll());
+        recommendations.addAll(db.getOtherDAO().findAll());
         return recommendations;
     }
 
@@ -250,7 +196,7 @@ public class TUI {
      * updating or deleting a Recommendation)
      * @throws SQLException
      */
-    private void updateIDList() throws SQLException {
+    public void updateIDList() throws SQLException {
         updateIDList(getAllRecommendations());
     }
 
@@ -265,7 +211,7 @@ public class TUI {
         return IDList.indexOf(ID);
     }
 
-    private Integer selectID() {
+    public Integer selectID() { //public until all IDList functionality is a part of RecHelper
         io.println("enter recommendation id (or empty input to go back)");
         io.print("ID: ");
         String id_String = io.getInput();
