@@ -2,6 +2,7 @@ package projekti.language;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +24,7 @@ public class Locale {
         Object value = langMap.getOrDefault(key, "Missing language key: " + key);
         if (value.getClass() == ArrayList.class) {
             @SuppressWarnings("unchecked")
-            ArrayList<String> list = (ArrayList<String>) value;
+            List<String> list = (List<String>) value;
             StringBuilder sb = new StringBuilder();
             for (String s : list) {
                 sb.append(s + "\n");
@@ -41,9 +42,7 @@ public class Locale {
         if (value.getClass() == ArrayList.class) {
             return ((ArrayList<String>) value);
         } else {
-            ArrayList<String> list = new ArrayList<>();
-            list.add(value.toString());
-            return list;
+            return Collections.singletonList(value.toString());
         }
     }
 
