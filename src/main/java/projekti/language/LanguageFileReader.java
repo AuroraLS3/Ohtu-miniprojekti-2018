@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class LanguageFileReader {
 
-	public HashMap<String, Object> readJson(String filename) {
+	public Map<String, Object> readJson(String filename) {
 		try (InputStreamReader isr = new InputStreamReader(Main.class.getClassLoader().getResourceAsStream(filename));
 				BufferedReader br = new BufferedReader(isr)) {
 			Gson gson = new Gson();
