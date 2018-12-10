@@ -6,15 +6,18 @@
 package projekti.language;
 
 /**
+ *
  * @author vililipo
  */
 public enum LanguageKeys implements Lang {
+    NAMEOFTHELANG("_langname"),
     GREET("greetMessage"),
     MAINCOMMANDS("mainCommands"),
     COMMAND("command"),
     QUIT("exitMessage"),
     NONSUP("nonSupportedCommand"),
     NOREC("noRecommendationFound"),
+    SELECTEDCOMMANDS("selectedCommands"),
     TYPELIST("typeListings"),
     RECADDED("recommendationAdded"),
     RECNOTADDED("recommendationNotAdded"),
@@ -28,12 +31,14 @@ public enum LanguageKeys implements Lang {
     ORLEAVE("orLeave"),
     NOTUP("notUpdated"),
     UPDATECONFIR("updateConfirmation"),
-
-    ;
+    UPDATEFAIL("updateFail"),
+    UPDATECANCEL("updateCancel"),
+    UPDATESUCCES("updateSuccess");
 
     private final String key;
 
-    LanguageKeys(String key) {
+
+    private LanguageKeys(String key) {
         this.key = key;
     }
 
@@ -41,4 +46,5 @@ public enum LanguageKeys implements Lang {
     public String getKey() {
         return key;
     }
+
 }
