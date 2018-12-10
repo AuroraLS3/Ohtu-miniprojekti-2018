@@ -34,7 +34,7 @@ public class LanguageFileReader {
 			return json;
 
 		} catch (IOException ex) {
-			return null;
+			throw new IllegalStateException("Can't read language file");
 		}
 	}
 }
