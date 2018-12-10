@@ -10,7 +10,7 @@ package projekti.language;
  * @author vililipo
  */
 public enum LanguageKeys implements Lang {
-	NAMEOFTHELANG("_langname"),
+    NAMEOFTHELANG("_langname"),
     GREET("greetMessage"),
     MAINCOMMANDS("mainCommands"),
     COMMAND("command"),
