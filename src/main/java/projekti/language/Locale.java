@@ -22,7 +22,7 @@ public class Locale {
     public String get(Lang lang) {
         String key = lang.getKey();
         Object value = langMap.getOrDefault(key, "Missing language key: " + key);
-        if (value.getClass() == ArrayList.class) {
+        if (value instanceof List) {
             @SuppressWarnings("unchecked")
             List<String> list = (List<String>) value;
             StringBuilder sb = new StringBuilder();
@@ -39,8 +39,8 @@ public class Locale {
     public List<String> getAsList(Lang lang) {
         String key = lang.getKey();
         Object value = langMap.getOrDefault(key, "Missing language key: " + key);
-        if (value.getClass() == ArrayList.class) {
-            return ((ArrayList<String>) value);
+        if (value instanceof List) {
+            return ((List<String>) value);
         } else {
             return Collections.singletonList(value.toString());
         }
