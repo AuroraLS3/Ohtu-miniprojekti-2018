@@ -75,6 +75,6 @@
     "updateConfirmation":"Haluatko varmasti päivittää vinkin ",
     "updateSuccess": "päivitys onnistui",
     "updateFail": "päivitys epäonnistui",
-    "updateCancel": "vinkin päivitys keskeytettiin"
+    "updateCancel": "vinkin päivitys keskeytettiin."
   }
 ]
