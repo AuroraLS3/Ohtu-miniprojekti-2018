@@ -3,6 +3,7 @@ package projekti.UI.commands;
 import java.sql.SQLException;
 
 import projekti.domain.Recommendation;
+import projekti.language.LanguageKeys;
 
 public class SelectRecommendation implements Command {
     private RecHelper rh;
@@ -31,11 +32,7 @@ public class SelectRecommendation implements Command {
             }
             rh.getIO().println(rh.getListID(recommendation) + recommendation.toStringWithDescription());
             rh.getIO().println();
-
-            rh.getIO().println("\ncommands for the selected recommendation: ");
-            rh.getIO().println("\tedit \tedit the recommendation");
-            rh.getIO().println("\tdelete \tremove the recommendation");
-            rh.getIO().println("\treturn \treturn to the main program");
+            rh.getIO().print(rh.getLocale().get(LanguageKeys.SELECTEDCOMMANDS));
 
             input = rh.getIO().getInput();
             switch (input) {
@@ -49,7 +46,7 @@ public class SelectRecommendation implements Command {
                     rh.getIO().println();
                     break;
                 default:
-                    rh.getIO().println("\nunsupported command");
+                    rh.getIO().println(rh.getLocale().get(LanguageKeys.NONSUP));
                     break;
             }
         }

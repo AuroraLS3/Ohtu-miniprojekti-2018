@@ -10,6 +10,7 @@ import projekti.domain.Other;
 import projekti.domain.Property;
 import projekti.domain.Recommendation;
 import projekti.domain.RecommendationFactory;
+import projekti.language.LanguageKeys;
 
 public class CreateRecommendation implements Command {
    
@@ -38,15 +39,15 @@ public class CreateRecommendation implements Command {
                     .whileMissingProperties(requestProperty)
                     .build();
         } catch (IllegalArgumentException ex) {
-            rh.getIO().println("\n " + recommendationType + " recommendation was not added.");
+        	rh.getIO().println("\n" + recommendationType + rh.getLocale().get(LanguageKeys.RECNOTADDED));
             throw ex;
         }
         if (save(recommendation) != null) {
             rh.getIO().println();
-            rh.getIO().println("new " + recommendationType + " recommendation added");
+            rh.getIO().println("new " + recommendationType + rh.getLocale().get(LanguageKeys.RECADDED));
             rh.updateIDList();
         } else {
-            rh.getIO().println("\nrecommendation not added");
+        	rh.getIO().println("\n" + recommendationType + rh.getLocale().get(LanguageKeys.RECNOTADDED));
         }
     }
 
