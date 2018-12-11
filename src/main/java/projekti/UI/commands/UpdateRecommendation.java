@@ -15,7 +15,7 @@ public class UpdateRecommendation implements Command {
     private RecHelper rh;
     private DBHelper db;
 
-    public UpdateRecommendation(RecHelper rh, DBHelper db){
+    public UpdateRecommendation(RecHelper rh, DBHelper db) {
         this.rh = rh;
         this.db = db;
     }
