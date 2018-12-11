@@ -47,7 +47,13 @@ public class Stepdefs {
         otherDAO = new OtherDAO(databaseManager);
 
         inputLines = new ArrayList<>();
+        inputLines.add("English");
         locale = Locale.createWith(new LanguageFileReader(), "json/english.lang.json");
+    }
+    
+    @Given("^language has been selected$")
+    public void languageIsSelected(){
+    	inputLines.add("English");
     }
 
     @Given("^command new is selected$")
