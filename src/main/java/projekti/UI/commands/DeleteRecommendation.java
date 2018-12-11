@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import projekti.domain.Recommendation;
 import projekti.domain.Blog.Properties;
+import projekti.language.LanguageKeys;
 
 public class DeleteRecommendation implements Command {
     private RecHelper rh;
@@ -25,14 +26,14 @@ public class DeleteRecommendation implements Command {
 
     public void deleteRecommendation(Recommendation recommendation) throws SQLException {
         Integer ID = rh.getListID(recommendation);
-        if (rh.confirm("Are you sure you want to delete recommendation " + ID + "?")) {
+        if (rh.confirm(rh.getLocale().get(LanguageKeys.DELETECONFIRM) + ID + "?")) {
             delete(recommendation);
             rh.getIO().println();
-            rh.getIO().println("recommendation successfully deleted");
+            rh.getIO().println(rh.getLocale().get(LanguageKeys.DELSUCCESS));
             rh.updateIDList();
         } else {
             rh.getIO().println();
-            rh.getIO().println("recommendation deletion canceled");
+            rh.getIO().println(rh.getLocale().get(LanguageKeys.DELCANCEL));
         }
     }
 
@@ -48,7 +49,7 @@ public class DeleteRecommendation implements Command {
                 db.getOtherDAO().delete(recommendation.getProperty(Properties.ID).orElse(null));
                 return;
             default:
-                throw new IllegalArgumentException("No retrieve definition for recommendation of type: " + recommendation.getType());
+                throw new IllegalArgumentException(rh.getLocale().get(LanguageKeys.NORETDEF) + recommendation.getType());
         }
     }
 

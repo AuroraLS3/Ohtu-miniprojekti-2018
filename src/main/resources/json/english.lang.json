@@ -21,19 +21,21 @@
   "typeListings":["enter recommendation type",
                   "recommendation type (possible choices: book, blog, other): "
                   ],
-  "recommendationAdded":"recommendation added",
+  "recommendationAdded":" recommendation added",
   "recommendationNotAdded":"recommendation was not added",
   "selectIdQuery":"enter recommendation id (or empty input to go back)",
   "nonValidID":"Not a valid ID. Has to be a number.",
   "invalidInput":"Invalid input",
   "deleteConfirmation":"Are you sure you want to delete recommendation ",
   "deleteSuccess":"recommendation successfully deleted",
-  "deleteCancellation":"",
+  "deleteCancellation":"recommendation deletion canceled",
   "enterNew":"enter new",
   "orLeave":" (or empty input to leave it unchanged): ",
   "notUpdated":" recommendation was not updated.",
   "updateConfirmation":"are you sure you want to update recommendation ",
-  "updateSuccess": "update succesful",
+  "updateSuccess": "update successful",
   "updateFail": "update failed",
-  "updateCancel": "recommendation update cancelled"
+  "updateCancel": "recommendation update canceled",
+  "notFound": "No recommendation found",
+  "noRetrieveDef": "No retrieve definition for recommendation of type: "
 }

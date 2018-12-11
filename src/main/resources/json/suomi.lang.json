@@ -2,7 +2,7 @@
   "_langname":"Suomi",
   "greetMessage": "Tervetuloa lukuvinkki applikaatioon!",
   "mainCommands": ["Komennot:",
-                   "\tnew \tLisää vinkki",
+                   "\tnew \tlisää vinkki",
                    "\tall \tlistaa kaikki vinkit",
                    "\tselect \tvalitse vinkki",
                    "\tupdate \tpäivitä vinkin tietoja",
@@ -21,7 +21,7 @@
   "typeListings":["Valitse vinkin tyyppi",
                   "vinkin tyyppi (vaihtoehdot: book, blog, other): "
                   ],
-  "recommendationAdded":"Vinkki lisätty",
+  "recommendationAdded":" vinkki lisätty",
   "recommendationNotAdded":"Vinkkiä ei lisätty",
   "selectIdQuery":"Syötä vinkin id (tai jätä tyhjäksi palataksesi)",
   "nonValidID":"Epäkelpo id. Id:n täytyy olla numero.",
@@ -29,11 +29,13 @@
   "deleteConfirmation":"Haluatko varmasti poistaa vinkin ",
   "deleteSuccess":"vinkki poistettiin onnistuneesti",
   "deleteCancellation":"",
-  "enterNew":"lisää uusi",
+  "enterNew":"lisää uusi ",
   "orLeave":" (tai jätä tyhjäksi säilyttääksesi vanhan arvon): ",
   "notUpdated":" Vinkkiä ei päivitetty.",
   "updateConfirmation":"Haluatko varmasti päivittää vinkin ",
   "updateSuccess": "päivitys onnistui",
   "updateFail": "päivitys epäonnistui",
-  "updateCancel": "vinkin päivitys keskeytettiin."
+  "updateCancel": "vinkin päivitys keskeytettiin.",
+  "notFound": "Vinkkiä ei löytynyt",
+  "noRetrieveDef": "Vastaavaa määritelmää tyypille ei löytynyt: "
 }
