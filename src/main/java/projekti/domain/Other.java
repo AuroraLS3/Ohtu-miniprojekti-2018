@@ -1,13 +1,13 @@
 package projekti.domain;
 
+import org.apache.commons.validator.routines.UrlValidator;
+import projekti.util.Check;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import org.apache.commons.validator.routines.UrlValidator;
-import projekti.util.Check;
 
 /**
  * Object that represents generic recommendation.
@@ -54,8 +54,8 @@ public class Other extends AbstractPropertyStore implements Recommendation {
     /**
      * Create a new other.
      *
-     * @param title Title of the other, not null or empty.
-     * @param url url of the other, not null or empty.
+     * @param title       Title of the other, not null or empty.
+     * @param url         url of the other, not null or empty.
      * @param description Description of the other, can be empty
      */
     public Other(String title, String url, String description) {
@@ -118,7 +118,6 @@ public class Other extends AbstractPropertyStore implements Recommendation {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(type);
     }
 
@@ -131,34 +130,6 @@ public class Other extends AbstractPropertyStore implements Recommendation {
 
     @Override
     public String toStringWithDescription() {
-        StringBuilder builder = new StringBuilder(toString());
-        builder.append("\nDescription: ");
-        Optional<String> descriptionProperty = getProperty(Properties.DESCRIPTION);
-        if (descriptionProperty.isPresent()) {
-
-            int currentLength = 0;
-            int charPerLine = 100;
-            // Split description on multiple lines, split between space characters if over 100 characters.
-            String[] words = descriptionProperty.get().split(" ");
-
-            for (int i = 0; i < words.length; i++) {
-                String word = words[i];
-                builder.append(word);
-                currentLength += word.length();
-
-                if (currentLength > charPerLine) {
-                    builder.append("\n");
-                    currentLength = 0;
-                }
-
-                // Separate words with spaces again, but don't add trailing space
-                if (i < words.length - 1) {
-                    builder.append(" ");
-                    currentLength++;
-                }
-            }
-        }
-
-        return builder.toString();
+        return toString() + "\nDescription: " + CommonProperties.turnDescriptionToString(this);
     }
 }
