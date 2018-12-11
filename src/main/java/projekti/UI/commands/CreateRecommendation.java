@@ -40,7 +40,7 @@ public class CreateRecommendation implements Command {
         if (save(recommendation) != null) {
             rh.getIO().println();
             rh.getIO().println("new " + recommendationType + " recommendation added");
-            rh.tui.updateIDList();
+            rh.updateIDList();
         } else {
             rh.getIO().println("\nrecommendation not added");
         }

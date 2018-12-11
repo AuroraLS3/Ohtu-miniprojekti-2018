@@ -15,13 +15,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import projekti.domain.Property;
 import projekti.domain.RecommendationFactory;
 
 public class TUI {
     private IO io;
-    private List<Integer> IDList;
+   
 
     private RecHelper rh;
     private DBHelper db;
@@ -34,11 +33,11 @@ public class TUI {
             IO io
     ) throws SQLException {
         this.db = new DBHelper(bookDAO, blogDAO, otherDAO);
-        this.rh = new RecHelper(this, io, db);
+        this.rh = new RecHelper(io, db);
         this.create = new CreateRecommendation(rh, db);
     
         this.io = io;
-        updateIDList();
+        rh.updateIDList();
     }
 
    
@@ -110,11 +109,11 @@ public class TUI {
                 break;
             case "update":
                 updateRecommendation(rh.askForRecommendation());
-                updateIDList();
+                
                 break;
             case "delete":
                 deleteRecommendation(rh.askForRecommendation());
-                updateIDList();
+                
                 break;
             default:
                 io.println("\nnon-supported command");
@@ -132,7 +131,7 @@ public class TUI {
             if (recommendation == null) {
                 return;
             }
-            io.println(getListID(recommendation) + recommendation.toStringWithDescription());
+            io.println(rh.getListID(recommendation) + recommendation.toStringWithDescription());
             io.println();
 
             io.println("\ncommands for the selected recommendation: ");
@@ -144,11 +143,11 @@ public class TUI {
             switch (input) {
                 case "edit":
                     recommendation = updateRecommendation(recommendation);
-                    updateIDList();
+                    
                     break;
                 case "delete":
                     deleteRecommendation(recommendation);
-                    updateIDList();
+                   
                     break selectionLoop;
                 case "return":
                     io.println();
@@ -164,7 +163,7 @@ public class TUI {
 
     private void listRecommendations() throws SQLException {
         List<Recommendation> recommendations = getAllRecommendations();
-        updateIDList(recommendations);
+        rh.updateIDList(); //varmista että toimii
         for (int i = 0; i < recommendations.size(); i++) {
             io.println(i + recommendations.get(i).toString());
         }
@@ -178,58 +177,8 @@ public class TUI {
         return recommendations;
     }
 
-    /**
-     * updates the IDList (list of "fake" IDs displayed to the user, used for
-     * selecting, updating or deleting a Recommendation)
-     * @param allRecommendations list of all Recommendation, already obtained
-     * by calling getAllRecommendations()
-     */
-    private void updateIDList(List<Recommendation> allRecommendations) {
-        this.IDList = allRecommendations.stream()
-                .map(r -> r.getProperty(Properties.ID).orElse(-1))
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * fetches all Recommendations from the database and updates the IDList
-     * (list of "fake" IDs displayed to the user, used for selecting,
-     * updating or deleting a Recommendation)
-     * @throws SQLException
-     */
-    public void updateIDList() throws SQLException {
-        updateIDList(getAllRecommendations());
-    }
-
-    /**
-     * returns the list ID (the one used by the user to refer to a specific
-     * recommendation) of the recommendation given as a parameter
-     * @param recommendation the given recommendation
-     * @return the recommendation's list ID
-     */
-    private Integer getListID(Recommendation recommendation) {
-        Integer ID = recommendation.getProperty(Properties.ID).orElse(null);
-        return IDList.indexOf(ID);
-    }
-
-    public Integer selectID() { //public until all IDList functionality is a part of RecHelper
-        io.println("enter recommendation id (or empty input to go back)");
-        io.print("ID: ");
-        String id_String = io.getInput();
-        Integer ID;
-        try {
-            ID = Integer.parseInt(id_String);
-            if (ID < 0 || ID >= IDList.size()) {
-                // just some value that can't be a true ID in the database
-                return -1;
-            }
-            return IDList.get(ID);
-        } catch (IllegalArgumentException ex) {
-            if (!id_String.isEmpty()) {
-                io.println("Not a valid ID. Has to be a number.");
-            }
-            throw ex;
-        }
-    }
+  
+    
 
     private boolean confirm(String message) {
         io.println(message);
@@ -248,12 +197,12 @@ public class TUI {
     }
 
     private void deleteRecommendation(Recommendation recommendation) throws SQLException {
-        Integer ID = getListID(recommendation);
+        Integer ID = rh.getListID(recommendation);
         if (confirm("Are you sure you want to delete recommendation " + ID + "?")) {
             delete(recommendation);
             io.println();
             io.println("recommendation successfully deleted");
-            updateIDList();
+            rh.updateIDList();
         } else {
             io.println();
             io.println("recommendation deletion canceled");
@@ -286,13 +235,13 @@ public class TUI {
 
         Integer ID = recommendation.getProperty(Properties.ID).orElse(null);
         updatedRecommendation.addProperty(Properties.ID, ID);
-        ID = IDList.indexOf(ID);
+        ID = rh.getIDList().indexOf(ID);
 
         if (confirm("are you sure you want to update recommendation " + ID + "?")) {
             if (update(updatedRecommendation)) {
                 io.println();
                 io.println("update successful");
-                updateIDList();
+                rh.updateIDList();
                 return updatedRecommendation;
             } else {
                 io.println();
