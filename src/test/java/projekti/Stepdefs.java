@@ -10,6 +10,8 @@ import projekti.db.*;
 import projekti.domain.Blog;
 import projekti.domain.Book;
 import projekti.domain.Other;
+import projekti.language.LanguageFileReader;
+import projekti.language.Locale;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +31,7 @@ public class Stepdefs {
     Dao<Other, Integer> otherDAO;
     TUI app;
     StubIO io;
+    Locale locale;
     List<String> inputLines;
 
     @Before
@@ -44,6 +47,7 @@ public class Stepdefs {
         otherDAO = new OtherDAO(databaseManager);
 
         inputLines = new ArrayList<>();
+        locale = Locale.createWith(new LanguageFileReader(), "json/english.lang.json");
     }
 
     @Given("^command new is selected$")
@@ -171,7 +175,7 @@ public class Stepdefs {
         inputLines.add("end");
 
         io = new StubIO(inputLines);
-        app = new TUI(bookDAO, blogDAO, otherDAO, io);
+        app = new TUI(bookDAO, blogDAO, otherDAO, io, locale);
         app.run();
     }
 

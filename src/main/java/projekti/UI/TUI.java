@@ -4,6 +4,7 @@ import projekti.UI.commands.Command;
 import projekti.UI.commands.CreateRecommendation;
 import projekti.UI.commands.DBHelper;
 import projekti.UI.commands.RecHelper;
+import projekti.UI.commands.SelectLocale;
 import projekti.db.Dao;
 import projekti.domain.Blog;
 import projekti.domain.Book;
@@ -18,6 +19,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import projekti.domain.Property;
 import projekti.domain.RecommendationFactory;
+import projekti.language.LanguageKeys;
+import projekti.language.Locale;
 
 public class TUI {
     private IO io;
@@ -26,17 +29,19 @@ public class TUI {
     private RecHelper rh;
     private DBHelper db;
     private Command create;
+    private Locale locale;
     
     public TUI(
             Dao<Book, Integer> bookDAO,
             Dao<Blog, Integer> blogDAO,
             Dao<Other, Integer> otherDAO,
-            IO io
+            IO io,
+            Locale locale
     ) throws SQLException {
         this.db = new DBHelper(bookDAO, blogDAO, otherDAO);
         this.rh = new RecHelper(this, io, db);
         this.create = new CreateRecommendation(rh, db);
-    
+        this.locale = locale;
         this.io = io;
         updateIDList();
     }
@@ -72,18 +77,12 @@ public class TUI {
     }
 
     public void run() throws SQLException {
-        io.println("Welcome to the reading recommendation app!");
-        io.println("Supported commands:");
-        io.println("\tnew \tadd a new recommendation");
-        io.println("\tall \tlist all existing recommendations");
-        io.println("\tselect \tselect a specific recommendation");
-        io.println("\tupdate \tupdate information for an existing recommendation");
-        io.println("\tdelete \tremove a recommendation");
-        io.println("\tend \tclose the program");
+        io.println(locale.get(LanguageKeys.GREET));
+        io.print(locale.get(LanguageKeys.MAINCOMMANDS));
 
         String input = "";
         while (!input.equalsIgnoreCase("end")) {
-            io.println("\ncommand: ");
+            io.println("\n: " + locale.get(LanguageKeys.COMMAND));
             input = io.getInput();
             try {
                 performAction(input);
@@ -103,7 +102,7 @@ public class TUI {
                 listRecommendations();
                 break;
             case "end":
-                io.println("\nshutting down program");
+                io.println("\n" + locale.get(LanguageKeys.QUIT));
                 break;
             case "select":
                 selectRecommendation();
@@ -117,7 +116,7 @@ public class TUI {
                 updateIDList();
                 break;
             default:
-                io.println("\nnon-supported command");
+                io.println("\n" + locale.get(LanguageKeys.NONSUP));
                 break;
         }
     }
@@ -135,10 +134,7 @@ public class TUI {
             io.println(getListID(recommendation) + recommendation.toStringWithDescription());
             io.println();
 
-            io.println("\ncommands for the selected recommendation: ");
-            io.println("\tedit \tedit the recommendation");
-            io.println("\tdelete \tremove the recommendation");
-            io.println("\treturn \treturn to the main program");
+            io.println(locale.get(LanguageKeys.SELECTEDCOMMANDS));
 
             input = io.getInput();
             switch (input) {
@@ -154,7 +150,7 @@ public class TUI {
                     io.println();
                     break;
                 default:
-                    io.println("\nunsupported command");
+                    io.println("\n" + locale.get(LanguageKeys.NONSUP));
                     break;
             }
         }
@@ -212,7 +208,7 @@ public class TUI {
     }
 
     public Integer selectID() { //public until all IDList functionality is a part of RecHelper
-        io.println("enter recommendation id (or empty input to go back)");
+        io.println(locale.get(LanguageKeys.SELECTIDQUERY));
         io.print("ID: ");
         String id_String = io.getInput();
         Integer ID;
@@ -225,7 +221,7 @@ public class TUI {
             return IDList.get(ID);
         } catch (IllegalArgumentException ex) {
             if (!id_String.isEmpty()) {
-                io.println("Not a valid ID. Has to be a number.");
+                io.println(locale.get(LanguageKeys.NONVALIDID));
             }
             throw ex;
         }
@@ -236,12 +232,12 @@ public class TUI {
         String optionString = "y/n";
         io.println(optionString);
         String val = io.getInput();
-        if (val.toLowerCase().equals("y")) {
+        if (val.equalsIgnoreCase(("y"))) {
             return true;
-        } else if (val.toLowerCase().equals("n")) {
+        } else if (val.equalsIgnoreCase("n")) {
             return false;
         } else {
-            String failMessage = "Invalid input";
+            String failMessage = locale.get(LanguageKeys.CONFIRMFAIL);
             io.println(failMessage);
             return confirm(message);
         }
@@ -249,23 +245,22 @@ public class TUI {
 
     private void deleteRecommendation(Recommendation recommendation) throws SQLException {
         Integer ID = getListID(recommendation);
-        if (confirm("Are you sure you want to delete recommendation " + ID + "?")) {
+        if (confirm(locale.get(LanguageKeys.DELETECONFIRM) + ID + "?")) {
             delete(recommendation);
             io.println();
-            io.println("recommendation successfully deleted");
+            io.println(locale.get(LanguageKeys.DELSUCCESS));
             updateIDList();
         } else {
             io.println();
-            io.println("recommendation deletion canceled");
+            io.println(locale.get(LanguageKeys.DELCANCEL));
         }
     }
 
     private Recommendation updateRecommendation(Recommendation recommendation) throws SQLException {
         Function<Property, String> requestProperty = (Property property) -> {
-            io.print("enter new " + property.getName() + " (or empty input to leave it unchanged): ");
+            io.print(locale.get(LanguageKeys.ENTERNEW) + property.getName() + locale.get(LanguageKeys.ORLEAVE));
             String userInput = io.getInput().trim();
             if (userInput.isEmpty()) {
-
                 return (String) recommendation.getProperty(property).orElse("");
             }
 
@@ -280,7 +275,7 @@ public class TUI {
                     .whileMissingProperties(requestProperty)
                     .build();
         } catch (IllegalArgumentException ex) {
-            io.println("\n " + recommendationType + " recommendation was not updated.");
+            io.println("\n " + recommendationType + locale.get(LanguageKeys.NOTUP));
             throw ex;
         }
 
@@ -288,21 +283,29 @@ public class TUI {
         updatedRecommendation.addProperty(Properties.ID, ID);
         ID = IDList.indexOf(ID);
 
-        if (confirm("are you sure you want to update recommendation " + ID + "?")) {
+        if (confirm(locale.get(LanguageKeys.UPDATECONFIR) + ID + "?")) {
             if (update(updatedRecommendation)) {
                 io.println();
-                io.println("update successful");
+                io.println(locale.get(LanguageKeys.UPDATESUCCES));
                 updateIDList();
                 return updatedRecommendation;
             } else {
                 io.println();
-                io.println("update failed");
+                io.println(locale.get(LanguageKeys.UPDATEFAIL));
                 return recommendation;
             }
         } else {
             io.println();
-            io.println("recommendation update canceled");
+            io.println(locale.get(LanguageKeys.UPDATECANCEL));
             return recommendation;
         }
+    }
+    
+    public Locale getLocale() {
+    	return this.locale;
+    }
+    
+    public void setLocale(Locale locale) {
+    	this.locale = locale;
     }
 }

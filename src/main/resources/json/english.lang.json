@@ -28,12 +28,12 @@
   "invalidInput":"Invalid input",
   "deleteConfirmation":"Are you sure you want to delete recommendation ",
   "deleteSuccess":"recommendation successfully deleted",
-  "deleteCancellation":"",
+  "deleteCancellation":"recommendation deletion canceled",
   "enterNew":"enter new",
   "orLeave":" (or empty input to leave it unchanged): ",
   "notUpdated":" recommendation was not updated.",
   "updateConfirmation":"are you sure you want to update recommendation ",
-  "updateSuccess": "update succesful",
+  "updateSuccess": "update successful",
   "updateFail": "update failed",
-  "updateCancel": "recommendation update cancelled"
+  "updateCancel": "recommendation update canceled"
 }
