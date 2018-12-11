@@ -18,6 +18,8 @@ import projekti.language.LanguageKeys;
 import projekti.language.Locale;
 
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class TUI {
@@ -25,11 +27,7 @@ public class TUI {
     private Locale locale;
     private RecHelper rh;
     private DBHelper db;
-    private Command create;
-    private Command update;
-    private Command delete;
-    private Command select;
-    private Command all;
+    private Map<String, Command> commands;
     private Command selectLocale;
 
     public TUI(
@@ -41,17 +39,17 @@ public class TUI {
     ) throws SQLException {
         this.db = new DBHelper(bookDAO, blogDAO, otherDAO);
         this.rh = new RecHelper(io, db, locale);
-        this.create = new CreateRecommendation(rh, db);
-        this.locale = locale;
-        this.delete = new DeleteRecommendation(rh, db);
-        this.update = new UpdateRecommendation(rh, db);
-        this.select = new SelectRecommendation(rh, db);
+        this.commands = new HashMap<>();
+        this.commands.put("all", new ListAll(rh, db));
+        this.commands.put("new", new CreateRecommendation(rh, db));
+        this.commands.put("delete", new DeleteRecommendation(rh, db));
+        this.commands.put("select", new SelectRecommendation(rh, db));
+        this.commands.put("update", new UpdateRecommendation(rh, db));
+        this.commands.put("end", () -> io.println("\n" + locale.get(LanguageKeys.QUIT)));
         this.selectLocale = new SelectLocale(rh);
-        this.all = new ListAll(rh, db);
-
+        rh.updateIDList();
         this.io = io;
         this.locale = locale;
-        rh.updateIDList();
     }
 
     public void run() throws SQLException {
@@ -73,28 +71,8 @@ public class TUI {
     }
 
     private void performAction(String input) throws SQLException {
-        switch (input.toLowerCase()) {
-            case "new":
-                create.execute();
-                break;
-            case "all":
-                all.execute();
-                break;
-            case "end":
-                io.println("\n" + locale.get(LanguageKeys.QUIT));
-                break;
-            case "select":
-                select.execute();
-                break;
-            case "update":
-                update.execute();
-                break;
-            case "delete":
-                delete.execute();
-                break;
-            default:
-                io.println("\n" + locale.get(LanguageKeys.NONSUP));
-                break;
-        }
+        Command command = commands.getOrDefault(input.toLowerCase().trim(),
+            () -> io.println("\n" + locale.get(LanguageKeys.NONSUP)));
+        command.execute();
     }
 }
