@@ -1,9 +1,9 @@
 package projekti.language;
 
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class LanguageFileReaderTest {
 
@@ -42,7 +42,7 @@ public class LanguageFileReaderTest {
 
     @Test
     public void listAsAStringSuomiTest() {
-        assertEquals("Valitse vinkin tyyppi\nvinkin tyyppi (vaihtoehdot: book, blog, other): \n", suomi.get(LanguageKeys.TYPELIST));
+        assertEquals("Valitse vinkin tyyppi\nvinkin tyyppi (vaihtoehdot: book, blog, other): ", suomi.get(LanguageKeys.TYPELIST));
     }
 
 }
