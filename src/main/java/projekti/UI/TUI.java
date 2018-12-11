@@ -3,6 +3,7 @@ package projekti.UI;
 import projekti.UI.commands.Command;
 import projekti.UI.commands.CreateRecommendation;
 import projekti.UI.commands.DBHelper;
+import projekti.UI.commands.DeleteRecommendation;
 import projekti.UI.commands.RecHelper;
 import projekti.db.Dao;
 import projekti.domain.Blog;
@@ -25,7 +26,8 @@ public class TUI {
     private RecHelper rh;
     private DBHelper db;
     private Command create;
-    
+    private DeleteRecommendation delete;
+
     public TUI(
             Dao<Book, Integer> bookDAO,
             Dao<Blog, Integer> blogDAO,
@@ -34,8 +36,9 @@ public class TUI {
     ) throws SQLException {
         this.db = new DBHelper(bookDAO, blogDAO, otherDAO);
         this.rh = new RecHelper(io, db);
+
         this.create = new CreateRecommendation(rh, db);
-    
+        this.delete = new DeleteRecommendation(rh, db);
         this.io = io;
         rh.updateIDList();
     }
@@ -54,21 +57,7 @@ public class TUI {
         }
     }
 
-    private void delete(Recommendation recommendation) throws SQLException {
-        switch (recommendation.getType()) {
-            case "BOOK":
-                db.getBookDAO().delete(recommendation.getProperty(Properties.ID).orElse(null));
-                return;
-            case "BLOG":
-                db.getBlogDAO().delete(recommendation.getProperty(Properties.ID).orElse(null));
-                return;
-            case "OTHER":
-                db.getOtherDAO().delete(recommendation.getProperty(Properties.ID).orElse(null));
-                return;
-            default:
-                throw new IllegalArgumentException("No retrieve definition for recommendation of type: " + recommendation.getType());
-        }
-    }
+   
 
     public void run() throws SQLException {
         io.println("Welcome to the reading recommendation app!");
@@ -96,7 +85,6 @@ public class TUI {
         switch (input.toLowerCase()) {
             case "new":
                 create.execute();
-               
                 break;
             case "all":
                 listRecommendations();
@@ -112,8 +100,7 @@ public class TUI {
                 
                 break;
             case "delete":
-                deleteRecommendation(rh.askForRecommendation());
-                
+                delete.execute();
                 break;
             default:
                 io.println("\nnon-supported command");
@@ -143,11 +130,9 @@ public class TUI {
             switch (input) {
                 case "edit":
                     recommendation = updateRecommendation(recommendation);
-                    
                     break;
                 case "delete":
-                    deleteRecommendation(recommendation);
-                   
+                    delete.execute(recommendation);
                     break selectionLoop;
                 case "return":
                     io.println();
@@ -163,7 +148,7 @@ public class TUI {
 
     private void listRecommendations() throws SQLException {
         List<Recommendation> recommendations = getAllRecommendations();
-        rh.updateIDList(); //varmista että toimii
+        rh.updateIDList(); 
         for (int i = 0; i < recommendations.size(); i++) {
             io.println(i + recommendations.get(i).toString());
         }
@@ -175,38 +160,6 @@ public class TUI {
         recommendations.addAll(db.getBlogDAO().findAll());
         recommendations.addAll(db.getOtherDAO().findAll());
         return recommendations;
-    }
-
-  
-    
-
-    private boolean confirm(String message) {
-        io.println(message);
-        String optionString = "y/n";
-        io.println(optionString);
-        String val = io.getInput();
-        if (val.toLowerCase().equals("y")) {
-            return true;
-        } else if (val.toLowerCase().equals("n")) {
-            return false;
-        } else {
-            String failMessage = "Invalid input";
-            io.println(failMessage);
-            return confirm(message);
-        }
-    }
-
-    private void deleteRecommendation(Recommendation recommendation) throws SQLException {
-        Integer ID = rh.getListID(recommendation);
-        if (confirm("Are you sure you want to delete recommendation " + ID + "?")) {
-            delete(recommendation);
-            io.println();
-            io.println("recommendation successfully deleted");
-            rh.updateIDList();
-        } else {
-            io.println();
-            io.println("recommendation deletion canceled");
-        }
     }
 
     private Recommendation updateRecommendation(Recommendation recommendation) throws SQLException {
@@ -237,7 +190,7 @@ public class TUI {
         updatedRecommendation.addProperty(Properties.ID, ID);
         ID = rh.getIDList().indexOf(ID);
 
-        if (confirm("are you sure you want to update recommendation " + ID + "?")) {
+        if (rh.confirm("are you sure you want to update recommendation " + ID + "?")) {
             if (update(updatedRecommendation)) {
                 io.println();
                 io.println("update successful");

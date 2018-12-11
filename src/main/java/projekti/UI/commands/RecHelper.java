@@ -98,7 +98,7 @@ public class RecHelper {
         }
     }
 
-    private boolean confirm(String message) {
+    public boolean confirm(String message) {
         io.println(message);
         String optionString = "y/n";
         io.println(optionString);
@@ -117,7 +117,7 @@ public class RecHelper {
     public List<Integer> getIDList() {
         return this.IDList;
     }
-    
+
     public IO getIO() {
         return this.io;
     }
