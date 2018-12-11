@@ -1,5 +1,6 @@
 package projekti.domain;
 
+import org.apache.commons.validator.routines.UrlValidator;
 import projekti.util.Check;
 
 import java.lang.reflect.Field;
@@ -7,8 +8,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import org.apache.commons.validator.routines.UrlValidator;
+
 /**
  * Object that represents a book.
  *
@@ -53,14 +53,13 @@ public class Book extends AbstractPropertyStore implements Recommendation {
 
     private final String type;
 
-
     /**
      * Create a new book.
      *
      * @param author      Author of the book, not null or empty.
      * @param title       Title of the book, not null or empty.
      * @param isbn        ISBN of the book, not null or empty.
-     * @param url		  URL address of the book, valid url or empty.
+     * @param url         URL address of the book, valid url or empty.
      * @param description Description of the book, can be empty
      */
     public Book(String author, String title, String isbn, String url, String description) {
@@ -78,16 +77,16 @@ public class Book extends AbstractPropertyStore implements Recommendation {
         this.type = "BOOK";
     }
 
-    private void handleUrlProperty(String url) {
-    	if (url != null) {
-            Check.isTrue(new UrlValidator().isValid(url), () -> new IllegalArgumentException("URL should be valid"));
-            addProperty(Properties.URL, url);
-    	}
-    }
-
     @Deprecated
     public Book(String author, String title, String isbn, String description) {
-    	this(author, title, isbn, null, description);
+        this(author, title, isbn, null, description);
+    }
+
+    private void handleUrlProperty(String url) {
+        if (url != null) {
+            Check.isTrue(new UrlValidator().isValid(url), () -> new IllegalArgumentException("URL should be valid"));
+            addProperty(Properties.URL, url);
+        }
     }
 
     @Deprecated
@@ -138,34 +137,6 @@ public class Book extends AbstractPropertyStore implements Recommendation {
     }
 
     public String toStringWithDescription() {
-        StringBuilder builder = new StringBuilder(toString());
-        builder.append("\nDescription: ");
-        Optional<String> descriptionProperty = getProperty(Properties.DESCRIPTION);
-        if (descriptionProperty.isPresent()) {
-
-            int currentLength = 0;
-            int charPerLine = 100;
-            // Split description on multiple lines, split between space characters if over 100 characters.
-            String[] words = descriptionProperty.get().split(" ");
-
-            for (int i = 0; i < words.length; i++) {
-                String word = words[i];
-                builder.append(word);
-                currentLength += word.length();
-
-                if (currentLength > charPerLine) {
-                    builder.append("\n");
-                    currentLength = 0;
-                }
-
-                // Separate words with spaces again, but don't add trailing space
-                if (i < words.length - 1) {
-                    builder.append(" ");
-                    currentLength++;
-                }
-            }
-        }
-
-        return builder.toString();
+        return toString() + "\nDescription: " + CommonProperties.turnDescriptionToString(this);
     }
 }
