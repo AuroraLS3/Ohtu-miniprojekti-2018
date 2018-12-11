@@ -12,10 +12,9 @@ import projekti.language.Locale;
 public class SelectLocale implements Command{
 	
 	private RecHelper rh;
-	private TUI tui;
 	private HashMap<String, Locale> choices;
 	
-	public SelectLocale(RecHelper rh, TUI tui) {
+	public SelectLocale(RecHelper rh) {
 		this.rh = rh;
 		createChoices();
 	}
@@ -30,7 +29,7 @@ public class SelectLocale implements Command{
 
 	@Override
 	public void execute() {
-		tui.setLocale(askLocale());
+		rh.setLocale(askLocale());
 	}
 	
 	private Locale askLocale() {

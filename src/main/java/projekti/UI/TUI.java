@@ -205,7 +205,6 @@ public class TUI {
             return recommendation;
         }
     }
-
     public Locale getLocale() {
     	return this.locale;
     }
@@ -213,4 +212,5 @@ public class TUI {
     public void setLocale(Locale locale) {
     	this.locale = locale;
     }
+
 }

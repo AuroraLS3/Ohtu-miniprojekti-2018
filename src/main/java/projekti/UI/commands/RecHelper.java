@@ -124,6 +124,14 @@ public class RecHelper {
     public IO getIO() {
         return this.io;
     }
+    
+    public Locale getLocale() {
+    	return this.locale;
+    }
+
+    public void setLocale(Locale locale) {
+    	this.locale = locale;
+    }
 
     
 }
