@@ -2,6 +2,7 @@ package projekti.UI.commands;
 
 import java.util.HashMap;
 
+import projekti.UI.TUI;
 import projekti.language.LanguageFileReader;
 import projekti.language.LanguageFiles;
 import projekti.language.LanguageKeys;
@@ -11,9 +12,10 @@ import projekti.language.Locale;
 public class SelectLocale implements Command{
 	
 	private RecHelper rh;
+	private TUI tui;
 	private HashMap<String, Locale> choices;
 	
-	public SelectLocale(RecHelper rh) {
+	public SelectLocale(RecHelper rh, TUI tui) {
 		this.rh = rh;
 		createChoices();
 	}
@@ -28,7 +30,7 @@ public class SelectLocale implements Command{
 
 	@Override
 	public void execute() {
-		rh.tui.setLocale(askLocale());
+		tui.setLocale(askLocale());
 	}
 	
 	private Locale askLocale() {
