@@ -41,7 +41,7 @@ public class TUI {
             Locale locale
     ) throws SQLException {
         this.db = new DBHelper(bookDAO, blogDAO, otherDAO);
-        this.rh = new RecHelper(io, db);
+        this.rh = new RecHelper(io, db, locale);
         this.create = new CreateRecommendation(rh, db);
         this.locale = locale;
         this.delete = new DeleteRecommendation(rh, db);
@@ -160,22 +160,6 @@ public class TUI {
         return recommendations;
     }
 
-
-    private boolean confirm(String message) {
-        io.println(message);
-        String optionString = "y/n";
-        io.println(optionString);
-        String val = io.getInput();
-        if (val.equalsIgnoreCase(("y"))) {
-            return true;
-        } else if (val.equalsIgnoreCase("n")) {
-            return false;
-        } else {
-            String failMessage = locale.get(LanguageKeys.CONFIRMFAIL);
-            io.println(failMessage);
-            return confirm(message);
-        }
-    }
 
 
     private Recommendation updateRecommendation(Recommendation recommendation) throws SQLException {

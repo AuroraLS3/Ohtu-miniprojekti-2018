@@ -35,5 +35,6 @@
   "updateConfirmation":"are you sure you want to update recommendation ",
   "updateSuccess": "update successful",
   "updateFail": "update failed",
-  "updateCancel": "recommendation update canceled"
+  "updateCancel": "recommendation update canceled",
+  "notFound": "No recommendation found"
 }
