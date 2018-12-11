@@ -9,6 +9,7 @@ import projekti.domain.Other;
 import projekti.domain.Property;
 import projekti.domain.Recommendation;
 import projekti.domain.RecommendationFactory;
+import projekti.language.LanguageKeys;
 import projekti.domain.Book.Properties;
 
 public class UpdateRecommendation implements Command {
@@ -31,7 +32,7 @@ public class UpdateRecommendation implements Command {
 
     private Recommendation updateRecommendation(Recommendation recommendation) throws SQLException {
         Function<Property, String> requestProperty = (Property property) -> {
-            rh.getIO().print("enter new " + property.getName() + " (or empty input to leave it unchanged): ");
+            rh.getIO().print(rh.getLocale().get(LanguageKeys.ENTERNEW) + property.getName() + rh.getLocale().get(LanguageKeys.ORLEAVE));
             String userInput = rh.getIO().getInput().trim();
             if (userInput.isEmpty()) {
 
@@ -49,7 +50,7 @@ public class UpdateRecommendation implements Command {
                     .whileMissingProperties(requestProperty)
                     .build();
         } catch (IllegalArgumentException ex) {
-            rh.getIO().println("\n " + recommendationType + " recommendation was not updated.");
+            rh.getIO().println("\n " + recommendationType + rh.getLocale().get(LanguageKeys.UPDATEFAIL));
             throw ex;
         }
 
@@ -57,20 +58,20 @@ public class UpdateRecommendation implements Command {
         updatedRecommendation.addProperty(Properties.ID, ID);
         ID = rh.getIDList().indexOf(ID);
 
-        if (rh.confirm("are you sure you want to update recommendation " + ID + "?")) {
+        if (rh.confirm(rh.getLocale().get(LanguageKeys.UPDATECONFIR) + ID + "?")) {
             if (update(updatedRecommendation)) {
                 rh.getIO().println();
-                rh.getIO().println("update successful");
+                rh.getIO().println(rh.getLocale().get(LanguageKeys.UPDATESUCCES));
                 rh.updateIDList();
                 return updatedRecommendation;
             } else {
                 rh.getIO().println();
-                rh.getIO().println("update failed");
+                rh.getIO().println(rh.getLocale().get(LanguageKeys.UPDATEFAIL));
                 return recommendation;
             }
         } else {
             rh.getIO().println();
-            rh.getIO().println("recommendation update canceled");
+            rh.getIO().println(rh.getLocale().get(LanguageKeys.UPDATECANCEL));
             return recommendation;
         }
     }
@@ -84,7 +85,7 @@ public class UpdateRecommendation implements Command {
             case "OTHER":
                 return db.getOtherDAO().update((Other) recommendation);
             default:
-                throw new IllegalArgumentException("No retrieve definition for recommendation of type: " + recommendation.getType());
+                throw new IllegalArgumentException(rh.getLocale().get(LanguageKeys.NORETDEF) + recommendation.getType());
         }
     }
 }
