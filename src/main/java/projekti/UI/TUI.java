@@ -3,6 +3,7 @@ package projekti.UI;
 import projekti.UI.commands.Command;
 import projekti.UI.commands.CreateRecommendation;
 import projekti.UI.commands.DBHelper;
+import projekti.UI.commands.DeleteRecommendation;
 import projekti.UI.commands.RecHelper;
 import projekti.UI.commands.SelectLocale;
 import projekti.db.Dao;
@@ -16,7 +17,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import projekti.domain.Property;
 import projekti.domain.RecommendationFactory;
 import projekti.language.LanguageKeys;
@@ -24,13 +24,15 @@ import projekti.language.Locale;
 
 public class TUI {
     private IO io;
-    private List<Integer> IDList;
+
 
     private RecHelper rh;
     private DBHelper db;
     private Command create;
     private Locale locale;
-    
+
+    private DeleteRecommendation delete;
+
     public TUI(
             Dao<Book, Integer> bookDAO,
             Dao<Blog, Integer> blogDAO,
@@ -39,14 +41,16 @@ public class TUI {
             Locale locale
     ) throws SQLException {
         this.db = new DBHelper(bookDAO, blogDAO, otherDAO);
-        this.rh = new RecHelper(this, io, db);
+        this.rh = new RecHelper(io, db);
         this.create = new CreateRecommendation(rh, db);
         this.locale = locale;
+        this.delete = new DeleteRecommendation(rh, db);
         this.io = io;
-        updateIDList();
+        this.locale = locale;
+        rh.updateIDList();
     }
 
-   
+
     private boolean update(Recommendation recommendation) throws SQLException {
         switch (recommendation.getType()) {
             case "BOOK":
@@ -60,21 +64,7 @@ public class TUI {
         }
     }
 
-    private void delete(Recommendation recommendation) throws SQLException {
-        switch (recommendation.getType()) {
-            case "BOOK":
-                db.getBookDAO().delete(recommendation.getProperty(Properties.ID).orElse(null));
-                return;
-            case "BLOG":
-                db.getBlogDAO().delete(recommendation.getProperty(Properties.ID).orElse(null));
-                return;
-            case "OTHER":
-                db.getOtherDAO().delete(recommendation.getProperty(Properties.ID).orElse(null));
-                return;
-            default:
-                throw new IllegalArgumentException("No retrieve definition for recommendation of type: " + recommendation.getType());
-        }
-    }
+
 
     public void run() throws SQLException {
         io.println(locale.get(LanguageKeys.GREET));
@@ -96,7 +86,6 @@ public class TUI {
         switch (input.toLowerCase()) {
             case "new":
                 create.execute();
-               
                 break;
             case "all":
                 listRecommendations();
@@ -109,11 +98,10 @@ public class TUI {
                 break;
             case "update":
                 updateRecommendation(rh.askForRecommendation());
-                updateIDList();
+
                 break;
             case "delete":
-                deleteRecommendation(rh.askForRecommendation());
-                updateIDList();
+                delete.execute();
                 break;
             default:
                 io.println("\n" + locale.get(LanguageKeys.NONSUP));
@@ -131,7 +119,7 @@ public class TUI {
             if (recommendation == null) {
                 return;
             }
-            io.println(getListID(recommendation) + recommendation.toStringWithDescription());
+            io.println(rh.getListID(recommendation) + recommendation.toStringWithDescription());
             io.println();
 
             io.println(locale.get(LanguageKeys.SELECTEDCOMMANDS));
@@ -140,11 +128,9 @@ public class TUI {
             switch (input) {
                 case "edit":
                     recommendation = updateRecommendation(recommendation);
-                    updateIDList();
                     break;
                 case "delete":
-                    deleteRecommendation(recommendation);
-                    updateIDList();
+                    delete.execute(recommendation);
                     break selectionLoop;
                 case "return":
                     io.println();
@@ -156,11 +142,11 @@ public class TUI {
         }
     }
 
-    
+
 
     private void listRecommendations() throws SQLException {
         List<Recommendation> recommendations = getAllRecommendations();
-        updateIDList(recommendations);
+        rh.updateIDList();
         for (int i = 0; i < recommendations.size(); i++) {
             io.println(i + recommendations.get(i).toString());
         }
@@ -281,13 +267,12 @@ public class TUI {
 
         Integer ID = recommendation.getProperty(Properties.ID).orElse(null);
         updatedRecommendation.addProperty(Properties.ID, ID);
-        ID = IDList.indexOf(ID);
-
-        if (confirm(locale.get(LanguageKeys.UPDATECONFIR) + ID + "?")) {
+        ID = rh.getIDList().indexOf(ID);
+        if (rh.confirm(locale.get(LanguageKeys.UPDATECONFIR) + ID + "?")) {
             if (update(updatedRecommendation)) {
                 io.println();
                 io.println(locale.get(LanguageKeys.UPDATESUCCES));
-                updateIDList();
+                rh.updateIDList();
                 return updatedRecommendation;
             } else {
                 io.println();
@@ -300,11 +285,11 @@ public class TUI {
             return recommendation;
         }
     }
-    
+
     public Locale getLocale() {
     	return this.locale;
     }
-    
+
     public void setLocale(Locale locale) {
     	this.locale = locale;
     }

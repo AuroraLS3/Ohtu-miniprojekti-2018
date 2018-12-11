@@ -20,7 +20,7 @@ public class CreateRecommendation implements Command {
         this.rh = rh;
         this.db = db;
     }
-
+    @Override
     public void execute() throws SQLException {
         String recommendationType = rh.askType().toLowerCase();
         Function<Property, String> requestProperty = (Property property) -> {
@@ -40,12 +40,14 @@ public class CreateRecommendation implements Command {
         if (save(recommendation) != null) {
             rh.getIO().println();
             rh.getIO().println("new " + recommendationType + " recommendation added");
-            rh.tui.updateIDList();
+            rh.updateIDList();
         } else {
             rh.getIO().println("\nrecommendation not added");
         }
     }
-   
+ 
+ 
+
     private Recommendation save(Recommendation recommendation) throws SQLException {
         switch (recommendation.getType()) {
             case "BOOK":
@@ -57,5 +59,5 @@ public class CreateRecommendation implements Command {
             default:
                 throw new IllegalArgumentException("No save definition for recommendation of type: " + recommendation.getType());
         }
-    }
-}  
+    } 
+} 
