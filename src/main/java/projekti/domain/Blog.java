@@ -15,6 +15,8 @@ import java.util.Objects;
  */
 public class Blog extends AbstractPropertyStore implements Recommendation {
 
+    private final String type;
+
     /**
      * Class that lists properties of a Blog object.
      * <p>
@@ -47,8 +49,6 @@ public class Blog extends AbstractPropertyStore implements Recommendation {
     public List<Property> getProperties() {
         return Properties.getAll();
     }
-
-    private final String type;
 
     /**
      * Create a new blog.

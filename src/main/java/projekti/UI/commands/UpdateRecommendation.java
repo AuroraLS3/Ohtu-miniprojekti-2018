@@ -1,4 +1,4 @@
-package projekti.UI.commands;
+package projekti.ui.commands;
 
 import java.sql.SQLException;
 import java.util.function.Function;

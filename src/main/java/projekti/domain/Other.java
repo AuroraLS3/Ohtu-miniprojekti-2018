@@ -16,6 +16,8 @@ import java.util.Objects;
  */
 public class Other extends AbstractPropertyStore implements Recommendation {
 
+    private final String type;
+
     /**
      * Class that lists properties of an Other object.
      * <p>
@@ -48,8 +50,6 @@ public class Other extends AbstractPropertyStore implements Recommendation {
     public List<Property> getProperties() {
         return Properties.getAll();
     }
-
-    private final String type;
 
     /**
      * Create a new other.

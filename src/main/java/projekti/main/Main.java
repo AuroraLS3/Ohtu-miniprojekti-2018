@@ -1,8 +1,8 @@
 package projekti.main;
 
 
-import projekti.UI.TUI;
-import projekti.UI.TextIO;
+import projekti.ui.TUI;
+import projekti.ui.TextIO;
 import projekti.db.BlogDAO;
 import projekti.db.BookDAO;
 import projekti.db.DatabaseManager;

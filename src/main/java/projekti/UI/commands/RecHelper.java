@@ -1,13 +1,13 @@
-package projekti.UI.commands;
+package projekti.ui.commands;
 
 
 
+import projekti.ui.IO;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import projekti.UI.*;
 import projekti.domain.*;
 import projekti.domain.Book.Properties;
 import projekti.language.LanguageKeys;
@@ -19,7 +19,7 @@ public class RecHelper {
     private IO io;
     private DBHelper db;
     private Locale locale;
-   
+
     private List<Integer> IDList;
 
     public RecHelper(IO io, DBHelper db, Locale locale) {
@@ -36,11 +36,13 @@ public class RecHelper {
         Check.notNull(recommendation, () -> new IllegalArgumentException(locale.get(LanguageKeys.NOTFOUND)));
         return recommendation;
     }
+
     public String askType() {
         io.println(locale.get(LanguageKeys.TYPELIST));
         return io.getInput().toUpperCase();
     }
-    private List<Recommendation> getAllRecommendations() throws SQLException {
+
+    public List<Recommendation> getAllRecommendations() throws SQLException {
         List<Recommendation> recommendations = new ArrayList<>();
         recommendations.addAll(db.getBookDAO().findAll());
         recommendations.addAll(db.getBlogDAO().findAll());
@@ -54,7 +56,7 @@ public class RecHelper {
      * @param allRecommendations list of all Recommendation, already obtained
      * by calling getAllRecommendations()
      */
-    private void updateIDList(List<Recommendation> allRecommendations) {
+    public void updateIDList(List<Recommendation> allRecommendations) {
         this.IDList = allRecommendations.stream()
                 .map(r -> r.getProperty(Properties.ID).orElse(-1))
                 .collect(Collectors.toList());
@@ -124,7 +126,7 @@ public class RecHelper {
     public IO getIO() {
         return this.io;
     }
-    
+
     public Locale getLocale() {
     	return this.locale;
     }
@@ -133,5 +135,5 @@ public class RecHelper {
     	this.locale = locale;
     }
 
-    
+
 }

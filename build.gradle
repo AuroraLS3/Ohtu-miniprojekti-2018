@@ -56,6 +56,3 @@ jacocoTestReport {
             })
     }
 }
-
-checkstyleTest.source = 'src/test/java'
-checkstyleTest.exclude '/projekti/Stepdefs.java'
