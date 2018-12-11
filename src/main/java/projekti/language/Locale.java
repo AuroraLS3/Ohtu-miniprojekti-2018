@@ -18,20 +18,30 @@ public class Locale {
         this.langMap = langMap;
     }
 
+    @SuppressWarnings("unchecked")
     public String get(Lang lang) {
         String key = lang.getKey();
         Object value = langMap.getOrDefault(key, "Missing language key: " + key);
         if (value instanceof List) {
-            @SuppressWarnings("unchecked")
-            List<String> list = (List<String>) value;
-            StringBuilder sb = new StringBuilder();
-            for (String s : list) {
-                sb.append(s + "\n");
-            }
-            return sb.toString();
+            return toStringList((List<String>) value);
         } else {
             return value.toString();
         }
+    }
+
+    private String toStringList(List<String> value) {
+        StringBuilder builder = new StringBuilder();
+
+        int max = value.size();
+        for (int i = 0; i < max; i++) {
+            builder.append(value.get(i));
+
+            // Avoid adding newline after last element
+            if (i + 1 < max) {
+                builder.append("\n");
+            }
+        }
+        return builder.toString();
     }
 
     @SuppressWarnings("unchecked")

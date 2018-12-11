@@ -28,7 +28,7 @@
   "invalidInput":"Epäkelpo syöte",
   "deleteConfirmation":"Haluatko varmasti poistaa vinkin ",
   "deleteSuccess":"vinkki poistettiin onnistuneesti",
-  "deleteCancellation":"",
+  "deleteCancellation": "poisto peruutettu",
   "enterNew":"lisää uusi ",
   "orLeave":" (tai jätä tyhjäksi säilyttääksesi vanhan arvon): ",
   "notUpdated":" Vinkkiä ei päivitetty.",
