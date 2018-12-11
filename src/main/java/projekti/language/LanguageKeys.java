@@ -34,7 +34,8 @@ public enum LanguageKeys implements Lang {
     UPDATEFAIL("updateFail"),
     UPDATECANCEL("updateCancel"),
     UPDATESUCCES("updateSuccess"),
-    NOTFOUND("notFound");
+    NOTFOUND("notFound"),
+	NORETDEF("noRetrieveDef");
 
     private final String key;
 

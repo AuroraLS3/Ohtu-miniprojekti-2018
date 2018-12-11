@@ -49,7 +49,7 @@ public class DeleteRecommendation implements Command {
                 db.getOtherDAO().delete(recommendation.getProperty(Properties.ID).orElse(null));
                 return;
             default:
-                throw new IllegalArgumentException("No retrieve definition for recommendation of type: " + recommendation.getType());
+                throw new IllegalArgumentException(rh.getLocale().get(LanguageKeys.NORETDEF) + recommendation.getType());
         }
     }
 

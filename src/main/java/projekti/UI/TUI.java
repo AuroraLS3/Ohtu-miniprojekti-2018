@@ -7,6 +7,7 @@ import projekti.UI.commands.DBHelper;
 import projekti.UI.commands.DeleteRecommendation;
 import projekti.UI.commands.ListAll;
 import projekti.UI.commands.RecHelper;
+import projekti.UI.commands.SelectLocale;
 import projekti.UI.commands.SelectRecommendation;
 import projekti.UI.commands.UpdateRecommendation;
 import projekti.db.Dao;
@@ -29,6 +30,7 @@ public class TUI {
     private Command delete;
     private Command select;
     private Command all;
+    private Command selectLocale;
 
     public TUI(
             Dao<Book, Integer> bookDAO,
@@ -44,6 +46,7 @@ public class TUI {
         this.delete = new DeleteRecommendation(rh, db);
         this.update = new UpdateRecommendation(rh, db);
         this.select = new SelectRecommendation(rh, db);
+        this.selectLocale = new SelectLocale(rh);
         this.all = new ListAll(rh, db);
 
         this.io = io;
@@ -52,6 +55,8 @@ public class TUI {
     }
 
     public void run() throws SQLException {
+    	selectLocale.execute();
+    	this.locale = rh.getLocale();
         io.println(locale.get(LanguageKeys.GREET));
         io.print(locale.get(LanguageKeys.MAINCOMMANDS));
 

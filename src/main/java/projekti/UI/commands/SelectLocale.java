@@ -38,6 +38,7 @@ public class SelectLocale implements Command {
 			for (String s : choices.keySet()) {
 				rh.getIO().print(s + "\n");
 			}
+			rh.getIO().print("type your choice: ");
 			String choice = rh.getIO().getInput();
 			l = choices.get(choice);
 		}

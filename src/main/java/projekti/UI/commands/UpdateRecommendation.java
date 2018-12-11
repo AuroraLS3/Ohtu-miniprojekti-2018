@@ -85,7 +85,7 @@ public class UpdateRecommendation implements Command {
             case "OTHER":
                 return db.getOtherDAO().update((Other) recommendation);
             default:
-                throw new IllegalArgumentException("No retrieve definition for recommendation of type: " + recommendation.getType());
+                throw new IllegalArgumentException(rh.getLocale().get(LanguageKeys.NORETDEF) + recommendation.getType());
         }
     }
 }

@@ -8,6 +8,7 @@ import projekti.db.BookDAO;
 import projekti.db.DatabaseManager;
 import projekti.db.OtherDAO;
 import projekti.language.LanguageFileReader;
+import projekti.language.LanguageFiles;
 import projekti.language.Locale;
 
 import java.sql.SQLException;
@@ -28,7 +29,8 @@ public class Main {
         BookDAO bookDAO = new BookDAO(databaseManager);
         BlogDAO blogDAO = new BlogDAO(databaseManager);
         OtherDAO otherDAO = new OtherDAO(databaseManager);
-        TUI app = new TUI(bookDAO, blogDAO, otherDAO, new TextIO(), Locale.createWith(new LanguageFileReader(), "json/english.lang.json"));
+        TUI app = new TUI(bookDAO, blogDAO, otherDAO, new TextIO(), Locale.createWith(new LanguageFileReader(),
+        		LanguageFiles.ENGLISH.getResourcePath()));
         app.run();
     }
 
