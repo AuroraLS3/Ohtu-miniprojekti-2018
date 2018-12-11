@@ -22,6 +22,10 @@ public class CreateRecommendation implements Command {
     }
     @Override
     public void execute() throws SQLException {
+        createRecommendation();
+    }
+ 
+    private void createRecommendation() throws SQLException {
         String recommendationType = rh.askType().toLowerCase();
         Function<Property, String> requestProperty = (Property property) -> {
             rh.getIO().print(property.getName() + ": ");
@@ -45,8 +49,6 @@ public class CreateRecommendation implements Command {
             rh.getIO().println("\nrecommendation not added");
         }
     }
- 
- 
 
     private Recommendation save(Recommendation recommendation) throws SQLException {
         switch (recommendation.getType()) {
