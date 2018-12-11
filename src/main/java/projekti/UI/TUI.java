@@ -1,25 +1,27 @@
 package projekti.UI;
 
-<<<<<<< HEAD
+
 import projekti.UI.commands.Command;
 import projekti.UI.commands.CreateRecommendation;
 import projekti.UI.commands.DBHelper;
 import projekti.UI.commands.DeleteRecommendation;
+import projekti.UI.commands.ListAll;
 import projekti.UI.commands.RecHelper;
-import projekti.UI.commands.SelectLocale;
-=======
-import projekti.UI.commands.*;
->>>>>>> tui-refactor-v1.1
+import projekti.UI.commands.SelectRecommendation;
+import projekti.UI.commands.UpdateRecommendation;
 import projekti.db.Dao;
 import projekti.domain.Blog;
 import projekti.domain.Book;
 import projekti.domain.Other;
+import projekti.language.LanguageKeys;
+import projekti.language.Locale;
 
 import java.sql.SQLException;
 
+
 public class TUI {
     private IO io;
-
+    private Locale locale;
     private RecHelper rh;
     private DBHelper db;
     private Command create;
