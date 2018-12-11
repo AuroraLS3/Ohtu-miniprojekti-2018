@@ -1,4 +1,4 @@
-package projekti.UI;
+package projekti.ui;
 
 import java.util.Scanner;
 

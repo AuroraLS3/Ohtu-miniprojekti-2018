@@ -16,14 +16,14 @@ import static org.junit.Assert.assertTrue;
  */
 public class LanguageKeysTest {
 
-    private static Locale ENGLISH;
-    private static Locale FINNISH;
+    private static Locale english;
+    private static Locale finnish;
 
     @BeforeClass
     public static void setUpClass() {
         LanguageFileReader languageFileReader = new LanguageFileReader();
-        ENGLISH = Locale.createWith(languageFileReader, LanguageFiles.ENGLISH.getResourcePath());
-        FINNISH = Locale.createWith(languageFileReader, LanguageFiles.SUOMI.getResourcePath());
+        english = Locale.createWith(languageFileReader, LanguageFiles.ENGLISH.getResourcePath());
+        finnish = Locale.createWith(languageFileReader, LanguageFiles.SUOMI.getResourcePath());
 
     }
 
@@ -33,12 +33,12 @@ public class LanguageKeysTest {
 
     @Test
     public void englishLanguageFileHasAllKeys() {
-        testAgainstMissing(ENGLISH, "English");
+        testAgainstMissing(english, "English");
     }
 
     @Test
     public void finnishLanguageFileHasAllKeys() {
-        testAgainstMissing(FINNISH, "Finnish");
+        testAgainstMissing(finnish, "Finnish");
     }
 
     private void testAgainstMissing(Locale locale, String localeName) {

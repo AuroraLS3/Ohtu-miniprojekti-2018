@@ -1,13 +1,13 @@
-package projekti.UI.commands;
+package projekti.ui.commands;
 
 
 
+import projekti.ui.IO;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import projekti.UI.*;
 import projekti.domain.*;
 import projekti.domain.Book.Properties;
 import projekti.language.LanguageKeys;

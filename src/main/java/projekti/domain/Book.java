@@ -16,6 +16,8 @@ import java.util.Objects;
  */
 public class Book extends AbstractPropertyStore implements Recommendation {
 
+    private final String type;
+
     /**
      * Class that lists properties of a Book object.
      * <p>
@@ -50,8 +52,6 @@ public class Book extends AbstractPropertyStore implements Recommendation {
     public List<Property> getProperties() {
         return Properties.getAll();
     }
-
-    private final String type;
 
     /**
      * Create a new book.

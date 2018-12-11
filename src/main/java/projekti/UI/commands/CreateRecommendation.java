@@ -1,9 +1,8 @@
-package projekti.UI.commands;
+package projekti.ui.commands;
 
 import java.sql.SQLException;
 import java.util.function.Function;
 
-import projekti.UI.*;
 import projekti.domain.Blog;
 import projekti.domain.Book;
 import projekti.domain.Other;

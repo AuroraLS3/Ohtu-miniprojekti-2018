@@ -1,15 +1,15 @@
-package projekti.UI;
+package projekti.ui;
 
 
-import projekti.UI.commands.Command;
-import projekti.UI.commands.CreateRecommendation;
-import projekti.UI.commands.DBHelper;
-import projekti.UI.commands.DeleteRecommendation;
-import projekti.UI.commands.ListAll;
-import projekti.UI.commands.RecHelper;
-import projekti.UI.commands.SelectLocale;
-import projekti.UI.commands.SelectRecommendation;
-import projekti.UI.commands.UpdateRecommendation;
+import projekti.ui.commands.Command;
+import projekti.ui.commands.CreateRecommendation;
+import projekti.ui.commands.DBHelper;
+import projekti.ui.commands.DeleteRecommendation;
+import projekti.ui.commands.ListAll;
+import projekti.ui.commands.RecHelper;
+import projekti.ui.commands.SelectLocale;
+import projekti.ui.commands.SelectRecommendation;
+import projekti.ui.commands.UpdateRecommendation;
 import projekti.db.Dao;
 import projekti.domain.Blog;
 import projekti.domain.Book;
