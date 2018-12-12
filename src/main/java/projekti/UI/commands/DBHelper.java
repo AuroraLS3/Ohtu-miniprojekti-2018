@@ -8,43 +8,19 @@ import projekti.db.*;
 import projekti.domain.*;
 
 public class DBHelper {
-    private Dao<Book, Integer> bookDAO;
-    private Dao<Blog, Integer> blogDAO;
-    private Dao<Other, Integer> otherDAO;
 
+    private Dao<Recommendation, Integer> DAO;
 
-    public DBHelper(
-        Dao<Book, Integer> bookDAO,
-        Dao<Blog, Integer> blogDAO,
-        Dao<Other, Integer> otherDAO
-    ) {
-        this.bookDAO = bookDAO;
-        this.blogDAO = blogDAO;
-        this.otherDAO = otherDAO;
+    public DBHelper(Dao<Recommendation, Integer> DAO) {
+        this.DAO = DAO;
     }
 
-    public Recommendation retrieve(String recommendationType, Integer ID)throws SQLException {
-        switch (recommendationType) {
-            case "BOOK":
-                return bookDAO.findOne(ID);
-            case "BLOG":
-                return blogDAO.findOne(ID);
-            case "OTHER":
-                return otherDAO.findOne(ID);
-            default:
-                throw new IllegalArgumentException("No retrieve definition for recommendation of type: " + recommendationType);
-        }
-    }
-    
-    public Dao<Book, Integer> getBookDAO() {
-        return this.bookDAO;
+    public Recommendation retrieve(Integer ID) throws SQLException {
+        return DAO.findOne(ID);
     }
 
-    public Dao<Blog, Integer> getBlogDAO() {
-        return this.blogDAO;
+    public Dao<Recommendation, Integer> getDAO() {
+        return this.DAO;
     }
 
-    public Dao<Other, Integer> getOtherDAO() {
-        return this.otherDAO;
-    }
 }

@@ -29,10 +29,9 @@ public class RecHelper {
     }
 
     public Recommendation askForRecommendation() throws SQLException {
-        String recommendationType = askType();
         Integer ID = selectID();
 
-        Recommendation recommendation = db.retrieve(recommendationType, ID);
+        Recommendation recommendation = db.retrieve(ID);
         Check.notNull(recommendation, () -> new IllegalArgumentException(locale.get(LanguageKeys.NOTFOUND)));
         return recommendation;
     }
@@ -44,9 +43,9 @@ public class RecHelper {
 
     public List<Recommendation> getAllRecommendations() throws SQLException {
         List<Recommendation> recommendations = new ArrayList<>();
-        recommendations.addAll(db.getBookDAO().findAll());
-        recommendations.addAll(db.getBlogDAO().findAll());
-        recommendations.addAll(db.getOtherDAO().findAll());
+        recommendations.addAll(db.getDAO().findAll("BOOK"));
+        recommendations.addAll(db.getDAO().findAll("BLOG"));
+        recommendations.addAll(db.getDAO().findAll("OTHER"));
         return recommendations;
     }
 

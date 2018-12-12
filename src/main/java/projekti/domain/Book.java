@@ -98,13 +98,15 @@ public class Book extends AbstractPropertyStore implements Recommendation {
         this.type = "BOOK";
     }
 
-//    public void setID(Integer id) {
-//        addProperty(Properties.ID, id);
-//    }
+    public void setID(Integer id) {
+        addProperty(Properties.ID, id);
+    }
 //
 //    public void setDescription(String description) {
 //        addProperty(Properties.DESCRIPTION, description);
 //    }
+    
+    
 
     public String getType() {
         return type;

@@ -2,6 +2,7 @@ package projekti.db;
 
 import projekti.domain.Book;
 import projekti.domain.Book.Properties;
+import projekti.domain.CommonProperties;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -12,14 +13,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import projekti.domain.Blog;
+import projekti.domain.Other;
 import projekti.domain.Property;
+import projekti.domain.Recommendation;
 
 /**
  * Data Access Object for Books.
  *
  * @author Rsl1122
  */
-public class BookDAO implements Dao<Book, Integer> {
+public class RecommendationDAO implements Dao<Recommendation, Integer> {
 
     private static final String TABLE_NAME = "RECOMMENDATION";
 
@@ -30,83 +34,116 @@ public class BookDAO implements Dao<Book, Integer> {
      *
      * @param databaseManager Required DatabaseManager for getting Connections.
      */
-    public BookDAO(DatabaseManager databaseManager) {
+    public RecommendationDAO(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
     }
 
     /**
-     * Fetch all books from the database.
+     * Fetch all recommendations of certain type from the database.
      *
-     * @return List of books, empty if none are found.
+     * @return List of recommendations of given type, empty if none are found.
      */
     @Override
-    public List<Book> findAll() {
-        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE TYPE='BOOK'";
+    public List<Recommendation> findAll(String type) {
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE TYPE='" + type + "'";
         try (Connection connection = databaseManager.connect();
                 PreparedStatement statement = connection.prepareStatement(sql);
                 ResultSet results = statement.executeQuery()) {
-            return readBooksFrom(results);
+            return readRecommendationsFrom(results);
         } catch (SQLException e) {
             // Unchecked exception is thrown if SQL error occurs during closing or execution.
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
 
-    private Book readABookFrom(ResultSet result) throws SQLException {
+    private Recommendation readARecommendationFrom(ResultSet result) throws SQLException {
         Integer id = result.getInt("ID");
-        Book book = new Book(
+        switch (result.getString("TYPE")) {
+            case "BOOK":
+                Book book = newBook(result);
+                book.setID(id);
+                return book;
+            case "BLOG":
+                Blog blog = newBlog(result);
+                blog.setID(id);
+                return blog;
+            case "OTHER":
+                Other other = newOther(result);
+                other.setID(id);
+                return other;
+            default:
+                return null;
+        }
+    }
+
+    private Book newBook(ResultSet result) throws SQLException {
+        return new Book(
                 result.getString("AUTHOR"),
                 result.getString("NAME"),
                 result.getString("ISBN"),
                 result.getString("URL"),
                 result.getString("DESCRIPTION")
         );
-        book.addProperty(Properties.ID, id);
-        return book;
+    }
+
+    private Blog newBlog(ResultSet result) throws SQLException {
+        return new Blog(
+                result.getString("NAME"),
+                result.getString("URL"),
+                result.getString("DESCRIPTION")
+        );
+    }
+
+    private Other newOther(ResultSet result) throws SQLException {
+        return new Other(
+                result.getString("NAME"),
+                result.getString("URL"),
+                result.getString("DESCRIPTION")
+        );
     }
 
     /**
-     * Read books from database using ResultSet.
+     * Read recommendations from database using ResultSet.
      *
      * @param results the ResultSet to be used
-     * @return a list of books defined in the given ResultSet.
+     * @return a list of recommendations defined in the given ResultSet.
      */
-    private List<Book> readBooksFrom(ResultSet results) throws SQLException {
-        List<Book> books = new ArrayList<>();
+    private List<Recommendation> readRecommendationsFrom(ResultSet results) throws SQLException {
+        List<Recommendation> recommendations = new ArrayList<>();
         while (results.next()) {
-            Book book = readABookFrom(results);
-            books.add(book);
+            Recommendation r = readARecommendationFrom(results);
+            recommendations.add(r);
         }
-        return books;
+        return recommendations;
     }
 
     /**
-     * Add a new book to the database.
+     * Add a new recommendation to the database.
      *
-     * @param book the given book
-     * @return a new Book fetched from the database
+     * @param recommendation the given recommendation
+     * @return a new Recommendation fetched from the database
      */
     @Override
-    public Book create(Book book) throws SQLException {
-        int bookId = -1;
+    public Recommendation create(Recommendation r) throws SQLException {
+        int id = -1;
 
-        if (!tooLongPropertyFound(book)) {
+        if (!tooLongPropertyFound(r)) {
 
             String sql = "INSERT INTO " + TABLE_NAME + " (AUTHOR, NAME, ISBN, TYPE, URL, DESCRIPTION) "
                     + "VALUES (?, ?, ?, ?, ?, ?)";
             try (Connection connection = databaseManager.connect()) {
                 PreparedStatement stmt = connection.prepareStatement(sql);
 
-                stmt.setString(1, book.getProperty(Properties.AUTHOR).orElse(null));
-                stmt.setString(2, book.getProperty(Properties.TITLE).orElse(null));
-                stmt.setString(3, book.getProperty(Properties.ISBN).orElse(null));
-                stmt.setString(4, book.getType());
-                stmt.setString(5, book.getProperty(Properties.URL).orElse(null));
-                stmt.setString(6, book.getProperty(Properties.DESCRIPTION).orElse(""));
+                stmt.setString(1, r.getProperty(Properties.AUTHOR).orElse(null));
+                stmt.setString(2, r.getProperty(Properties.TITLE).orElse(null));
+                stmt.setString(3, r.getProperty(Properties.ISBN).orElse(null));
+                stmt.setString(4, r.getType());
+                stmt.setString(5, r.getProperty(Properties.URL).orElse(null));
+                stmt.setString(6, r.getProperty(Properties.DESCRIPTION).orElse(""));
                 stmt.executeUpdate();
                 ResultSet rs = stmt.getGeneratedKeys();
                 if (rs.next()) {
-                    bookId = rs.getInt(1);
+                    id = rs.getInt(1);
                 }
                 rs.close();
                 stmt.close();
@@ -115,17 +152,19 @@ public class BookDAO implements Dao<Book, Integer> {
                 throw new IllegalStateException(e.getMessage(), e);
             }
         }
-        return findOne(bookId);
+        return findOne(id);
     }
 
     /**
-     * Searches for a specific book from the database by the given key/id.
+     * Searches for a specific recommendation from the database by the given
+     * key/id.
      *
-     * @param key the book's primary key
-     * @return a new Book object fetched from the database based on the key
+     * @param key the recommendation's primary key
+     * @return a new Recommendation object fetched from the database based on
+     * the key
      */
     @Override
-    public Book findOne(Integer key) throws SQLException {
+    public Recommendation findOne(Integer key) throws SQLException {
         try (Connection conn = databaseManager.connect()) {
             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM " + TABLE_NAME + " WHERE ID = ?");
             stmt.setInt(1, key);
@@ -133,21 +172,21 @@ public class BookDAO implements Dao<Book, Integer> {
             if (!result.next()) {
                 return null;
             }
-            Book one = readABookFrom(result);
+            Recommendation one = readARecommendationFrom(result);
             result.close();
             return one;
         }
     }
 
     /**
-     * Update book information in the database
+     * Update recommendation information in the database
      *
-     * @param object the book that is updated
-     * @return the book
+     * @param object the recommendation that is updated
+     * @return the recommendation
      * @throws SQLException
      */
     @Override
-    public boolean update(Book object) throws SQLException {
+    public boolean update(Recommendation object) throws SQLException {
         if (!tooLongPropertyFound(object)) {
             try (Connection conn = databaseManager.connect()) {
                 String statementString = "UPDATE RECOMMENDATION "
@@ -179,9 +218,9 @@ public class BookDAO implements Dao<Book, Integer> {
     }
 
     /*
-     * Deletes a specific book from the database by the given key/id.
+     * Deletes a specific recommendation from the database by the given key/id.
      *
-     * @param key the book's primary key
+     * @param key the recommendation's primary key
      */
     @Override
     public void delete(Integer key) throws SQLException {
@@ -217,21 +256,21 @@ public class BookDAO implements Dao<Book, Integer> {
     }
 
     /**
-     * Goes through a book's properties and checks if any of the properties'
-     * content is too long considering column sizes.
+     * Goes through a recommendation's properties and checks if any of the
+     * properties' content is too long considering column sizes.
      *
-     * @param the book to be checked
+     * @param the recommendation to be checked
      * @return true if any of the properties in the property list is too long,
      * false if not
      * @throws SQLException
      */
     @Override
-    public boolean tooLongPropertyFound(Book book) throws SQLException {
-        List<Property> props = book.getProperties();
+    public boolean tooLongPropertyFound(Recommendation r) throws SQLException {
+        List<Property> props = r.getProperties();
         boolean tooLong = false;
         for (int i = 0; i < props.size(); i++) {
             Property p = props.get(i);
-            if (!p.getName().equals("ID") && propertyTooLong(p.getName(), book.getProperty(p).toString())) {
+            if (!p.getName().equals("ID") && propertyTooLong(p.getName(), r.getProperty(p).toString())) {
                 tooLong = true;
             }
         }

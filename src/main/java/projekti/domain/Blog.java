@@ -53,15 +53,13 @@ public class Blog extends AbstractPropertyStore implements Recommendation {
     /**
      * Create a new blog.
      *
-     * @param title       Title of the blog, not null or empty.
-     * @param url         url of the blog, not null or empty.
+     * @param title Title of the blog, not null or empty.
+     * @param url url of the blog, not null or empty.
      * @param description Description of the blog, can be empty
      */
     public Blog(String title, String url, String description) {
         Check.notNull(title, () -> new IllegalArgumentException("Title should not be null"));
-        Check.notNull(url, () -> new IllegalArgumentException("URL should not be null"));
         Check.isFalse(title.isEmpty(), () -> new IllegalArgumentException("Title should not be empty"));
-        Check.isFalse(url.isEmpty(), () -> new IllegalArgumentException("URL should not be empty"));
         addProperty(Properties.TITLE, title);
         addProperty(Properties.URL, url);
         addProperty(Properties.DESCRIPTION, description);
@@ -81,8 +79,16 @@ public class Blog extends AbstractPropertyStore implements Recommendation {
         addProperty(Properties.TITLE, title);
     }
 
+    public String getTitle() {
+        return "" + getProperty(Properties.TITLE);
+    }
+
     public void setURL(String url) {
         addProperty(Properties.URL, url);
+    }
+
+    public Property getURL() {
+        return Properties.URL;
     }
 
     public void setID(Integer id) {
@@ -91,6 +97,10 @@ public class Blog extends AbstractPropertyStore implements Recommendation {
 
     public void setDescription(String description) {
         addProperty(Properties.DESCRIPTION, description);
+    }
+
+    public Property getDescription() {
+        return Properties.DESCRIPTION;
     }
 
     public String getType() {

@@ -32,7 +32,7 @@ public interface Dao<T, K> {
      * @return list of objects.
      */
 
-    List<T> findAll() throws SQLException;
+    List<T> findAll(String type) throws SQLException;
 
     /**
      * Add a new object to the database.
