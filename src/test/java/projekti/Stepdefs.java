@@ -7,9 +7,6 @@ import cucumber.api.java.en.When;
 import projekti.ui.StubIO;
 import projekti.ui.TUI;
 import projekti.db.*;
-import projekti.domain.Blog;
-import projekti.domain.Book;
-import projekti.domain.Other;
 import projekti.language.LanguageFileReader;
 import projekti.language.Locale;
 
@@ -22,13 +19,12 @@ import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import projekti.domain.Recommendation;
 
 public class Stepdefs {
 
     private DatabaseManager databaseManager;
-    private Dao<Book, Integer> bookDAO;
-    private Dao<Blog, Integer> blogDAO;
-    private Dao<Other, Integer> otherDAO;
+    private Dao<Recommendation, Integer> DAO;
     private TUI app;
     private StubIO io;
     private Locale locale;
@@ -42,9 +38,7 @@ public class Stepdefs {
         File testDB = new File("./build/test.mv.db");
         Files.deleteIfExists(testDB.toPath());
         this.databaseManager = new DatabaseManager("jdbc:h2:./build/test", "sa", "");
-        bookDAO = new BookDAO(databaseManager);
-        blogDAO = new BlogDAO(databaseManager);
-        otherDAO = new OtherDAO(databaseManager);
+        DAO = new RecommendationDAO(databaseManager);
 
         inputLines = new ArrayList<>();
         inputLines.add("English");
@@ -181,7 +175,7 @@ public class Stepdefs {
         inputLines.add("end");
 
         io = new StubIO(inputLines);
-        app = new TUI(bookDAO, blogDAO, otherDAO, io, locale);
+        app = new TUI(DAO, io, locale);
         app.run();
     }
 

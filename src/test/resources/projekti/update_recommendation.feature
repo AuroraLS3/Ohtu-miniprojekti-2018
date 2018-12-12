@@ -3,7 +3,6 @@ Feature: Users can update existing recommendations
     Scenario: user can update an existing book recommendation and receives a message upon successful update
        Given some book recommendations have been created
        And   command update is selected
-       And   recommendation type "book" is selected
        When  existing recommendation id "1" is entered
        And   new author "Reetta" is entered
        And   new title "Jolly Book" is entered
@@ -19,7 +18,6 @@ Feature: Users can update existing recommendations
     Scenario: user can update an existing blog recommendation and receives a message upon succesful update
        Given some blog recommendations have been created
        And   command update is selected
-       And   recommendation type "blog" is selected
        When  existing recommendation id "1" is entered
        And   new title "Jolliest Blog" is entered
        And   new url "http://www.faketestfaketestfaketesturl.com" is entered
@@ -33,7 +31,6 @@ Feature: Users can update existing recommendations
     Scenario: user can update an existing other recommendation and receives a message upon succesful update
        Given some other recommendations have been created
        And   command update is selected
-       And   recommendation type "other" is selected
        When  existing recommendation id "1" is entered
        And   new title "Jolliest Website" is entered
        And   new url "http://www.faketestfaketestfaketesturl.com" is entered
@@ -48,7 +45,6 @@ Feature: Users can update existing recommendations
     Scenario: user gets a warning message when trying to update a nonexisting recommendation
        Given some book recommendations have been created
        And   command update is selected
-       And   recommendation type "book" is selected
        When  nonexisting recommendation id "42" is entered
        And   the app processes the input
        Then  system will respond with "No recommendation found"
@@ -56,7 +52,6 @@ Feature: Users can update existing recommendations
     Scenario: user gets a confirmation message before actual update and can decide to revoke update
        Given some book recommendations have been created
        And   command update is selected
-       And   recommendation type "book" is selected
        When  existing recommendation id "2" is entered
        And   new author "Minna" is entered
        And   new title "Jolly Book" is entered
@@ -73,7 +68,6 @@ Feature: Users can update existing recommendations
     Scenario: user gets a warning message when entering a non-integer ID
        Given some book recommendations have been created
        And   command update is selected
-       And   recommendation type "book" is selected
        When  invalid recommendation id "strings_are_not_valid_IDs" is entered
        And   the app processes the input
        Then  system will respond with "Not a valid ID. Has to be a number."
