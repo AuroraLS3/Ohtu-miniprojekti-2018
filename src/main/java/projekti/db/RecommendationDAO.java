@@ -19,9 +19,8 @@ import projekti.domain.Property;
 import projekti.domain.Recommendation;
 
 /**
- * Data Access Object for Books.
+ * Data Access Object for Recommendations.
  *
- * @author Rsl1122
  */
 public class RecommendationDAO implements Dao<Recommendation, Integer> {
 
