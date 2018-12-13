@@ -15,7 +15,7 @@ public class SelectRecommendation implements Command {
         this.update = new UpdateRecommendation(rh, db);
         this.delete = new DeleteRecommendation(rh, db);
     }
-    
+
     @Override
     public void execute() throws SQLException {
         selectRecommendation();
@@ -32,7 +32,7 @@ public class SelectRecommendation implements Command {
             }
             rh.getIO().println(rh.getListID(recommendation) + recommendation.toStringWithDescription());
             rh.getIO().println();
-            rh.getIO().print(rh.getLocale().get(LanguageKeys.SELECTEDCOMMANDS));
+            rh.getIO().print(rh.getLocale().get(LanguageKeys.SELECTEDCOMMANDS) + "\n");
 
             input = rh.getIO().getInput();
             switch (input) {
@@ -52,4 +52,4 @@ public class SelectRecommendation implements Command {
         }
     }
 
-}   
+}

@@ -11,9 +11,6 @@ import projekti.ui.commands.SelectLocale;
 import projekti.ui.commands.SelectRecommendation;
 import projekti.ui.commands.UpdateRecommendation;
 import projekti.db.Dao;
-import projekti.domain.Blog;
-import projekti.domain.Book;
-import projekti.domain.Other;
 import projekti.language.LanguageKeys;
 import projekti.language.Locale;
 

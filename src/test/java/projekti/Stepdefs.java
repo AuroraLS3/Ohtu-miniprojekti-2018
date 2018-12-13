@@ -41,7 +41,6 @@ public class Stepdefs {
         DAO = new RecommendationDAO(databaseManager);
 
         inputLines = new ArrayList<>();
-        inputLines.add("English");
         locale = Locale.createWith(new LanguageFileReader(), "json/english.lang.json");
     }
 
@@ -142,6 +141,11 @@ public class Stepdefs {
     @Given("^recommendation type \"([^\"]*)\" is selected$")
     public void recommendationTypeIsSelected(String recommendationType) {
         inputLines.add(recommendationType);
+    }
+
+    @Given("^the user chooses \"([^\"]*)\" when the app starts$")
+    public void theUserChoosesWhenTheAppStarts(String language) {
+        inputLines.add(language);
     }
 
     @When("^author \"([^\"]*)\" title \"([^\"]*)\" and ISBN \"([^\"]*)\" are entered$")
@@ -268,5 +272,17 @@ public class Stepdefs {
     @Then("^the list of recommendations will not include \"([^\"]*)\"$")
     public void theListOfRecommendationsWillNotInclude(String unexpectedOutput) {
         assertFalse(io.getPrints().contains(unexpectedOutput));
+    }
+
+    @Then("^the user will receive a prompt in English$")
+    public void theUserWillReceiveAPromptInEnglish() {
+        assertTrue(io.getPrints().contains("Welcome to the reading recommendation app !"));
+        assertTrue(io.getPrints().contains("Supported commands:"));
+    }
+
+    @Then("^the user will receive a prompt in Finnish$")
+    public void theUserWillReceiveAPromptInFinnish() {
+        assertTrue(io.getPrints().contains("Tervetuloa lukuvinkki applikaatioon!"));
+        assertTrue(io.getPrints().contains("Komennot:"));
     }
 }
