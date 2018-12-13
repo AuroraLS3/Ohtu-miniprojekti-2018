@@ -1,7 +1,8 @@
 Feature: Users can update existing recommendations
 
     Scenario: user can update an existing book recommendation and receives a message upon successful update
-       Given some book recommendations have been created
+       Given language has been selected
+       And   some book recommendations have been created
        And   command update is selected
        When  existing recommendation id "1" is entered
        And   new author "Reetta" is entered
@@ -16,7 +17,8 @@ Feature: Users can update existing recommendations
        And   the list of recommendations will include "1. Reetta: Jolly Book, ISBN: 987655555, URL: http://www.faketestfaketestfaketesturl.com"
 
     Scenario: user can update an existing blog recommendation and receives a message upon succesful update
-       Given some blog recommendations have been created
+       Given language has been selected
+       And   some blog recommendations have been created
        And   command update is selected
        When  existing recommendation id "1" is entered
        And   new title "Jolliest Blog" is entered
@@ -29,7 +31,8 @@ Feature: Users can update existing recommendations
        And   the list of recommendations will include "1. Jolliest Blog, URL: http://www.faketestfaketestfaketesturl.com"
 
     Scenario: user can update an existing other recommendation and receives a message upon succesful update
-       Given some other recommendations have been created
+       Given language has been selected
+       And   some other recommendations have been created
        And   command update is selected
        When  existing recommendation id "1" is entered
        And   new title "Jolliest Website" is entered
@@ -43,14 +46,16 @@ Feature: Users can update existing recommendations
 
 
     Scenario: user gets a warning message when trying to update a nonexisting recommendation
-       Given some book recommendations have been created
+       Given language has been selected
+       And   some book recommendations have been created
        And   command update is selected
        When  nonexisting recommendation id "42" is entered
        And   the app processes the input
        Then  system will respond with "No recommendation found"
 
     Scenario: user gets a confirmation message before actual update and can decide to revoke update
-       Given some book recommendations have been created
+       Given language has been selected
+       And   some book recommendations have been created
        And   command update is selected
        When  existing recommendation id "2" is entered
        And   new author "Minna" is entered
@@ -66,7 +71,8 @@ Feature: Users can update existing recommendations
        And   the list of recommendations will include "2. Heli: Kirjojen Kirja, ISBN: 777777333, URL: -"
 
     Scenario: user gets a warning message when entering a non-integer ID
-       Given some book recommendations have been created
+       Given language has been selected
+       And   some book recommendations have been created
        And   command update is selected
        When  invalid recommendation id "strings_are_not_valid_IDs" is entered
        And   the app processes the input
