@@ -3,9 +3,6 @@ package projekti.ui.commands;
 import java.sql.SQLException;
 import java.util.function.Function;
 
-import projekti.domain.Blog;
-import projekti.domain.Book;
-import projekti.domain.Other;
 import projekti.domain.Property;
 import projekti.domain.Recommendation;
 import projekti.domain.RecommendationFactory;
@@ -77,15 +74,6 @@ public class UpdateRecommendation implements Command {
     }
 
     private boolean update(Recommendation recommendation) throws SQLException {
-        switch (recommendation.getType()) {
-            case "BOOK":
-                return db.getBookDAO().update((Book) recommendation);
-            case "BLOG":
-                return db.getBlogDAO().update((Blog) recommendation);
-            case "OTHER":
-                return db.getOtherDAO().update((Other) recommendation);
-            default:
-                throw new IllegalArgumentException(rh.getLocale().get(LanguageKeys.NORETDEF) + recommendation.getType());
-        }
+        return db.getDAO().update(recommendation);
     }
 }

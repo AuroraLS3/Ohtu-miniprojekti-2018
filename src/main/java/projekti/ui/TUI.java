@@ -20,6 +20,7 @@ import projekti.language.Locale;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import projekti.domain.Recommendation;
 
 
 public class TUI {
@@ -31,13 +32,11 @@ public class TUI {
     private Command selectLocale;
 
     public TUI(
-            Dao<Book, Integer> bookDAO,
-            Dao<Blog, Integer> blogDAO,
-            Dao<Other, Integer> otherDAO,
+            Dao<Recommendation, Integer> DAO,
             IO io,
             Locale locale
     ) throws SQLException {
-        this.db = new DBHelper(bookDAO, blogDAO, otherDAO);
+        this.db = new DBHelper(DAO);
         this.rh = new RecHelper(io, db, locale);
         this.commands = new HashMap<>();
         this.commands.put("all", new ListAll(rh, db));

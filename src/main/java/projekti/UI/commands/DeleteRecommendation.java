@@ -3,7 +3,7 @@ package projekti.ui.commands;
 import java.sql.SQLException;
 
 import projekti.domain.Recommendation;
-import projekti.domain.Blog.Properties;
+import projekti.domain.Book.Properties;
 import projekti.language.LanguageKeys;
 
 public class DeleteRecommendation implements Command {
@@ -38,19 +38,7 @@ public class DeleteRecommendation implements Command {
     }
 
     private void delete(Recommendation recommendation) throws SQLException {
-        switch (recommendation.getType()) {
-            case "BOOK":
-                db.getBookDAO().delete(recommendation.getProperty(Properties.ID).orElse(null));
-                return;
-            case "BLOG":
-                db.getBlogDAO().delete(recommendation.getProperty(Properties.ID).orElse(null));
-                return;
-            case "OTHER":
-                db.getOtherDAO().delete(recommendation.getProperty(Properties.ID).orElse(null));
-                return;
-            default:
-                throw new IllegalArgumentException(rh.getLocale().get(LanguageKeys.NORETDEF) + recommendation.getType());
-        }
+        db.getDAO().delete(recommendation.getProperty(Properties.ID).orElse(null));
     }
 
    

@@ -1,9 +1,9 @@
 Feature: Users can select a specific recommendation
 
   Scenario: user can select a recommendation to see its description
-    Given    some book recommendations have been created
+    Given    language has been selected
+    And      some book recommendations have been created
     And      command select is selected
-    And      recommendation type "book" is selected
     When     existing recommendation id "1" is entered
     And      command return is entered
     And      the app processes the input
@@ -11,18 +11,18 @@ Feature: Users can select a specific recommendation
     Then     system will respond with "Description: hyva kirja"
 
   Scenario: user gets a warning message when trying to select a nonexisting recommendation
-    Given   some book recommendations have been created
+    Given   language has been selected
+    And     some book recommendations have been created
     And     command select is selected
-    And     recommendation type "book" is selected
     When    nonexisting recommendation id "43" is entered
     And     command return is entered
     And     the app processes the input
     Then    system will respond with "No recommendation found"
 
   Scenario: user can edit a selected recommendation
-    Given   some book recommendations have been created
+    Given   language has been selected
+    And     some book recommendations have been created
     And     command select is selected
-    And     recommendation type "book" is selected
     When    existing recommendation id "1" is entered
     And     command edit is entered
     And     new author "New Author" is entered
@@ -37,9 +37,9 @@ Feature: Users can select a specific recommendation
     Then     system will respond with "Description: new description"
 
   Scenario: user can delete selected recommendation
-    Given some book recommendations have been created
+    Given language has been selected
+    And   some book recommendations have been created
     And   command select is selected
-    And   recommendation type "book" is selected
     When  existing recommendation id "2" is entered
     And   command delete is selected
     And   affirmative response is given when asked for confirmation

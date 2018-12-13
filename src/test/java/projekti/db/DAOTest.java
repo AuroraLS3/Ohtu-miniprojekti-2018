@@ -41,6 +41,10 @@ public abstract class DAOTest<T extends Recommendation> {
     protected abstract Dao<T, Integer> setUpDAO() throws Exception;
 
     protected abstract T createTestObject();
+    
+    protected abstract T createSecondTestObject();
+    
+    protected abstract T createThirdTestObject();
 
     protected abstract T updateObjectInSomeWay(T testObject);
 
@@ -50,13 +54,13 @@ public abstract class DAOTest<T extends Recommendation> {
 
     @Test
     public void emptyListIsReturnedWithNoObjectsSaved() throws SQLException {
-        assertEquals(Collections.emptyList(), underTest.findAll());
+        assertEquals(Collections.emptyList(), underTest.findAll(testObject.getType()));
     }
 
     @Test
     public void newObjectIsReturnedByFindAll() throws SQLException {
         addObject();
-        assertEquals(Collections.singletonList(testObject), underTest.findAll());
+        assertEquals(Collections.singletonList(testObject), underTest.findAll(testObject.getType()));
     }
 
     @Test
@@ -86,7 +90,7 @@ public abstract class DAOTest<T extends Recommendation> {
     public void foundObjectsHaveAllProperties() throws SQLException {
         addObject();
 
-        List<T> found = underTest.findAll();
+        List<T> found = underTest.findAll(testObject.getType());
         assertFalse(found.isEmpty());
 
         T object = found.get(0);

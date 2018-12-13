@@ -59,9 +59,7 @@ public class Blog extends AbstractPropertyStore implements Recommendation {
      */
     public Blog(String title, String url, String description) {
         Check.notNull(title, () -> new IllegalArgumentException("Title should not be null"));
-        Check.notNull(url, () -> new IllegalArgumentException("URL should not be null"));
         Check.isFalse(title.isEmpty(), () -> new IllegalArgumentException("Title should not be empty"));
-        Check.isFalse(url.isEmpty(), () -> new IllegalArgumentException("URL should not be empty"));
         addProperty(Properties.TITLE, title);
         addProperty(Properties.URL, url);
         addProperty(Properties.DESCRIPTION, description);

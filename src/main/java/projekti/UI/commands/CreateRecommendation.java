@@ -3,9 +3,6 @@ package projekti.ui.commands;
 import java.sql.SQLException;
 import java.util.function.Function;
 
-import projekti.domain.Blog;
-import projekti.domain.Book;
-import projekti.domain.Other;
 import projekti.domain.Property;
 import projekti.domain.Recommendation;
 import projekti.domain.RecommendationFactory;
@@ -51,15 +48,6 @@ public class CreateRecommendation implements Command {
     }
 
     private Recommendation save(Recommendation recommendation) throws SQLException {
-        switch (recommendation.getType()) {
-            case "BOOK":
-                return db.getBookDAO().create((Book) recommendation);
-            case "BLOG":
-                return db.getBlogDAO().create((Blog) recommendation);
-            case "OTHER":
-                return db.getOtherDAO().create((Other) recommendation);
-            default:
-                throw new IllegalArgumentException("No save definition for recommendation of type: " + recommendation.getType());
-        }
+        return db.getDAO().create(recommendation);
     } 
 } 
