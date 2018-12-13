@@ -16,7 +16,7 @@
   "selectedCommands": ["Komennot valitulle vinkille: ",
                        "\tedit \tMuokkaa",
                        "\tdelete \tPoista",
-                       "\treturn \tPalaa päävalikkoon."
+                       "\treturn \tPalaa päävalikkoon"
                       ],
   "typeListings":["Valitse vinkin tyyppi",
                   "vinkin tyyppi (vaihtoehdot: book, blog, other): "
