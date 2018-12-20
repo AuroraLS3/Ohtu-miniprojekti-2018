@@ -10,6 +10,8 @@ Codacy: [![Codacy Badge](https://api.codacy.com/project/badge/Grade/0a82fe54e04f
 
 [User Guide](https://github.com/Rsl1122/Ohtu-miniprojekti-2018/tree/master/documentation/user_guide.md)
 
+[Loppuraportti](https://docs.google.com/document/d/e/2PACX-1vTgR_xUMorMEvARBExNRGvCXpXCjkrAJdI1LTSM3oLyg1_RtuFRrdyuNh4z6R3lzwr3MccmnOgEhBZm/pub)
+
 ## Definition of done
 - Komponentin toiminta vastaa määrittelyä
 - Komponentti on testattu
